@@ -27,7 +27,6 @@
     #import "utils.h"
     #import "BWStatusBarOverlay.h"
     #import "UINavigationController+SGProgress.h"
-    #import "MTStatusBarOverlay.h"
     #import "FTAnimation.h"
 #endif
 

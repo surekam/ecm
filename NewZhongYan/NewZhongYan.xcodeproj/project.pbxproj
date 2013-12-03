@@ -104,6 +104,7 @@
 		F23F3E0C1845E2680034C811 /* SKEdetailInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F23F3E0B1845E2680034C811 /* SKEdetailInfoController.m */; };
 		F23F3E1018461BD50034C811 /* UIColor+FlatUI.m in Sources */ = {isa = PBXBuildFile; fileRef = F23F3E0F18461BD50034C811 /* UIColor+FlatUI.m */; };
 		F240235817F6B89300C25FFB /* MainStoryboard_ios5.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F240235617F6B89300C25FFB /* MainStoryboard_ios5.storyboard */; };
+		F242FC7C184C5C47003C56AA /* SMPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F242FC7B184C5C47003C56AA /* SMPageControl.m */; };
 		F24BD5DA182A2645009AE159 /* onlyread.png in Resources */ = {isa = PBXBuildFile; fileRef = F24BD5D3182A2645009AE159 /* onlyread.png */; };
 		F24BD5DB182A2645009AE159 /* btn_location_enabled.png in Resources */ = {isa = PBXBuildFile; fileRef = F24BD5D4182A2645009AE159 /* btn_location_enabled.png */; };
 		F24BD5DC182A2645009AE159 /* btn_location_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F24BD5D5182A2645009AE159 /* btn_location_pressed.png */; };
@@ -604,6 +605,8 @@
 		F23F3E0E18461BD50034C811 /* UIColor+FlatUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+FlatUI.h"; sourceTree = "<group>"; };
 		F23F3E0F18461BD50034C811 /* UIColor+FlatUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+FlatUI.m"; sourceTree = "<group>"; };
 		F240235717F6B89300C25FFB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_ios5.storyboard; sourceTree = "<group>"; };
+		F242FC7A184C5C47003C56AA /* SMPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMPageControl.h; sourceTree = "<group>"; };
+		F242FC7B184C5C47003C56AA /* SMPageControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMPageControl.m; sourceTree = "<group>"; };
 		F24BD5D3182A2645009AE159 /* onlyread.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = onlyread.png; sourceTree = "<group>"; };
 		F24BD5D4182A2645009AE159 /* btn_location_enabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_location_enabled.png; sourceTree = "<group>"; };
 		F24BD5D5182A2645009AE159 /* btn_location_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_location_pressed.png; sourceTree = "<group>"; };
@@ -1889,6 +1892,8 @@
 				F20EC7711824DE0B00427D54 /* SKAttachButton.m */,
 				F2A48536182A426A0068A4D7 /* SKImageView.h */,
 				F2A48537182A426A0068A4D7 /* SKImageView.m */,
+				F242FC7A184C5C47003C56AA /* SMPageControl.h */,
+				F242FC7B184C5C47003C56AA /* SMPageControl.m */,
 				F299A5E61839C5A900ACFDC6 /* SKQLPreviewController.h */,
 				F299A5E71839C5AA00ACFDC6 /* SKQLPreviewController.m */,
 			);
@@ -2885,6 +2890,7 @@
 				F2E803541830D43F00670B7D /* FTUtils+NSObject.m in Sources */,
 				F2D8149A1835C75300FE0839 /* OAHelper.m in Sources */,
 				F2F79E93180D29B70004CAFC /* SKMessageEntity.m in Sources */,
+				F242FC7C184C5C47003C56AA /* SMPageControl.m in Sources */,
 				F2B67F9717F7C8EC0007CB91 /* UIImage+rescale.m in Sources */,
 				F291E24F180CDD010027F0C9 /* ASINetworkQueue.m in Sources */,
 				F28846A31803B335006A5D62 /* APPUtils.m in Sources */,

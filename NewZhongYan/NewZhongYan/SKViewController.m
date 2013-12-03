@@ -18,12 +18,15 @@
 #import "GetNewVersion.h"
 #import "SKAPPUpdateController.h"
 #import "MBProgressHUD.h"
+#import "SMPageControl.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
 @interface SKViewController ()
 {
     SKSystemMenuController* settingController;
     BWStatusBarOverlay* BWStatusBar;
     __weak IBOutlet UIScrollView *bgScrollView;
+    //UIPageControl* pageController;
+    SMPageControl* pageController;
 }
 @end
 
@@ -31,7 +34,6 @@
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
    // return UIStatusBarStyleDefault;
-    
     return UIStatusBarStyleLightContent;
 }
 
@@ -103,23 +105,23 @@
 -(void)initItems
 {
     [bgScrollView setContentSize:CGSizeMake(640, bgScrollView.frame.size.height)];
-//    upButtons = [[NSMutableArray alloc] init];
-//    NSArray *dataArray=[self dataFromXml];
-//    for (int i=0;i<dataArray.count;i++)
-//    {
-//        DDXMLElement *obj=[dataArray objectAtIndex:i];
-//        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
-//        [dragbtn setTitle:[obj elementForName:@"title"].stringValue];
-//        [dragbtn setNormalImage:[obj elementForName:@"icon"].stringValue];
-//        [dragbtn setControllerName:[obj elementForName:@"controller"].stringValue];
-//        [dragbtn setLocation:up];
-//        [dragbtn setDelegate:self];
-//        [dragbtn setTag:i];
-//        [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:dragbtn];
-//        [upButtons addObject:dragbtn];
-//    }
-//    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
+    upButtons = [[NSMutableArray alloc] init];
+    NSArray *dataArray=[self dataFromXml];
+    for (int i=0;i<dataArray.count;i++)
+    {
+        DDXMLElement *obj=[dataArray objectAtIndex:i];
+        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
+        [dragbtn setTitle:[obj elementForName:@"title"].stringValue];
+        [dragbtn setNormalImage:[obj elementForName:@"icon"].stringValue];
+        [dragbtn setControllerName:[obj elementForName:@"controller"].stringValue];
+        [dragbtn setLocation:up];
+        [dragbtn setDelegate:self];
+        [dragbtn setTag:i];
+        [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
+        [bgScrollView addSubview:dragbtn];
+        [upButtons addObject:dragbtn];
+    }
+    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
 }
 
 -(void)initSetting
@@ -307,12 +309,48 @@
     return self;
 }
 
+- (void)gotoPage:(BOOL)animated
+{
+    NSInteger page = pageController.currentPage;
+    
+    CGRect bounds = bgScrollView.bounds;
+    bounds.origin.x = CGRectGetWidth(bounds) * page;
+    bounds.origin.y = 0;
+    [bgScrollView scrollRectToVisible:bounds animated:animated];
+}
+
+- (IBAction)changePage:(id)sender
+{
+    [self gotoPage:YES];    // YES = animate
+}
+
+-(void)initPageController
+{
+    pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 40, 150, 40)];
+    [pageController setIndicatorDiameter:8];
+    [pageController setNumberOfPages:2];
+    [pageController setHidesForSinglePage:YES];
+    [pageController setPageIndicatorTintColor:[UIColor blackColor]];
+    [pageController setCurrentPageIndicatorTintColor:[UIColor whiteColor]];
+    [pageController setCurrentPage:0];
+    [pageController addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:pageController];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGFloat pageWidth = CGRectGetWidth(bgScrollView.frame);
+    NSUInteger page = floor((bgScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    pageController.currentPage = page;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self copyXMLToDocument];
     [self initNavBar];
     [self initItems];
+    [self initPageController];
     [self initSetting];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];

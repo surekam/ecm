@@ -187,6 +187,12 @@
     return[NSURL URLWithString:urlstring];
 }
 
++(NSURL*)commitWorkIte
+{
+    return
+    [NSURL URLWithString:[NSString stringWithFormat:@"%@/users/oa/commitWorkItem",ZZZobt]];
+}
+
 //(6).提交下环节（POST）
 ///users/oa/commitWorkItem
 +(NSURL*)commitWorkItem

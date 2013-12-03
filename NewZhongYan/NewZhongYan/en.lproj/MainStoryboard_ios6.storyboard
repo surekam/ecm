@@ -793,13 +793,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SPU-Of-A3S">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="372"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="SPU-Of-A3S" firstAttribute="leading" secondItem="ORO-5O-RNf" secondAttribute="leading" id="6L9-UP-gXg"/>
                             <constraint firstItem="wZv-ks-bxq" firstAttribute="top" secondItem="ORO-5O-RNf" secondAttribute="bottom" constant="44" id="GXb-35-YrA"/>
                             <constraint firstAttribute="trailing" secondItem="ORO-5O-RNf" secondAttribute="trailing" id="Kkp-Wz-4ko"/>
                             <constraint firstItem="ORO-5O-RNf" firstAttribute="leading" secondItem="xrR-c1-jvt" secondAttribute="leading" id="MJv-08-SiN"/>
                             <constraint firstItem="ORO-5O-RNf" firstAttribute="top" secondItem="xrR-c1-jvt" secondAttribute="top" id="tB4-OS-1yW"/>
+                            <constraint firstItem="SPU-Of-A3S" firstAttribute="bottom" secondItem="ORO-5O-RNf" secondAttribute="bottom" id="wsy-Rh-5TS"/>
+                            <constraint firstItem="SPU-Of-A3S" firstAttribute="trailing" secondItem="ORO-5O-RNf" secondAttribute="trailing" id="xAj-sV-VvI"/>
+                            <constraint firstItem="SPU-Of-A3S" firstAttribute="top" secondItem="ORO-5O-RNf" secondAttribute="top" id="y15-SQ-4dZ"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="首页" id="tPf-Zf-PU2">
@@ -819,6 +827,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="bgScrollView" destination="SPU-Of-A3S" id="8aM-vT-CYr"/>
                         <segue destination="AhG-sA-YJt" kind="push" identifier="about" id="Bkd-Ag-0mk"/>
                         <segue destination="n0d-zb-Ftf" kind="push" identifier="userinfo" id="h64-lE-1Ep"/>
                         <segue destination="p0K-cn-rde" kind="push" identifier="secret" id="7vc-3H-BSf"/>
@@ -2833,7 +2842,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eIK-Om-q7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2167" y="23"/>
+            <point key="canvasLocation" x="2158" y="23"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jXl-mD-KWW">
@@ -3187,7 +3196,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e1z-aQ-Vm1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-472" y="45"/>
+            <point key="canvasLocation" x="-490" y="39"/>
         </scene>
         <!--Maintain View Controller - 系统维护-->
         <scene sceneID="K96-8m-ddn">
