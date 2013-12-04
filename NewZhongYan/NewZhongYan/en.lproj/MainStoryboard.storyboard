@@ -227,10 +227,10 @@
             </objects>
             <point key="canvasLocation" x="-70" y="-538"/>
         </scene>
-        <!--View Controller - 修改密码-->
+        <!--Secret Controller - 修改密码-->
         <scene sceneID="MMx-Fr-mjn">
             <objects>
-                <viewController id="qG6-37-yXD" sceneMemberID="viewController">
+                <viewController id="qG6-37-yXD" customClass="SKSecretController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="D1l-rw-5w2"/>
                         <viewControllerLayoutGuide type="bottom" id="cup-Bt-DPI"/>
@@ -262,6 +262,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="modifySafePassWord:" destination="qG6-37-yXD" eventType="touchUpInside" id="YMf-Wt-f90"/>
+                                </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gSZ-6l-Ytm">
                                 <rect key="frame" x="0.0" y="63" width="320" height="237"/>
@@ -304,7 +307,7 @@
                                         <rect key="frame" x="112" y="62" width="188" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Q6V-WB-9eN" customClass="SKCTextField">
                                         <rect key="frame" x="112" y="112" width="188" height="30"/>
@@ -320,10 +323,35 @@
                                     </textField>
                                 </subviews>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U1D-nd-4uM">
+                                <rect key="frame" x="0.0" y="431" width="320" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="4m2-Up-LvB"/>
+                                    <constraint firstAttribute="height" constant="49" id="Twu-ci-A1J"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="U1D-nd-4uM" firstAttribute="leading" secondItem="pRg-9Y-bPx" secondAttribute="leading" id="3Tv-VL-hf7"/>
+                            <constraint firstAttribute="trailing" secondItem="U1D-nd-4uM" secondAttribute="trailing" id="JPX-k8-akV"/>
+                            <constraint firstItem="cup-Bt-DPI" firstAttribute="top" secondItem="U1D-nd-4uM" secondAttribute="bottom" id="w43-R4-CmX"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="修改密码" id="seG-4p-J2r"/>
+                    <connections>
+                        <outlet property="mainScrollView" destination="gSZ-6l-Ytm" id="3G2-hz-xVl"/>
+                        <outlet property="newATextView" destination="Q6V-WB-9eN" id="18o-Zb-EqZ"/>
+                        <outlet property="newBTextView" destination="hZK-2n-KYF" id="1nO-hx-vPW"/>
+                        <outlet property="oldTextView" destination="tKv-aL-sjv" id="Ps9-X2-VUd"/>
+                        <outlet property="protPassWord" destination="Vbk-zB-B4J" id="sph-Wh-dkZ"/>
+                        <outlet property="protrdivisionline" destination="5jI-KH-vUJ" id="ck7-ab-qLW"/>
+                        <outlet property="toolView" destination="U1D-nd-4uM" id="Q1I-7w-hUJ"/>
+                        <outlet property="userPassWord" destination="kdk-eV-zDx" id="EU8-N3-csu"/>
+                        <outlet property="userdivisionline" destination="fVG-O9-hhk" id="MZ0-eh-2Di"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bbz-vK-zLd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

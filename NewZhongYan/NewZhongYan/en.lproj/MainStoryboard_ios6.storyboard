@@ -226,10 +226,10 @@
             </objects>
             <point key="canvasLocation" x="-70" y="-538"/>
         </scene>
-        <!--View Controller - 修改密码-->
+        <!--Secret Controller - 修改密码-->
         <scene sceneID="53g-wu-9eA">
             <objects>
-                <viewController id="p0K-cn-rde" sceneMemberID="viewController">
+                <viewController id="p0K-cn-rde" customClass="SKSecretController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="xag-el-4Mb"/>
                         <viewControllerLayoutGuide type="bottom" id="aNx-aU-V2S"/>
@@ -261,6 +261,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="modifySafePassWord:" destination="p0K-cn-rde" eventType="touchUpInside" id="mmd-Kf-RNd"/>
+                                </connections>
                             </button>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Agn-hv-cL7">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="237"/>
@@ -319,10 +322,35 @@
                                     </textField>
                                 </subviews>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xO1-Cf-ZLO">
+                                <rect key="frame" x="0.0" y="367" width="320" height="49"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="I1k-Xp-hzB"/>
+                                    <constraint firstAttribute="height" constant="49" id="WsM-3O-D3P"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="aNx-aU-V2S" firstAttribute="top" secondItem="xO1-Cf-ZLO" secondAttribute="bottom" id="26F-io-8qM"/>
+                            <constraint firstAttribute="trailing" secondItem="xO1-Cf-ZLO" secondAttribute="trailing" id="b8O-2O-sWb"/>
+                            <constraint firstItem="xO1-Cf-ZLO" firstAttribute="leading" secondItem="WKk-pc-T0U" secondAttribute="leading" id="cEA-Bq-6pW"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="修改密码" id="ZuV-f2-ZJc"/>
+                    <connections>
+                        <outlet property="mainScrollView" destination="Agn-hv-cL7" id="DOD-aD-Hrt"/>
+                        <outlet property="newATextView" destination="X0Q-xm-oW1" id="ro5-1j-xl9"/>
+                        <outlet property="newBTextView" destination="LxC-Tf-cSo" id="Oq7-xo-qm3"/>
+                        <outlet property="oldTextView" destination="T8Q-kR-SYJ" id="NAM-2W-4K5"/>
+                        <outlet property="protPassWord" destination="59J-IY-2yP" id="mVZ-Or-reO"/>
+                        <outlet property="protrdivisionline" destination="O4B-Tq-AwD" id="4BJ-GL-Ptc"/>
+                        <outlet property="toolView" destination="xO1-Cf-ZLO" id="mjE-IQ-9B9"/>
+                        <outlet property="userPassWord" destination="IbF-oQ-EYv" id="AEm-ni-hNU"/>
+                        <outlet property="userdivisionline" destination="AOs-on-2Xi" id="6d6-GR-h66"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GCe-EH-iAo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

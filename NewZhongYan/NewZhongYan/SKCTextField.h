@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 @class TextDownView;
 @interface SKCTextField : UITextField
-@property (nonatomic,retain) TextDownView *textDownView; //下方的提示信息
+@property (nonatomic,strong) TextDownView *textDownView; //下方的提示信息
 @end

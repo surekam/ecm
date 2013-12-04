@@ -20,7 +20,7 @@
     NSInteger currentTextViewIndex;
     NSDictionary* personInfoDictionary;
     float changeHeight;//增长的高度
-
+    
 }
 @end
 
@@ -106,7 +106,7 @@
     [myToolBar setFirstItem:@"btn_save" Title:@"保存"];
     [myToolBar setSecondItem:@"btn_refresh" Title:@"刷新"];
     [toolVIew addSubview:myToolBar];
-
+    
     [mobileTextField.internalTextView setKeyboardType:UIKeyboardTypeNumberPad];
     [mobileTextField setDelegate:self];
     //[mobileTextField setMaxNumberOfLines:1];
@@ -114,15 +114,15 @@
     [telephoneTextField.internalTextView setKeyboardType:UIKeyboardTypeNumberPad];
     [telephoneTextField setDelegate:self];
     //[telephoneTextField setMaxNumberOfLines:1];
-
+    
     [shortPhoneTextField.internalTextView setKeyboardType:UIKeyboardTypeNumberPad];
     [shortPhoneTextField setDelegate:self];
     //[shortPhoneTextField setMaxNumberOfLines:1];
-
+    
     [officeAddressTextField.internalTextView setKeyboardType:UIKeyboardTypeDefault];
     [officeAddressTextField setDelegate:self];
     //[officeAddressTextField setMaxNumberOfLines:1];
-
+    
     
     [self roundTextView:mobileTextField];
     [self roundTextView:telephoneTextField];
@@ -179,18 +179,15 @@
     [savePersonInfoRequest setPostValue:officeAddressTextField.text forKey:@"officeAddress"];
     __weak SKFormDataRequest *req = savePersonInfoRequest;
     [savePersonInfoRequest setCompletionBlock:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (req.responseStatusCode == 500){
-                [BWStatusBarOverlay showErrorWithMessage:@"网络异常请联系供应商" duration:1 animated:1];
-            }
-            if ([[req responseString] isEqualToString:@"OK"]) {
-                [BWStatusBarOverlay showSuccessWithMessage:@"保存成功" duration:1 animated:1];
-            }else{
-                [BWStatusBarOverlay showErrorWithMessage:@"服务器异常" duration:1 animated:1];
-            }
-        });
+        if (req.responseStatusCode == 500){
+            [BWStatusBarOverlay showErrorWithMessage:@"网络异常请联系供应商" duration:1 animated:1];
+        }
+        if ([[req responseString] isEqualToString:@"OK"]) {
+            [BWStatusBarOverlay showSuccessWithMessage:@"保存成功" duration:1 animated:1];
+        }else{
+            [BWStatusBarOverlay showErrorWithMessage:@"服务器异常" duration:1 animated:1];
+        }
     }];
-    //失败
     [savePersonInfoRequest setFailedBlock:^{
         NSError *error = [req error];
         [BWStatusBarOverlay showErrorWithMessage:[NetUtils userInfoWhenRequestOccurError:error] duration:1 animated:1];

@@ -89,6 +89,8 @@
 		F23487A41831CD6D00E649AA /* help5_3.png in Resources */ = {isa = PBXBuildFile; fileRef = F23487801831CD6D00E649AA /* help5_3.png */; };
 		F23487A51831CD6D00E649AA /* help5_4.png in Resources */ = {isa = PBXBuildFile; fileRef = F23487811831CD6D00E649AA /* help5_4.png */; };
 		F23487A61831CD6D00E649AA /* help5_5.png in Resources */ = {isa = PBXBuildFile; fileRef = F23487821831CD6D00E649AA /* help5_5.png */; };
+		F23AA248184F1542004248DB /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = F23AA247184F1542004248DB /* warning.png */; };
+		F23AA24B184F1624004248DB /* SKSecretController.m in Sources */ = {isa = PBXBuildFile; fileRef = F23AA24A184F1624004248DB /* SKSecretController.m */; };
 		F23CE449182B21600066F214 /* btn_submit_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F23CE447182B21600066F214 /* btn_submit_pressed.png */; };
 		F23CE44A182B21600066F214 /* btn_submit.png in Resources */ = {isa = PBXBuildFile; fileRef = F23CE448182B21600066F214 /* btn_submit.png */; };
 		F23CE44D182B23680066F214 /* SKCommonLanguageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F23CE44C182B23680066F214 /* SKCommonLanguageCell.m */; };
@@ -578,6 +580,9 @@
 		F23487801831CD6D00E649AA /* help5_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help5_3.png; sourceTree = "<group>"; };
 		F23487811831CD6D00E649AA /* help5_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help5_4.png; sourceTree = "<group>"; };
 		F23487821831CD6D00E649AA /* help5_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help5_5.png; sourceTree = "<group>"; };
+		F23AA247184F1542004248DB /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
+		F23AA249184F1624004248DB /* SKSecretController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSecretController.h; sourceTree = "<group>"; };
+		F23AA24A184F1624004248DB /* SKSecretController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSecretController.m; sourceTree = "<group>"; };
 		F23CE447182B21600066F214 /* btn_submit_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_submit_pressed.png; sourceTree = "<group>"; };
 		F23CE448182B21600066F214 /* btn_submit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_submit.png; sourceTree = "<group>"; };
 		F23CE44B182B23680066F214 /* SKCommonLanguageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKCommonLanguageCell.h; sourceTree = "<group>"; };
@@ -1977,6 +1982,7 @@
 		F2B8320F1829EFFC007E2CC0 /* HPGroingTextView */ = {
 			isa = PBXGroup;
 			children = (
+				F23AA247184F1542004248DB /* warning.png */,
 				F2B8322F1829F104007E2CC0 /* TextDownView.h */,
 				F2B832301829F104007E2CC0 /* TextDownView.m */,
 				F23CE452182B343B0066F214 /* HPGrowingTextView.h */,
@@ -2028,6 +2034,8 @@
 				F2D814711834D74200FE0839 /* SKEmailConfigurationView.xib */,
 				F2D814821835BD6900FE0839 /* SKMaintainViewController.h */,
 				F2D814831835BD6900FE0839 /* SKMaintainViewController.m */,
+				F23AA249184F1624004248DB /* SKSecretController.h */,
+				F23AA24A184F1624004248DB /* SKSecretController.m */,
 			);
 			name = setting;
 			sourceTree = "<group>";
@@ -2634,6 +2642,7 @@
 				F2B4B1A21807A45F00A789CB /* locus_round_click_error.png in Resources */,
 				F234879B1831CD6D00E649AA /* buttonStart_pressed.png in Resources */,
 				F2B8320B1829E974007E2CC0 /* dispose.png in Resources */,
+				F23AA248184F1542004248DB /* warning.png in Resources */,
 				F289FC6718068C8500B825DC /* contentview_graylongbutton_highlighted@2x.png in Resources */,
 				F20EC7811824F9EC00427D54 /* btn_download_remainder_pressed.png in Resources */,
 				F2B4B1A51807A45F00A789CB /* topbar_bg.png in Resources */,
@@ -2783,6 +2792,7 @@
 				F2705AF3182C7E1F003D0B6E /* SKAttachViewController.m in Sources */,
 				F2B66EF518151DD600AD6286 /* GetNewVersion.m in Sources */,
 				F22450E5183EF7AB003B32D3 /* SDWebImageManager.m in Sources */,
+				F23AA24B184F1624004248DB /* SKSecretController.m in Sources */,
 				F2F038FD181908D400B9116C /* EGOImageView.m in Sources */,
 				F2F038F1181908B700B9116C /* EGOCache.m in Sources */,
 				F2E5D5A4182A654600BFB48D /* SKSToolBar.m in Sources */,

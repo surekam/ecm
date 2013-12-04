@@ -33,7 +33,10 @@ enum PatternLockStatus
     int errorCount;//错误次数
 }
 
+@property(nonatomic,assign) BOOL isChangePsw;//是否从设置保护密码界面进入此界面
 @property(nonatomic,weak) id<drawPatternLockDelegate> delegate;
+
+-(void)changePassWord;
 @end
 
 

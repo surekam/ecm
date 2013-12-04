@@ -21,11 +21,15 @@
 @implementation SKPatternLockController
 @synthesize delegate;
 - (IBAction)quitApp:(id)sender {
-    [UIView animateWithDuration:2 animations:^{
-        [self.view setAlpha:0.3];
-    } completion:^(BOOL complete){
-         exit(-1);
-    }];
+    if (_isChangePsw) {
+        [self dismissModalViewControllerAnimated:YES];
+    }else{
+        [UIView animateWithDuration:2 animations:^{
+            [self.view setAlpha:0.3];
+        } completion:^(BOOL complete){
+            exit(-1);
+        }];
+    }
 }
 - (IBAction)help:(id)sender {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"popupHelp" object:nil];
@@ -153,7 +157,7 @@
         errorCount=0;
     }
     
-
+    
     for (int i=0; i<MATRIX_SIZE; i++)
     {
         for (int j=0; j<MATRIX_SIZE; j++)
@@ -402,6 +406,30 @@
         [self dismissViewControllerAnimated:YES completion:^{
             
         }];
+    }
+}
+
+//修改密码按钮
+-(void)changePassWord
+{
+    markLabel.text=@"请输入旧密码";
+    if (status==PatternLockStatusInputingNewPassword||status==PatternLockStatusConfirmingNewPassword)
+    {
+        return;
+    }
+    if (status!=PatternLockStatusInputingOldPassword)
+    {
+        status=PatternLockStatusInputingOldPassword;
+        markLabel.text=@"请输入旧密码";
+        //[changePassWordBtn setTitle:@"输入保护密码" forState:UIControlStateNormal];
+        
+    }
+    else
+    {
+        status=PatternLockStatusUnlocking;
+        markLabel.text=@"请输入保护密码";
+        //[changePassWordBtn setTitle:@"修改保护密码" forState:UIControlStateNormal];
+        
     }
 }
 
