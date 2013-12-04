@@ -43,7 +43,7 @@
     [request startSynchronous];
     if (request.error)
     {
-        //[self onRegsistFaild:[NetUtils userInfoWhenRequestOccurError:[request error]]];
+        [self onRegsistFaild:[NetUtils userInfoWhenRequestOccurError:[request error]]];
     }
     else
     {
@@ -84,7 +84,7 @@
                             NSLog(@"注册本机成功");
                         }else{
                             NSLog(@"注册本机失败");
-                            //[self onRegsistFaild:[NetUtils userInfoWhenRequestOccurError:request.error]];
+                            [self onRegsistFaild:[NetUtils userInfoWhenRequestOccurError:request.error]];
                         }
                     }
                 }
