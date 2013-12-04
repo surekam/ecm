@@ -19,6 +19,7 @@
 #import "SKAPPUpdateController.h"
 #import "MBProgressHUD.h"
 #import "SMPageControl.h"
+#import "DataServiceURLs.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
 @interface SKViewController ()
 {
@@ -312,7 +313,6 @@
 - (void)gotoPage:(BOOL)animated
 {
     NSInteger page = pageController.currentPage;
-    
     CGRect bounds = bgScrollView.bounds;
     bounds.origin.x = CGRectGetWidth(bounds) * page;
     bounds.origin.y = 0;
@@ -438,7 +438,6 @@
     //如果服务端版本小于等于当前客户端版本 不弹出更新界面
     if ([[vDic objectForKey:@"NVER"] floatValue] > [appVersion floatValue])
     {
-        NSLog(@"%f",[[vDic objectForKey:@"NVER"] floatValue]);
         UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"versionupdatenav"];
         [self presentViewController:nav animated:NO completion:^{
             SKAPPUpdateController* updater = (SKAPPUpdateController*)[nav topViewController];
@@ -474,11 +473,8 @@
         }else{
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedNewsType] delegate:0];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedCompanyDocumentsType] delegate:0];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];
         }
     }else{
@@ -493,7 +489,6 @@
                     }
                 }
                 [BWStatusBarOverlay showLoadingWithMessage:@"正在登录..." animated:YES];
-                //[MBProgressHUD showBackgroundAddedTo:self.view animated:YES];
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [[APPUtils AppLogonManager] loginWithUser:[SKAppDelegate sharedCurrentUser]
                                                 CompleteBlock:^{
@@ -501,19 +496,20 @@
                                                         [BWStatusBarOverlay showSuccessWithMessage:@"登录成功" duration:1 animated:1];
                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                     });
-                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
-                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
-                                                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
-                                                        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
-                                                        }
-                                                    }
-                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
-                                                        [self onGetNewVersionDoneWithDic:dict];
-                                                    } FaliureBlock:^(NSDictionary* error){
-                                                    }];
+                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
+//                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
+//                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
+//                                                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
+//                                                        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
+//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
+//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
+//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
+//                                                        }
+//                                                    }
+//                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
+//                                                        [self onGetNewVersionDoneWithDic:dict];
+//                                                    } FaliureBlock:^(NSDictionary* error){
+//                                                    }];
                                                 }
                                                  failureBlock:^(NSDictionary* dict){
                                                      [self setBadgeNumber];

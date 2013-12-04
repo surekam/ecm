@@ -187,10 +187,10 @@
     return[NSURL URLWithString:urlstring];
 }
 
-+(NSURL*)commitWorkIte
++(NSURL*)userClientAppAll
 {
     return
-    [NSURL URLWithString:[NSString stringWithFormat:@"%@/users/oa/commitWorkItem",ZZZobt]];
+    [NSURL URLWithString:[NSString stringWithFormat:@"%@/users/clientapp/all",ZZZobt]];
 }
 
 //(6).提交下环节（POST）

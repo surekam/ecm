@@ -31,7 +31,6 @@
 + (UIColor *) silverColor;//银
 + (UIColor *) concreteColor;
 + (UIColor *) asbestosColor;//石棉
-
 + (UIColor *) blendedColorWithForegroundColor:(UIColor *)foregroundColor
                               backgroundColor:(UIColor *)backgroundColor
                                  percentBlend:(CGFloat) percentBlend;

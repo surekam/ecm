@@ -1019,18 +1019,95 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     return YES;
 }
 
++(BOOL)createClientApp
+{
+    NSString* t_ClientApp_sql = [NSString stringWithFormat:@"create table  if not exists %@\
+                               (\
+                               CODE             VARCHAR(24) NOT NULL,\
+                               NAME             VARCHAR(48),\
+                               DEPARTMENT       VARCHAR(24),\
+                               DEFAULTED 		SMALLINT,\
+                               APPTYPE          VARCHAR(8),\
+                               ENABLED 			SMALLINT,\
+                               constraint P_CLIENTAPP_KEY primary key (CODE)\
+                               );",@"T_CLIENTAPP"];
+    
+    char *error = NULL;
+    [self openDb];
+    //T_NOTIFY 表
+    if (sqlite3_exec(dataBase, [t_ClientApp_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
+        NSLog(@"create table %@ error:%s",@"T_CLIENTAPP",error);
+        [self closeDb];
+        return NO;
+    }
+    [self closeDb];
+    return YES;
+}
+
++(BOOL)createChannel
+{
+    NSString* t_channel_sql = [NSString stringWithFormat:@"create table  if not exists %@\
+                                 (\
+                                 CODE 				varchar(24) NOT NULL,\
+                                 NAME 				varchar(48),\
+                                 OWNERAPP 			varchar(24),\
+                                 LOGO				varchar(128),\
+                                 FIDLIST 			varchar(1024),\
+                                 HASSUBTYPE 			SMALLINT,\
+                                 ENABLED 			SMALLINT,\
+                                 constraint P_CLIENTAPP_KEY primary key (CODE)\
+                                 );",@"T_CHANNEL"];
+    
+    NSString* t_channel_tp_sql  = [NSString stringWithFormat:@"create table  if not exists %@\
+                           (\
+                           TID					VARCHAR(24) NOT NULL,\
+                           TNAME 				VARCHAR(48),\
+                           OWNER				VARCHAR(24),\
+                           ENABLED 			    SMALLINT,\
+                           constraint P_CHANNELTP_KEY primary key (TID)\
+                           );",@"T_CHANNELTP"];
+    
+    char *error = NULL;
+    [self openDb];
+    //T_NOTIFY 表
+    if (sqlite3_exec(dataBase, [t_channel_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
+        NSLog(@"create table %@ error:%s",@"T_CHANNEL",error);
+        [self closeDb];
+        return NO;
+    }
+    
+    if (sqlite3_exec(dataBase, [t_channel_tp_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
+        NSLog(@"create table %@ error:%s",@"T_CHANNELTP",error);
+        [self closeDb];
+        return NO;
+    }
+    [self closeDb];
+    return YES;
+}
+
 +(void)setDBVersion
 {
-    [self openDb];
-    char *error = NULL;
-    NSString* oid_index = @"CREATE INDEX INDEX_T_ORGANIZATIONAL_OID ON T_ORGANIZATIONAL(OID)";
-    if (sqlite3_exec(dataBase, [oid_index UTF8String], 0, 0, &error) != SQLITE_OK) {
-        NSLog(@"create indices %@ error:%s",@"T_ORGANIZATIONAL",error);
+    if (![FileUtils valueFromPlistWithKey:@"DBVERSION"] || [[FileUtils valueFromPlistWithKey:@"DBVERSION"] length] == 0)
+    {
+        [self openDb];
+        char *error = NULL;
+        NSString* oid_index = @"CREATE INDEX INDEX_T_ORGANIZATIONAL_OID ON T_ORGANIZATIONAL(OID)";
+        if (sqlite3_exec(dataBase, [oid_index UTF8String], 0, 0, &error) != SQLITE_OK) {
+            NSLog(@"create indices %@ error:%s",@"T_ORGANIZATIONAL",error);
+            [self closeDb];
+        }
+        [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"1"];
         [self closeDb];
+        
     }
-    [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"1"];
-    [self closeDb];
+    
+    if ([[FileUtils valueFromPlistWithKey:@"DBVERSION"] intValue] == 1) {
+        [self createClientApp];
+        [self createChannel];
+        [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
+    }
 }
+
 
 +(BOOL)createAllTable
 {
@@ -1047,7 +1124,9 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     [self createMessageDateMapTables];
     [self createOutbox];
     [self createDraft];
-    [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"1"];
+    [self createClientApp];
+    [self createChannel];
+    [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
     return YES;
 }
 

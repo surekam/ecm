@@ -57,8 +57,6 @@
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     currentVersionLabel.text=[infoDictionary objectForKey:@"CFBundleShortVersionString"];
     latestVersionLabel.text=[_versionDic objectForKey:@"SVER"];
-    NSLog(@"%@",[_versionDic objectForKey:@"SVER"]);
-    NSLog(@"%@",[_versionDic objectForKey:@"PAGEURL"]);
     if ([[_versionDic objectForKey:@"FORCEDUP"] boolValue]) {
         [warningLabel setText:@"本次更新为必须更新，否则某些功能将无法正常使用！"];
     }else{

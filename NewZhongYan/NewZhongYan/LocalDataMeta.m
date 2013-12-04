@@ -25,6 +25,13 @@ static LocalDataMeta * sharedCompanyDocumentsType = nil;
 static LocalDataMeta * sharedWorkNews = nil;
 static LocalDataMeta * sharedWorkNewsType = nil;
 static LocalDataMeta * sharedMail = nil;
+/**
+ *  ECM
+ */
+static LocalDataMeta * sharedClientApp = nil;
+static LocalDataMeta * sharedChannel = nil;
+static LocalDataMeta * sharedChannelType = nil;
+
 @implementation LocalDataMeta
 @synthesize dataCode;
 @synthesize messageCode;
@@ -58,7 +65,6 @@ static LocalDataMeta * sharedMail = nil;
         self.lastcount = 0;
         self.lastfrom = 0;
         self.lastupdatetime = 0;
-        //engine = [[SKEngine alloc] initWithHostName:@"tam.hngytobacco.com" customHeaderFields:0];
     }
     return self;
 }
@@ -227,6 +233,33 @@ static LocalDataMeta * sharedMail = nil;
                        messageCode:@"LOCALMESSAGE"
                          tablename:@"T_LOCALMESSAGE"
                       identityName:@"MESSAGEID"
+                           version:0];
+}
+
+-(id)initWithClientApp
+{
+    return  [self initWithDataCode:@"clientapp"
+                       messageCode:@"CLIENTAPP"
+                         tablename:@"T_CLIENTAPP"
+                      identityName:@"CODE"
+                           version:0];
+}
+
+-(id)initWithChannel
+{
+    return  [self initWithDataCode:@"channel"
+                       messageCode:@"CHANNEL"
+                         tablename:@"T_CHANNEL"
+                      identityName:@"CODE"
+                           version:0];
+}
+
+-(id)initWithChannelType
+{
+    return  [self initWithDataCode:@"channeltp"
+                       messageCode:@"CHANNELTP"
+                         tablename:@"T_CHANNELTP"
+                      identityName:@"CODE"
                            version:0];
 }
 
@@ -401,6 +434,36 @@ static LocalDataMeta * sharedMail = nil;
             [sharedMail setUserOwner:YES];
         }
         return sharedMail;
+    }
+}
+
++ (LocalDataMeta *)sharedClientApp
+{
+    @synchronized(self){
+        if (!sharedClientApp) {
+            sharedClientApp = [[LocalDataMeta alloc] initWithClientApp];
+        }
+        return sharedClientApp;
+    }
+}
+
++ (LocalDataMeta *)sharedChannel
+{
+    @synchronized(self){
+        if (!sharedChannel) {
+            sharedChannel = [[LocalDataMeta alloc] initWithChannel];
+        }
+        return sharedChannel;
+    }
+}
+
++ (LocalDataMeta *)sharedChannelType
+{
+    @synchronized(self){
+        if (!sharedChannelType) {
+            sharedChannelType = [[LocalDataMeta alloc] initWithChannelType];
+        }
+        return sharedChannelType;
     }
 }
 

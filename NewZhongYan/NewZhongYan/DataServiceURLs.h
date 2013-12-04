@@ -116,6 +116,8 @@
  **/
 +(NSURL*)commitWorkItem;
 
++(NSURL*)userClientAppAll;
+
 /**
  * 获取历史办理记录（GET）
  * @param uid 当前处理业务的用户ID

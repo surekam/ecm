@@ -24,6 +24,7 @@
 @property int   lastfrom;           //分页大小
 @property int   lastcount;          //分页大小
 @property int   lastversion;        //分页大小
+@property BOOL  isECM;          //是否为用户所有
 
 + (LocalDataMeta *)sharedEmployee;
 + (LocalDataMeta *)sharedSelfEmployee;
@@ -43,7 +44,8 @@
 + (LocalDataMeta *)sharedCMS;
 + (LocalDataMeta *)sharedVersionInfo;
 + (LocalDataMeta *)sharedMail;
-
++ (LocalDataMeta *)sharedClientApp;
++ (LocalDataMeta *)sharedChannel;
 /**
  * 一般用于快照本地数据的状态 如 存储掉一批数据 后马上快照
  * @param version   上次下载服务器版本号

@@ -49,6 +49,8 @@
     [self restoreMetaData:[LocalDataMeta sharedWorkNews]];
     [self restoreMetaData:[LocalDataMeta sharedMeeting]];
     [self restoreMetaData:[LocalDataMeta sharedAnnouncement]];
+    [self restoreMetaData:[LocalDataMeta sharedClientApp]];
+    [self restoreMetaData:[LocalDataMeta sharedChannel]];
 }
 
 +(LocalDataMeta*)flushMetaData:(LocalDataMeta*)metaData
