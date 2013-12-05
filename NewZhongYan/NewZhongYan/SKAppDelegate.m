@@ -18,6 +18,7 @@
 #import "UIDevice-Hardware.h"
 #import "UIDevice+IdentifierAddition.h"
 #import "SKViewController.h"
+#import "AESCrypt.h"
 #define MAXTIME 10
 static User* currentUser = nil;
 @implementation SKAppDelegate

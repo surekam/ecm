@@ -49,24 +49,54 @@
     DataServiceURLs* dataservice = [[DataServiceURLs alloc] init];
     NSString* dataProviderURL;
     NSString* datacode = [metaData.dataCode isEqualToString:@"semployee"] ? @"employee" : metaData.dataCode;
-    if ([metaData isUserOwner]) {
-        dataProviderURL = [NSString stringWithFormat:@"%@/users/%@/%@/",ZZZobt,[APPUtils userUid],datacode];
+
+    if (metaData.isECM == YES) {
+        if ([metaData isUserOwner]) {
+            dataProviderURL = [NSString stringWithFormat:@"%@/users/%@/",ZZZobt,datacode];
+        }else{
+            dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@/",ZZZobt,datacode];
+        }
+        dataservice.ECMAllURL = [NSString stringWithFormat:@"%@all",dataProviderURL];
+        dataservice.versionURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
+        dataservice.searchURL = [NSString stringWithFormat:@"%@vupdate",dataProviderURL];
+
     }else{
-        dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@/",ZZZobt,datacode];
+        if ([metaData isUserOwner]) {
+            dataProviderURL = [NSString stringWithFormat:@"%@/users/%@/%@/",ZZZobt,[APPUtils userUid],datacode];
+        }else{
+            dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@/",ZZZobt,datacode];
+        }
+        dataservice.metaURL = [NSString stringWithFormat:@"%@metadata",dataProviderURL];
+        dataservice.versionURL = [NSString stringWithFormat:@"%@version",dataProviderURL];
+        dataservice.searchURL = [NSString stringWithFormat:@"%@search",dataProviderURL];
+        dataservice.postURL = [NSString stringWithFormat:@"%@post",dataProviderURL];
+        dataservice.isExistedURL = [NSString stringWithFormat:@"%@exist",dataProviderURL];
+        dataservice.rangeURL = [NSString stringWithFormat:@"%@range",dataProviderURL];
+        dataservice.attmsURL = [NSString stringWithFormat:@"%@attms",dataProviderURL];
+        dataservice.dataByIdURL = [NSString stringWithFormat:@"%@id",dataProviderURL];
+        dataservice.updateMetaURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
+        dataservice.updateRangeURL = [NSString stringWithFormat:@"%@vrange",dataProviderURL];
     }
-    dataservice.metaURL = [NSString stringWithFormat:@"%@metadata",dataProviderURL];
-    dataservice.versionURL = [NSString stringWithFormat:@"%@version",dataProviderURL];
-    dataservice.searchURL = [NSString stringWithFormat:@"%@search",dataProviderURL];
-    dataservice.postURL = [NSString stringWithFormat:@"%@post",dataProviderURL];
-    dataservice.isExistedURL = [NSString stringWithFormat:@"%@exist",dataProviderURL];
-    dataservice.rangeURL = [NSString stringWithFormat:@"%@range",dataProviderURL];
-    dataservice.attmsURL = [NSString stringWithFormat:@"%@attms",dataProviderURL];
-    dataservice.dataByIdURL = [NSString stringWithFormat:@"%@id",dataProviderURL];
-    dataservice.updateMetaURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
-    dataservice.updateRangeURL = [NSString stringWithFormat:@"%@vrange",dataProviderURL];
     return dataservice;
 }
 
+
+
+
+-(NSString*)ECMVmetaInfoWithVersion:(int)version
+{
+    return [self.ECMAllURL stringByAppendingFormat:@"?version=%d",version];
+}
+
+-(NSString*)ECMMetaInfoWithVersion:(int)version
+{
+    return [self.ECMVmetaURL stringByAppendingFormat:@"?version=%d",version];
+}
+
+-(NSString*)ECMVupdateDataWithVersion:(int)version
+{
+    return [self.ECMVupdateURL stringByAppendingFormat:@"?version=%d",version];
+}
 
 //下面都是属性方法重写
 -(NSString*)dataByIdURL:(NSString*)idValue

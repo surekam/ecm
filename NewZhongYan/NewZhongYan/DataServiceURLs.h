@@ -22,6 +22,9 @@
 @property(nonatomic,strong) NSString* rangeURL;
 @property(nonatomic,strong) NSString* postURL;
 @property(nonatomic,strong) NSString* attmsURL;
+@property(nonatomic,strong) NSString* ECMAllURL;
+@property(nonatomic,strong) NSString* ECMVmetaURL;
+@property(nonatomic,strong) NSString* ECMVupdateURL;
 
 /**
  * 一般用于mknetworkkit
@@ -36,6 +39,12 @@
  * @return 返回该数据元对应的DataServiceURLs基础类
  **/
 +(DataServiceURLs*)DataServiceURLs:(LocalDataMeta*)metaData;
+
+-(NSString*)ECMVmetaInfoWithVersion:(int)version;
+
+-(NSString*)ECMMetaInfoWithVersion:(int)version;
+
+-(NSString*)ECMVupdateDataWithVersion:(int)version;
 
 /**
  * @param idValue id值

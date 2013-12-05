@@ -93,9 +93,15 @@ static NSOperationQueue* _shareQueue = nil;
     {
         [_delegate didBeginSynData:_metaData];
     }
+    
     while (sc > 0 && from <= sc)
     {
-        NSURL* rangeURL = [NSURL URLWithString:[_urlHelper rangeURL:from length:_metaData.pageSize]];
+        NSURL* rangeURL;
+        if ([_metaData isECM]) {
+            rangeURL = [NSURL URLWithString:_urlHelper.ECMVupdateURL];
+        }else{
+            rangeURL = [NSURL URLWithString:[_urlHelper rangeURL:from length:_metaData.pageSize]];
+        }
         SKHTTPRequest* request = [SKHTTPRequest requestWithURL:rangeURL];
         [request setTimeOutSeconds:30];
         [request startSynchronous];
@@ -123,15 +129,18 @@ static NSOperationQueue* _shareQueue = nil;
 }
 
 -(void)firstSynData{
-    if ([_metaData isInitDataSnapped]) {
+    if ([_metaData isInitDataSnapped])
+    {
         [self synDataWithServerVersion:_metaData.lastversion
                            ServerCount:_metaData.lastcount
                                   From:_metaData.lastfrom];
     }else{
+        
         SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[NSURL URLWithString:_urlHelper.metaURL]];
         [request setDefaultResponseEncoding:NSUTF8StringEncoding];//完美解决中文编码乱码的问题
         [request setTimeOutSeconds:15];
         [request startSynchronous];
+        NSLog(@"%@\n  %@",request.url,request.responseString);
         if (request.error) {
             @throw [NSException exceptionWithName:@"请求失败"
                                            reason:[[request error] localizedDescription]

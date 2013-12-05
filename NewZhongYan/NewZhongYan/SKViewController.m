@@ -98,6 +98,7 @@
         [self setNeedsStatusBarAppearanceUpdate];
         navbgImage = [UIImage imageNamed:@"navbar64"] ;
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        
     }
     [self.navigationController.navigationBar setBackgroundImage:navbgImage  forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
