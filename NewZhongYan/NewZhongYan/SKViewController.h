@@ -10,6 +10,7 @@
 #import "UIDragButton.h"
 #import "SKPatternLockController.h"
 #import "SKNewsItemController.h"
+#import "UIButton+WebCache.h"
 @interface SKViewController : UIViewController<UIDragButtonDelegate,drawPatternLockDelegate,SKDataDaemonHelperDelegate>
 {
     NSMutableArray *upButtons;

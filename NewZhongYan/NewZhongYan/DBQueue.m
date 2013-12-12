@@ -140,6 +140,24 @@ static DBQueue *gSharedInstance = nil;
     return result;
 }
 
+-(NSArray*)arrayFromTableBySQL:(NSString*)sql
+{
+    __block NSMutableArray* result = [[NSMutableArray alloc] init];
+    [self.dbQueue inTransaction:^(FMDatabase *db,BOOL *roolBack)
+     {
+         [db setShouldCacheStatements:YES];
+         FMResultSet *rs = [db executeQuery:sql];
+         if ([db hadError]) {
+             NSLog(@"dberror = %@",[db lastErrorMessage]);
+         }
+         while ([rs next]) {
+             [result addObject: [rs stringForColumnIndex:0]];
+         }
+         [rs close];
+     }];
+    return result;
+}
+
 -(FMResultSet*)RSFromTableBySQL:(NSString*)sql
 {
     __block FMResultSet* result = nil;

@@ -15,6 +15,7 @@
 @property(nonatomic,strong) NSString*   identityName;     //标识符属性名
 @property(nonatomic,strong) NSString*   updateTime;       //数据更新的间隔 表示每隔多久更新一次 //单位 毫秒  如果 等于0 表示永不更新
 @property(nonatomic,strong) NSString*   lastupdatetime;
+@property(nonatomic,strong) NSString*   pECMName;         //例如 app 的上一级为空  channel 的上一级为app
 @property(nonatomic)        NSInteger   version;          //本地版本号 如果版本号为0，表示无本地数据
 
 @property long  reInitDelay;       //再次刷新数据的间隔 表示经过多少天没有增量更新后 则更新初始化数据 如果小于0 则表示表示多长时间都不重新初始化
@@ -46,6 +47,7 @@
 + (LocalDataMeta *)sharedMail;
 + (LocalDataMeta *)sharedClientApp;
 + (LocalDataMeta *)sharedChannel;
++ (LocalDataMeta *)sharedChannelType;
 /**
  * 一般用于快照本地数据的状态 如 存储掉一批数据 后马上快照
  * @param version   上次下载服务器版本号

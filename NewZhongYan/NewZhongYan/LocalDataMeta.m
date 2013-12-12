@@ -444,6 +444,7 @@ static LocalDataMeta * sharedChannelType = nil;
             sharedClientApp = [[LocalDataMeta alloc] initWithClientApp];
             [sharedClientApp setIsECM:YES];
             [sharedClientApp setUserOwner:YES];
+            [sharedClientApp setPECMName:@""];
         }
         return sharedClientApp;
     }
@@ -454,7 +455,7 @@ static LocalDataMeta * sharedChannelType = nil;
     @synchronized(self){
         if (!sharedChannel) {
             sharedChannel = [[LocalDataMeta alloc] initWithChannel];
-            [sharedClientApp setIsECM:YES];
+            [sharedChannel setIsECM:YES];
         }
         return sharedChannel;
     }
@@ -465,7 +466,7 @@ static LocalDataMeta * sharedChannelType = nil;
     @synchronized(self){
         if (!sharedChannelType) {
             sharedChannelType = [[LocalDataMeta alloc] initWithChannelType];
-            [sharedClientApp setIsECM:YES];
+            [sharedChannelType setIsECM:YES];
         }
         return sharedChannelType;
     }

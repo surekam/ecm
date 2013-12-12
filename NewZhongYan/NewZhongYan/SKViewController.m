@@ -350,7 +350,8 @@
     [super viewDidLoad];
     [self copyXMLToDocument];
     [self initNavBar];
-    [self initItems];
+    [self initView];
+    //[self initItems];
     [self initPageController];
     [self initSetting];
     if (isFirstLogin) {
@@ -477,6 +478,7 @@
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];
+            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
         }
     }else{
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
@@ -568,13 +570,46 @@
     });
 }
 
+-(NSString*)ECMPName
+{
+    NSArray* array = [[DBQueue sharedbQueue] arrayFromTableBySQL:@"select code from T_CLIENTAPP;"];
+    NSString* result = [array componentsJoinedByString:@","];
+    NSLog(@"%@",result);
+    return result;
+}
+
+-(void)initView
+{
+    [bgScrollView setContentSize:CGSizeMake(640, bgScrollView.frame.size.height)];
+    upButtons = [[NSMutableArray alloc] init];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CHANNEL WHERE OWNERAPP = 'company';"];
+    for (int i=0;i<array.count;i++)
+    {
+        NSDictionary *dict=[array objectAtIndex:i];
+        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
+        [dragbtn setTitle:dict[@"NAME"]];
+        [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
+        [dragbtn setNormalImage:dict[@"NAME"]];
+        //[dragbtn setControllerName:dict[@"NAME"]];
+        [dragbtn setLocation:up];
+        [dragbtn setDelegate:self];
+        [dragbtn setTag:i];
+        //[dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
+        [bgScrollView addSubview:dragbtn];
+        [upButtons addObject:dragbtn];
+    }
+    
+//    for (UIDragButton* btn in upButtons) {
+//        [btn setFrame:CGRectMake(20 , OriginY + 40 , 66.6, 66.6)];
+//        [btn setLastCenter:CGPointMake(20 + 33.3,OriginY + 40 + 33.3)];
+//    }
+    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
+}
+
 -(void)didCompleteSynData:(LocalDataMeta *)metaData
 {
     if ([metaData.dataCode isEqualToString:@"versioninfo"]) {
         [self setBadgeNumber];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [BWStatusBarOverlay showSuccessWithMessage:@"获取版本信息完成" duration:1 animated:YES];
-//        });
     }
     
     if ([metaData.dataCode isEqualToString:@"employee"] && ![metaData isUserOwner])
@@ -585,10 +620,23 @@
             [BWStatusBar showSuccessWithMessage:@"通讯录同步完成" duration:2 animated:YES];
         });
     }
+    
+    if ([metaData.dataCode isEqualToString:@"clientapp"]) {
+        LocalDataMeta* datameta = [LocalDataMeta sharedChannel];
+        [datameta setPECMName:[self ECMPName]];
+        [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedChannel] delegate:self];
+    }
+    
+    if ([metaData.dataCode isEqualToString:@"channel"]) {
+        //开始构建主页
+        NSLog(@"channel");
+        [self initView];
+    }
 }
 
 -(void)didCompleteSynData:(NSString *)datacode SV:(int)sv SC:(int)sc LV:(int)lv
 {
+    
 }
 
 -(void)didEndSynData:(LocalDataMeta *)metaData
@@ -600,10 +648,6 @@
             [BWStatusBar setMessage:@"正在同步通讯录..." animated:NO];
         }
     });
-    if (IS_IOS7) {
-        
-    }
-    //[BWStatusBar ];
 }
 
 -(void)didCancelSynData:(LocalDataMeta *)metaData

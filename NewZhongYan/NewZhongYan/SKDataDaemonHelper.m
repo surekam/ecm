@@ -20,7 +20,7 @@ static NSOperationQueue* _shareQueue = nil;
     self = [super init];
     if (self) {
         _metaData = metaData;
-        _pathHelper = [DataServiceURLs DataServicePath:metaData];
+        //_pathHelper = [DataServiceURLs DataServicePath:metaData];
         _urlHelper = [DataServiceURLs DataServiceURLs:metaData];
         _delegate = delegate;
     }
@@ -135,7 +135,6 @@ static NSOperationQueue* _shareQueue = nil;
                            ServerCount:_metaData.lastcount
                                   From:_metaData.lastfrom];
     }else{
-        
         SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[NSURL URLWithString:_urlHelper.metaURL]];
         [request setDefaultResponseEncoding:NSUTF8StringEncoding];//完美解决中文编码乱码的问题
         [request setTimeOutSeconds:15];
@@ -213,7 +212,13 @@ static NSOperationQueue* _shareQueue = nil;
 {
     int lv = [_metaData version];
     //获取根据指定版本之后的变更元信息
-    SKMessageEntity* entity = [self messageEntityWithURL:[_urlHelper updateMetaURL:lv]];
+    NSString* url;
+    if ([_metaData isECM]) {
+        url = [_urlHelper ECMMetaInfoWithVersion:lv];
+    }else{
+        url = [_urlHelper updateMetaURL:lv];
+    }
+    SKMessageEntity* entity = [self messageEntityWithURL:url];
     /*如果该任务没有被取消且*/
     NSDictionary* dict = [entity dataItem:0];
     @synchronized(dict)

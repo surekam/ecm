@@ -125,7 +125,7 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //NSLog(@"%@",NSHomeDirectory());
+    NSLog(@"%@",NSHomeDirectory());
     if (System_Version_Small_Than_(7)) {
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
             _mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_ios6" bundle:nil];

@@ -1024,6 +1024,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     NSString* t_ClientApp_sql = [NSString stringWithFormat:@"create table  if not exists %@\
                                (\
                                CODE             VARCHAR(24) NOT NULL,\
+                               OWUID            VARCHAR(48),\
                                NAME             VARCHAR(48),\
                                DEPARTMENT       VARCHAR(24),\
                                DEFAULTED 		SMALLINT,\
@@ -1053,7 +1054,8 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
                                  OWNERAPP 			varchar(24),\
                                  LOGO				varchar(128),\
                                  FIDLIST 			varchar(1024),\
-                                 HASSUBTYPE 			SMALLINT,\
+                                 TYPELABLE          varchar(48),\
+                                 HASSUBTYPE 		SMALLINT,\
                                  ENABLED 			SMALLINT,\
                                  constraint P_CLIENTAPP_KEY primary key (CODE)\
                                  );",@"T_CHANNEL"];

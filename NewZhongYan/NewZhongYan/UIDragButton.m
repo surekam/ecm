@@ -100,7 +100,6 @@
     shakeAnimation.repeatCount = MAXFLOAT;
     shakeAnimation.fromValue = [NSValue valueWithCATransform3D:CATransform3DRotate(self.layer.transform, -0.1, 0, 0, 1)];
     shakeAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DRotate(self.layer.transform, 0.1, 0, 0, 1)];
-    
     [self.layer addAnimation:shakeAnimation forKey:@"shakeAnimation"];
 }
 

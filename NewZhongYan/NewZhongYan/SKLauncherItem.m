@@ -25,7 +25,6 @@
         
         titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 66.6, 66.6, 20)];
         titleLabel.text = @"";
-        //titleLabel.layer.cornerRadius = 10;
         titleLabel.font = [UIFont systemFontOfSize:14];
         titleLabel.textColor = [UIColor blackColor];
         titleLabel.textAlignment = UITextAlignmentCenter;

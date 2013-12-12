@@ -67,6 +67,15 @@
 -(NSArray*)recordFromTableBySQL:(NSString*)sql;
 
 /**
+ *  取单列数据集合
+ *
+ *  @param sql
+ *
+ *  @return array
+ */
+-(NSArray*)arrayFromTableBySQL:(NSString*)sql;
+
+/**
  *  获取某条sql的结果集
  *
  *  @param sql sql语句

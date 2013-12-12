@@ -51,17 +51,20 @@
     NSString* datacode = [metaData.dataCode isEqualToString:@"semployee"] ? @"employee" : metaData.dataCode;
 
     if (metaData.isECM == YES) {
+        if (metaData.pECMName.length>0) {
+            metaData.pECMName = [metaData.pECMName stringByAppendingString:@"/"];
+        }
         if ([metaData isUserOwner]) {
-            dataProviderURL = [NSString stringWithFormat:@"%@/users/%@/",ZZZobt,datacode];
+            dataProviderURL = [NSString stringWithFormat:@"%@/users/%@%@/",ZZZobt,metaData.pECMName,datacode];
         }else{
-            dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@/",ZZZobt,datacode];
+            dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@%@/",ZZZobt,metaData.pECMName,datacode];
         }
         dataservice.ECMAllURL = [NSString stringWithFormat:@"%@all",dataProviderURL];
-        dataservice.versionURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
-        dataservice.searchURL = [NSString stringWithFormat:@"%@vupdate",dataProviderURL];
-
+        dataservice.ECMVmetaURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
+        dataservice.ECMVupdateURL = [NSString stringWithFormat:@"%@vupdate",dataProviderURL];
+        dataservice.metaURL = [NSString stringWithFormat:@"%@vmeta",dataProviderURL];
     }else{
-        if ([metaData isUserOwner]) {
+        if ([metaData isUserOwner]){
             dataProviderURL = [NSString stringWithFormat:@"%@/users/%@/%@/",ZZZobt,[APPUtils userUid],datacode];
         }else{
             dataProviderURL = [NSString stringWithFormat:@"%@/commons/%@/",ZZZobt,datacode];
