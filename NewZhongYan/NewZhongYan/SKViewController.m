@@ -350,8 +350,8 @@
     [super viewDidLoad];
     [self copyXMLToDocument];
     [self initNavBar];
-    [self initView];
-    //[self initItems];
+    //[self initView];
+    [self initItems];
     [self initPageController];
     [self initSetting];
     if (isFirstLogin) {

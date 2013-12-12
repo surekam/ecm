@@ -99,7 +99,7 @@
 //add by ysf
 @property(nonatomic,strong) NSIndexPath *indexPath;
 @property (nonatomic,assign) BOOL isHadToBeFill;//是否必填项
-@property (nonatomic,strong) NSString *nameLabelText;//对应的标签值
+@property (nonatomic,strong) NSString *nameLabelText;//对应的标签值 用来当必填而没有填时提示用户
 @property (nonatomic,assign) BOOL isForSignature; //是否是为签名准备的隐藏textView
 @property (nonatomic,assign) BOOL hasBtnDownside; //下面是否有button
 @property (nonatomic,strong) TextDownView *textDownView; //下方的提示信息

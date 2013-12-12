@@ -138,7 +138,7 @@
 -(CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
 {
     if(section == 0)
-        return 15;
+        return 1;// 这里不能填0 填0的话是默认高度
     return 10.0;
 }
 

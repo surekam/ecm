@@ -172,15 +172,15 @@
  */
 -(void)businessDataFromServer
 {
-//    NSData* data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
-//    [self praserBusinessWithServerData:data];
-//    NSString* step = (self.aBusiness.step && ![self.aBusiness.step isEqualToString:@""])
-//    ?[NSString stringWithFormat:@"当前环节: %@",self.aBusiness.step]:@"";
-//    [stepLabel setText:step];
-//    [self createBusinessDetailViewWithData:self.aBusiness];
-//    [myToolBar.secondButton setEnabled:YES];
-//    [myToolBar.thirdButton setEnabled:YES];
-//    return;
+    //    NSData* data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
+    //    [self praserBusinessWithServerData:data];
+    //    NSString* step = (self.aBusiness.step && ![self.aBusiness.step isEqualToString:@""])
+    //    ?[NSString stringWithFormat:@"当前环节: %@",self.aBusiness.step]:@"";
+    //    [stepLabel setText:step];
+    //    [self createBusinessDetailViewWithData:self.aBusiness];
+    //    [myToolBar.secondButton setEnabled:YES];
+    //    [myToolBar.thirdButton setEnabled:YES];
+    //    return;
     NSURL* workItemUrl = [DataServiceURLs getWorkItemDetails:[APPUtils userUid]
                                                         TFRM:[GTaskDetailInfo objectForKey:@"TFRM"]
                                                          AID:[GTaskDetailInfo objectForKey:@"AID"]];
@@ -388,7 +388,7 @@
 
 -(void)dealloc
 {
-
+    
 }
 #pragma mark- 构件截面
 /**
@@ -593,7 +593,7 @@
         float nameLabelY=CONTENT_TITLEHEIGHT+8+contentTotalHeight;
         float lineHeight = valueLabelHeight+CONTENT_BUTTOMEDGE+CONTENT_TOPEDGE;
         //如果时必填项
-        if (columntype == rwTypeW1)
+        if (columntype == rwTypeW1 || columntype == rwTypeWB1)
         {
             if(gTextView)
             {
@@ -698,8 +698,8 @@
             signatureImageView=[[SKImageView alloc] init];
             [signatureImageView setFrame:CGRectMake(VALUELABLE_LEFT, contentTotalHeight+CONTENT_TITLEHEIGHT, 0, 40)];
             [cv addSubview:signatureImageView];
-//            UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-//            [signatureImageView setUserInteractionEnabled:YES];
+            //            UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            //            [signatureImageView setUserInteractionEnabled:YES];
             //[signatureImageView addGestureRecognizer:tapRecognizer];
             signatureImageView.tag=currentImageViewIndex*1001;
             signatureImageView.tdView=tdView;
@@ -710,6 +710,7 @@
             }
             [signatureImageView setXmlnode:c.cnode];
             [signatureImageView setCs:cs];
+            [signatureImageView.cs setIsWritenColumns:YES];
             signatureImageView.nameLabelText=[c.columnDict objectForKey:@"name"];
             [signatureImageViewArray addObject:signatureImageView];
             NSString *imageSignatureID;
@@ -761,7 +762,7 @@
             signatureImageView=[[SKImageView alloc] init];
             [signatureImageView setFrame:CGRectMake(VALUELABLE_LEFT, contentTotalHeight+CONTENT_TITLEHEIGHT, 0, 40)];
             [cv addSubview:signatureImageView];
-           // UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            // UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
             [signatureImageView setUserInteractionEnabled:YES];
             //[signatureImageView addGestureRecognizer:tapRecognizer];
             signatureImageView.tag=currentImageViewIndex*1001;
@@ -939,7 +940,7 @@
     if (nameLabelString.length)
     {
         //如果时必填项
-        if (elementype == rwTypeW1)
+        if (elementype == rwTypeW1 || elementype == rwTypeWB1)
         {
             if(gTextView)
             {
@@ -956,6 +957,7 @@
         if (elementype)[nameLabel setTag:currentTextViewindex - 1];
         [cv addSubview:nameLabel];
     }
+    
     if (extendType==SKPhrase&&elementype)
     {
         UIButton *phraseBtn=[UIButton buttonWithType:UIButtonTypeCustom];
@@ -1058,6 +1060,7 @@
             }
             [signatureImageView setXmlnode:e.enode];
             [signatureImageView setCs:cs];
+            [signatureImageView.cs setIsWritenColumns:YES];
             signatureImageView.nameLabelText=[e.elementDict objectForKey:@"name"];
             [signatureImageViewArray addObject:signatureImageView];
             NSString *imageSignatureID;
@@ -1502,7 +1505,7 @@
                                              selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
@@ -1812,16 +1815,16 @@
             [self setScrollViewOffsetWithTextView:textView];
             return;
         }
+        
         if (textView.text.length || textView.isTextSignature) {
             if (textView.isTextSignature) {//文字签名
-                //[textView.node setStringValue:textView.sigText];
                 [textView.node setStringValue:[APPUtils userUid]];
-                textView.cs.isWritenColumns = YES;
             }else{
                 [textView.node setStringValue:textView.text];
-                textView.cs.isWritenColumns = YES;
             }
         }
+        textView.cs.isWritenColumns = YES;
+        
     }
     
     /**
@@ -1854,6 +1857,7 @@
             }
             [signatureImageView.base64String stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             [signatureImageView.xmlnode setStringValue:signatureImageView.base64String];
+            [signatureImageView.cs setIsWritenColumns:YES];//这里还待测试
         }
     }
     
@@ -1889,7 +1893,7 @@
     }];
     __weak  SKFormDataRequest * req = saveDatarequest;
     [saveDatarequest setCompletionBlock:^{
-         NSLog(@"setCompletionBlock %@",req.responseString);
+        NSLog(@"setCompletionBlock %@",req.responseString);
         if (req.responseStatusCode == 500) {
             [BWStatusBarOverlay showMessage:@"服务器网络故障!" duration:1.5 animated:YES];
             return;
