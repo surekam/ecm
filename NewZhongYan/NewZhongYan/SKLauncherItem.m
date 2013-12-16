@@ -10,20 +10,19 @@
 #import "CustomBadge.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation SKLauncherItem
-@synthesize tapButton,badge;
+@synthesize tapButton,badge,titleLabel;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        //self.layer.cornerRadius = 10; 
         self.backgroundColor = [UIColor clearColor];
-        
+        //self.backgroundColor = COLOR(17, 168, 171);
         tapButton = [UIButton buttonWithType:UIButtonTypeCustom];
         tapButton.layer.cornerRadius = 10;
-        [tapButton setFrame:CGRectMake(0, 0, 66.6, 66.6)];
+        [tapButton setFrame:CGRectMake(0, 0, 60, 60)];
         [self addSubview:tapButton];
         
-        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 66.6, 66.6, 20)];
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(tapButton.frame), CGRectGetWidth(tapButton.frame), 20)];
         titleLabel.text = @"";
         titleLabel.font = [UIFont systemFontOfSize:14];
         titleLabel.textColor = [UIColor blackColor];
@@ -39,6 +38,11 @@
     return self;
 }
 
+-(void)setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    
+}
 -(void)setTitle:(NSString *)title
 {
     if (title) {

@@ -20,6 +20,9 @@
 #import "MBProgressHUD.h"
 #import "SMPageControl.h"
 #import "DataServiceURLs.h"
+#import "SKGridController.h"
+#import "UIView+screenshot.h"
+#import "UIImage+BlurredFrame.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
 @interface SKViewController ()
 {
@@ -28,6 +31,9 @@
     __weak IBOutlet UIScrollView *bgScrollView;
     //UIPageControl* pageController;
     SMPageControl* pageController;
+    __weak IBOutlet UIView *workItemView;
+    __weak IBOutlet UIView *titleView;
+    __weak IBOutlet UIImageView *titleImageView;
 }
 @end
 
@@ -102,6 +108,11 @@
     }
     [self.navigationController.navigationBar setBackgroundImage:navbgImage  forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
+    
+    UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [btn setFrame:CGRectMake(10, 10, 60, 60)];
+    [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];
+    [self.navigationController.navigationBar addSubview:btn];
 }
 
 -(void)initItems
@@ -183,8 +194,8 @@
                     int i = 3 * y + x;
                     if (i < count) {
                         UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-                        [button setFrame:CGRectMake(20 + x * 106.6, OriginY+40 + y * 96.6, 66.6, 66.6)];
-                        [button setLastCenter:CGPointMake(20 + x * 106.6 + 33.3,OriginY + 40 + y * 96.6 + 33.3)];
+                        [button setFrame:CGRectMake(20 + x * 106.6, 40 + y * 96.6, 66.6, 66.6)];
+                        [button setLastCenter:CGPointMake(20 + x * 106.6 + 33.3, 40 + y * 96.6 + 33.3)];
                     }
                 }
             }
@@ -345,15 +356,37 @@
     pageController.currentPage = page;
 }
 
+- (void)loadScrollViewWithPage:(NSUInteger)page
+{
+    [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
+    SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
+    if (controller.view.superview == nil)
+    {
+        CGRect frame = bgScrollView.frame;
+        frame.origin.x = CGRectGetWidth(frame) * page;
+        frame.origin.y = 0;
+        controller.view.frame = frame;
+        
+        [self addChildViewController:controller];
+        [bgScrollView addSubview:controller.view];
+    }
+}
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self copyXMLToDocument];
     [self initNavBar];
+    [self loadScrollViewWithPage:0];
+    [self loadScrollViewWithPage:1];
+    
+    //titleImageView.image = [[titleView re_screenshot] applyExtraLightEffectAtFrame:titleView.bounds];
     //[self initView];
-    [self initItems];
-    [self initPageController];
-    [self initSetting];
+    //[self initItems];
+    //[self initPageController];
+    //[self initSetting];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];
         [FileUtils setvalueToPlistWithKey:@"EPSIZE" Value:@"5"];

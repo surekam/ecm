@@ -126,6 +126,26 @@ NSUInteger DeviceSystemMajorVersion() {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"%@",NSHomeDirectory());
+    
+    
+    ASIHTTPRequest* r = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://117.18.98.241/s/1"]];
+    __weak ASIHTTPRequest* request = r;
+    r.shouldAttemptPersistentConnection = 1;
+    [r setHeadersReceivedBlock:^(NSDictionary* dict){
+        NSLog(@"%@",dict);
+    }];
+    
+    [r setCompletionBlock:^{
+        NSLog(@"------%@",request.responseString);
+    }];
+    
+    [r setDataReceivedBlock:^(NSData* data){
+        NSLog(@"data = %@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+    }];
+    
+    //[r startAsynchronous];
+
+    
     if (System_Version_Small_Than_(7)) {
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
             _mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_ios6" bundle:nil];

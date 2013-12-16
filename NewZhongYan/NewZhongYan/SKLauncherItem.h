@@ -16,8 +16,9 @@
     CustomBadge *badge;
 }
 
-@property(nonatomic,retain) UIButton    *tapButton;
-@property(nonatomic,retain) CustomBadge *badge;
+@property(nonatomic,strong) UIButton    *tapButton;
+@property(nonatomic,strong) UILabel     *titleLabel;
+@property(nonatomic,strong) CustomBadge *badge;
 -(void)setTitle:(NSString *)title;
 -(void)setNormalImage:(NSString *)normalImage;
 -(void)setHighlightedImage:(NSString *)highlightedImage;

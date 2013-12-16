@@ -14,8 +14,6 @@
     if (self) {
         self.lastCenter = CGPointMake(frame.origin.x + frame.size.width / 2, frame.origin.y + frame.size.height / 2);
         superView = view;
-        //[self setBackgroundImage:image forState:UIControlStateNormal];
-        
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(drag:)];
         [self addGestureRecognizer:longPress];
         
@@ -61,7 +59,8 @@
                         if (self.lastCenter.x == 0) {
                             [delegate arrangeUpButtonsWithButton:self andAdd:YES];
                         }else{
-                            [self setFrame:CGRectMake(lastCenter.x - 33.3, lastCenter.y - 33.3, 66.6, 66.6)];
+                            [self setFrame:CGRectMake(lastCenter.x - 30, lastCenter.y - 30, 60, 60)];
+                            NSLog(@"%@",self.titleLabel.text);
                         }
                         
                     } completion:^(BOOL finished) {
