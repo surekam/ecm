@@ -44,6 +44,13 @@
             [self setCenter:CGPointMake(self.center.x + offX, self.center.y + offY)];
             lastPoint = point;
             [delegate checkLocationOfOthersWithButton:self];
+            if (CGRectGetMinX(self.frame) <= -(CGRectGetWidth(self.frame)/3)) {
+                [delegate checkShakingButtonToLeftEdge:self];
+            }
+            if (CGRectGetMaxX(self.frame) >= (CGRectGetWidth(self.superview.frame) + CGRectGetWidth(self.frame)/3))
+            {
+                [delegate checkShakingButtonToRightEdge:self];
+            }
             break;
         }
         case UIGestureRecognizerStateEnded:
@@ -60,9 +67,7 @@
                             [delegate arrangeUpButtonsWithButton:self andAdd:YES];
                         }else{
                             [self setFrame:CGRectMake(lastCenter.x - 30, lastCenter.y - 30, 60, 60)];
-                            NSLog(@"%@",self.titleLabel.text);
                         }
-                        
                     } completion:^(BOOL finished) {
                         [self.layer setShadowOpacity:0];
                     }];

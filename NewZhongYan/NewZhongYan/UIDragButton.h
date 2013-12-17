@@ -15,6 +15,8 @@ typedef enum{
 - (void)arrangeDownButtonsWithButton:(UIDragButton *)button andAdd:(BOOL)_bool;
 - (void)setDownButtonsFrameWithAnimate:(BOOL)_bool withoutShakingButton:(UIDragButton *)shakingButton;
 - (void)checkLocationOfOthersWithButton:(UIDragButton *)shakingButton;
+- (void)checkShakingButtonToLeftEdge:(UIDragButton *)shakingButton;
+- (void)checkShakingButtonToRightEdge:(UIDragButton *)shakingButton;
 - (void)removeShakingButton:(UIDragButton *)button fromUpButtons:(BOOL)_bool;
 @end
 

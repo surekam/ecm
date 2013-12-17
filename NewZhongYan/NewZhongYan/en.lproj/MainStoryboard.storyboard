@@ -975,12 +975,32 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNl-Cy-DBU">
                                 <rect key="frame" x="0.0" y="64" width="320" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="邮件: 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ltl-PX-7CD">
+                                        <rect key="frame" x="96" y="6" width="54" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="待办: 1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SaI-RT-8iL">
+                                        <rect key="frame" x="163" y="6" width="54" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="通讯录" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gyg-GF-KJo">
+                                        <rect key="frame" x="227" y="6" width="51" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJd-FC-wTk">
                                 <rect key="frame" x="0.0" y="107" width="320" height="350"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
-                                    <outlet property="delegate" destination="2" id="kzf-ob-2pq"/>
+                                    <outlet property="delegate" destination="2" id="Hx2-aw-en1"/>
                                 </connections>
                             </scrollView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W0X-UF-DS2">
@@ -1015,6 +1035,7 @@
                     <connections>
                         <outlet property="bgScrollView" destination="UJd-FC-wTk" id="BYF-ed-Ffo"/>
                         <outlet property="titleImageView" destination="9Oh-OZ-CcG" id="906-Ei-fpH"/>
+                        <outlet property="titleLabel" destination="3iH-Aa-kP2" id="tLu-jX-dNO"/>
                         <outlet property="titleView" destination="W0X-UF-DS2" id="zSr-q5-9v3"/>
                         <outlet property="workItemView" destination="CNl-Cy-DBU" id="mIj-V9-8W1"/>
                         <segue destination="5r6-CX-bUE" kind="push" identifier="about" id="rEU-E3-JYe"/>
@@ -3704,7 +3725,7 @@
         <scene sceneID="5gi-mb-V0x">
             <objects>
                 <navigationController storyboardIdentifier="rootNav" definesPresentationContext="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="byi-Cc-Zqt" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" hidden="YES" contentMode="scaleToFill" id="TCH-pG-aC8">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="TCH-pG-aC8">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="adA-W1-n5L">

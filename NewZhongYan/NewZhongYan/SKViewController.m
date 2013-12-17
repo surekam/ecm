@@ -18,7 +18,6 @@
 #import "GetNewVersion.h"
 #import "SKAPPUpdateController.h"
 #import "MBProgressHUD.h"
-#import "SMPageControl.h"
 #import "DataServiceURLs.h"
 #import "SKGridController.h"
 #import "UIView+screenshot.h"
@@ -28,16 +27,23 @@
 {
     SKSystemMenuController* settingController;
     BWStatusBarOverlay* BWStatusBar;
-    __weak IBOutlet UIScrollView *bgScrollView;
     //UIPageControl* pageController;
-    SMPageControl* pageController;
+    
     __weak IBOutlet UIView *workItemView;
     __weak IBOutlet UIView *titleView;
     __weak IBOutlet UIImageView *titleImageView;
+    __weak IBOutlet UILabel *titleLabel;
+    UIView* topView;
+    
+    SKGridController* companyController;
+    SKGridController* selfCompanyController;
+    NSMutableArray* controllerArray;
 }
 @end
 
 @implementation SKViewController
+@synthesize bgScrollView;
+@synthesize pageController;
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
    // return UIStatusBarStyleDefault;
@@ -109,40 +115,25 @@
     [self.navigationController.navigationBar setBackgroundImage:navbgImage  forBarMetrics:UIBarMetricsDefault];
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
     
+    
+    CGRect rect = self.navigationController.navigationBar.bounds;
+    rect.size.height += 25;
+    topView = [[UIView alloc] initWithFrame:rect];
+    topView.backgroundColor =COLOR(0, 97, 194);
+    topView.backgroundColor =[UIColor clearColor];
+    [self.navigationController.navigationBar addSubview:topView];
+    
     UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn setFrame:CGRectMake(10, 10, 60, 60)];
+    [btn setFrame:CGRectMake(10, 8, 60, 60)];
     [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];
-    [self.navigationController.navigationBar addSubview:btn];
-}
-
--(void)initItems
-{
-    [bgScrollView setContentSize:CGSizeMake(640, bgScrollView.frame.size.height)];
-    upButtons = [[NSMutableArray alloc] init];
-    NSArray *dataArray=[self dataFromXml];
-    for (int i=0;i<dataArray.count;i++)
-    {
-        DDXMLElement *obj=[dataArray objectAtIndex:i];
-        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
-        [dragbtn setTitle:[obj elementForName:@"title"].stringValue];
-        [dragbtn setNormalImage:[obj elementForName:@"icon"].stringValue];
-        [dragbtn setControllerName:[obj elementForName:@"controller"].stringValue];
-        [dragbtn setLocation:up];
-        [dragbtn setDelegate:self];
-        [dragbtn setTag:i];
-        [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
-        [bgScrollView addSubview:dragbtn];
-        [upButtons addObject:dragbtn];
-    }
-    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
+    [topView addSubview:btn];
 }
 
 -(void)initSetting
 {
     settingController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"setting"];
     settingController.rootController = self;
-    CGRect rect = CGRectMake(0,self.view.bounds.size.height - 44 - 44,
-                                 320,self.view.bounds.size.height - 44);
+    CGRect rect = CGRectMake(0,self.view.bounds.size.height - 44 - 44,320,self.view.bounds.size.height - 44);
     if (IS_IOS7)
     {
         rect.origin.y += 44;
@@ -166,63 +157,6 @@
     //UIViewController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:btn.controllerName];
     //[self.navigationController pushViewController:controller animated:YES];
     [self performSegueWithIdentifier:btn.controllerName sender:self];
-}
-
-//设置按钮位置
-- (void)setUpButtonsFrameWithAnimate:(BOOL)_bool withoutShakingButton:(UIDragButton *)shakingButton
-{
-    int count = [upButtons count];
-    if (shakingButton != nil) {
-        [UIView animateWithDuration:_bool ? 0.4 : 0 animations:^{
-            for (int y = 0; y <= count / 3; y++) {
-                for (int x = 0; x < 3; x++) {
-                    int i = 3 * y + x;
-                    if (i < count) {
-                        UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-                        if (button.tag != shakingButton.tag){
-                            [button setFrame:CGRectMake(20 + x * 106.6, OriginY + 40 + y * 96.6, 66.6, 66.6)];
-                        }
-                        [button setLastCenter:CGPointMake(20 + x * 106.6 + 33.3, OriginY + 40 + y * 96.6 + 33.3)];
-                    }
-                }
-            }
-        }];
-    }else{
-        [UIView animateWithDuration:_bool ? 0.4 : 0 animations:^{
-            for (int y = 0; y <= count / 3; y++) {
-                for (int x = 0; x < 3; x++) {
-                    int i = 3 * y + x;
-                    if (i < count) {
-                        UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-                        [button setFrame:CGRectMake(20 + x * 106.6, 40 + y * 96.6, 66.6, 66.6)];
-                        [button setLastCenter:CGPointMake(20 + x * 106.6 + 33.3, 40 + y * 96.6 + 33.3)];
-                    }
-                }
-            }
-        }];
-    }
-}
-
-- (void)checkLocationOfOthersWithButton:(UIDragButton *)shakingButton
-{
-    if (shakingButton.location == up)
-    {
-        for (int i = 0; i < [upButtons count]; i++)
-        {
-            UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-            if (button.tag != shakingButton.tag)
-            {
-                CGRect intersectionRect=CGRectIntersection(shakingButton.frame, button.frame);//两个按钮接触的大小
-                if (intersectionRect.size.width>15&&intersectionRect.size.height>25)
-                {
-                    [upButtons exchangeObjectAtIndex:i withObjectAtIndex:[upButtons indexOfObject:shakingButton]];
-                    [self setUpButtonsFrameWithAnimate:YES withoutShakingButton:shakingButton];
-                    //[self writeDataToXml];
-                    break;
-                }
-            }
-        }
-    }
 }
 
 -(void)setBadgeNumber
@@ -331,6 +265,15 @@
     [bgScrollView scrollRectToVisible:bounds animated:animated];
 }
 
+- (void)scrollToPage:(int)page
+{
+    CGRect bounds = bgScrollView.bounds;
+    bounds.origin.x = CGRectGetWidth(bounds) * page;
+    bounds.origin.y = 0;
+    [bgScrollView scrollRectToVisible:bounds animated:YES];
+    pageController.currentPage = page;
+}
+
 - (IBAction)changePage:(id)sender
 {
     [self gotoPage:YES];    // YES = animate
@@ -338,7 +281,8 @@
 
 -(void)initPageController
 {
-    pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 40, 150, 40)];
+    pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 30, 150, 40)];
+    [pageController setHidden:YES];
     [pageController setIndicatorDiameter:8];
     [pageController setNumberOfPages:2];
     [pageController setHidesForSinglePage:YES];
@@ -354,12 +298,20 @@
     CGFloat pageWidth = CGRectGetWidth(bgScrollView.frame);
     NSUInteger page = floor((bgScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     pageController.currentPage = page;
+    if (page == 0) {
+        titleLabel.text = @"吴忠主页";
+    }else{
+        titleLabel.text = @"公司主页";
+    }
 }
 
 - (void)loadScrollViewWithPage:(NSUInteger)page
 {
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
     SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
+    controller.isCompanyPage = !page;
+    controller.rootController = self;
+    [controllerArray addObject:controller];
     if (controller.view.superview == nil)
     {
         CGRect frame = bgScrollView.frame;
@@ -372,21 +324,16 @@
     }
 }
 
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    titleLabel.text = @"吴忠主页";
+    controllerArray = [NSMutableArray array];
     [self copyXMLToDocument];
     [self initNavBar];
+    [self initPageController];
     [self loadScrollViewWithPage:0];
     [self loadScrollViewWithPage:1];
-    
-    //titleImageView.image = [[titleView re_screenshot] applyExtraLightEffectAtFrame:titleView.bounds];
-    //[self initView];
-    //[self initItems];
-    //[self initPageController];
-    //[self initSetting];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];
         [FileUtils setvalueToPlistWithKey:@"EPSIZE" Value:@"5"];
@@ -407,8 +354,16 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [topView setHidden:YES];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
+    [topView setHidden:NO];
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -512,6 +467,7 @@
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
+            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
         }
     }else{
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
@@ -533,15 +489,15 @@
                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                     });
                                                     [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
-//                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
-//                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
-//                                                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
-//                                                        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
-//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
-//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
-//                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
-//                                                        }
-//                                                    }
+                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
+                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
+                                                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
+                                                        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
+                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
+                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
+                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
+                                                        }
+                                                    }
 //                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
 //                                                        [self onGetNewVersionDoneWithDic:dict];
 //                                                    } FaliureBlock:^(NSDictionary* error){
@@ -611,34 +567,6 @@
     return result;
 }
 
--(void)initView
-{
-    [bgScrollView setContentSize:CGSizeMake(640, bgScrollView.frame.size.height)];
-    upButtons = [[NSMutableArray alloc] init];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CHANNEL WHERE OWNERAPP = 'company';"];
-    for (int i=0;i<array.count;i++)
-    {
-        NSDictionary *dict=[array objectAtIndex:i];
-        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
-        [dragbtn setTitle:dict[@"NAME"]];
-        [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
-        [dragbtn setNormalImage:dict[@"NAME"]];
-        //[dragbtn setControllerName:dict[@"NAME"]];
-        [dragbtn setLocation:up];
-        [dragbtn setDelegate:self];
-        [dragbtn setTag:i];
-        //[dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
-        [bgScrollView addSubview:dragbtn];
-        [upButtons addObject:dragbtn];
-    }
-    
-//    for (UIDragButton* btn in upButtons) {
-//        [btn setFrame:CGRectMake(20 , OriginY + 40 , 66.6, 66.6)];
-//        [btn setLastCenter:CGPointMake(20 + 33.3,OriginY + 40 + 33.3)];
-//    }
-    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
-}
-
 -(void)didCompleteSynData:(LocalDataMeta *)metaData
 {
     if ([metaData.dataCode isEqualToString:@"versioninfo"]) {
@@ -662,8 +590,12 @@
     
     if ([metaData.dataCode isEqualToString:@"channel"]) {
         //开始构建主页
-        NSLog(@"channel");
-        [self initView];
+        NSLog(@"开始构建主页");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for (SKGridController* controller in controllerArray) {
+                [controller reloadData];
+            }
+        });
     }
 }
 

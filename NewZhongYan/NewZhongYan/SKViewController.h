@@ -11,9 +11,14 @@
 #import "SKPatternLockController.h"
 #import "SKNewsItemController.h"
 #import "UIButton+WebCache.h"
+#import "SMPageControl.h"
 @interface SKViewController : UIViewController<UIDragButtonDelegate,drawPatternLockDelegate,SKDataDaemonHelperDelegate>
 {
     NSMutableArray *upButtons;
     BOOL isFirstLogin;
 }
+
+@property(nonatomic,weak)UIScrollView *bgScrollView;
+@property(nonatomic,strong)SMPageControl* pageController;
+- (void)scrollToPage:(int)page;
 @end

@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIDragButton.h"
 @interface SKGridController : UIViewController<UIDragButtonDelegate>
-
+@property BOOL isCompanyPage;
+@property(nonatomic,weak)SKViewController* rootController;
+-(void)reloadData;
 @end
