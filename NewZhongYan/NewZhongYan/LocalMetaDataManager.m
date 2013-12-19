@@ -82,7 +82,6 @@
         }
         [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
     }else{
-        NSLog(@"flushMetaData%@  %d",metaData.dataCode,metaData.isExistedSnap);
         [[DBQueue sharedbQueue] updateDataTotableWithSQL:
          [NSString stringWithFormat:@"delete from DATA_VER where OWUID = '%@' and SID = '%@'",uid,metaData.dataCode]];
         [[DBQueue sharedbQueue] updateDataTotableWithSQL:

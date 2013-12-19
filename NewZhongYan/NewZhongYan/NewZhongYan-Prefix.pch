@@ -11,6 +11,10 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "SKClientApp.h"
+    #import "SKChannel.h" 
+    #import "SKChanneltp.h"
+    #import "SKECMURLManager.h"
     #import "OpenUDID.h"
     #import "Reachability.h"
     #import "NetUtils.h"

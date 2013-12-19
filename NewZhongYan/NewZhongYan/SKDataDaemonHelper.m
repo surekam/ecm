@@ -139,7 +139,7 @@ static NSOperationQueue* _shareQueue = nil;
         [request setDefaultResponseEncoding:NSUTF8StringEncoding];//完美解决中文编码乱码的问题
         [request setTimeOutSeconds:15];
         [request startSynchronous];
-        NSLog(@"%@\n  %@",request.url,request.responseString);
+        //NSLog(@"%@\n  %@",request.url,request.responseString);
         if (request.error) {
             @throw [NSException exceptionWithName:@"请求失败"
                                            reason:[[request error] localizedDescription]

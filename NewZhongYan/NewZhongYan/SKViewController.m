@@ -324,6 +324,44 @@
     }
 }
 
+
+- (void)loadScrollViewWithClientApp:(SKClientApp*)app PageNo:(int)page
+{
+    [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
+    SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
+    controller.isCompanyPage = !page;
+    controller.rootController = self;
+    controller.clientApp = app;
+    [controllerArray addObject:controller];
+    if (controller.view.superview == nil)
+    {
+        CGRect frame = bgScrollView.frame;
+        frame.origin.x = CGRectGetWidth(frame) * page;
+        frame.origin.y = 0;
+        controller.view.frame = frame;
+        [self addChildViewController:controller];
+        [bgScrollView addSubview:controller.view];
+    }
+}
+
+-(void)initClientApp
+{
+    clientAppArray = [NSMutableArray array];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP;"];
+    for (NSDictionary* dict in array) {
+        SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
+        [clientAppArray addObject:clientApp];
+    }
+    [self initSrollView];
+}
+
+-(void)initSrollView
+{
+    for (SKClientApp* app in clientAppArray) {
+        [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -332,8 +370,7 @@
     [self copyXMLToDocument];
     [self initNavBar];
     [self initPageController];
-    [self loadScrollViewWithPage:0];
-    [self loadScrollViewWithPage:1];
+    [self initClientApp];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];
         [FileUtils setvalueToPlistWithKey:@"EPSIZE" Value:@"5"];
@@ -563,7 +600,6 @@
 {
     NSArray* array = [[DBQueue sharedbQueue] arrayFromTableBySQL:@"select code from T_CLIENTAPP;"];
     NSString* result = [array componentsJoinedByString:@","];
-    NSLog(@"%@",result);
     return result;
 }
 
@@ -579,18 +615,18 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         dispatch_async(dispatch_get_main_queue(), ^{
             [BWStatusBar showSuccessWithMessage:@"通讯录同步完成" duration:2 animated:YES];
+            //这里需要完善用户信息
         });
     }
     
     if ([metaData.dataCode isEqualToString:@"clientapp"]) {
-        LocalDataMeta* datameta = [LocalDataMeta sharedChannel];
-        [datameta setPECMName:[self ECMPName]];
-        [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedChannel] delegate:self];
+//        LocalDataMeta* datameta = [LocalDataMeta sharedChannel];
+//        [datameta setPECMName:[self ECMPName]];
+//        [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedChannel] delegate:self];
+        [self initClientApp];
     }
     
     if ([metaData.dataCode isEqualToString:@"channel"]) {
-        //开始构建主页
-        NSLog(@"开始构建主页");
         dispatch_async(dispatch_get_main_queue(), ^{
             for (SKGridController* controller in controllerArray) {
                 [controller reloadData];

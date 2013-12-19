@@ -133,8 +133,19 @@
     if ([[segue identifier] isEqualToString:@"notifyDetail"]) {
         SKAttachViewController *attachController = (SKAttachViewController *)[segue destinationViewController];
         NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-        attachController.cmsInfo = _dataItems[selectedIndexPath.row];
+        NSMutableDictionary* dataDict = _dataItems[selectedIndexPath.row];
+        attachController.cmsInfo = dataDict;
         attachController.doctype = SKNotify;
+        
+        if (![[dataDict objectForKey:@"READED"] intValue])
+        {
+            NSString* sql =[NSString stringWithFormat:@"update T_NOTIFY set READED = 1 where TID = '%@';",[dataDict objectForKey:@"TID"]];
+            [dataDict setObject:@"1" forKey:@"READED"];
+            [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
+            });
+        }
         [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
     }
 }

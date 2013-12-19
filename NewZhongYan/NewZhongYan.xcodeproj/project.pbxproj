@@ -405,6 +405,10 @@
 		F2C89BB717F6B73D0099A62D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9217F6B73D0099A62D /* Foundation.framework */; };
 		F2C89BBF17F6B73D0099A62D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F2C89BBD17F6B73D0099A62D /* InfoPlist.strings */; };
 		F2C89BC217F6B73D0099A62D /* NewZhongYanTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C89BC117F6B73D0099A62D /* NewZhongYanTests.m */; };
+		F2CE6E1F1862B28900D95B34 /* SKClientApp.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CE6E1E1862B28900D95B34 /* SKClientApp.m */; };
+		F2CE6E231862B8F900D95B34 /* SKChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CE6E221862B8F900D95B34 /* SKChannel.m */; };
+		F2CE6E261862BB5800D95B34 /* SKChanneltp.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CE6E251862BB5800D95B34 /* SKChanneltp.m */; };
+		F2CE6E2D1862F1F700D95B34 /* SKECMURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CE6E2C1862F1F700D95B34 /* SKECMURLManager.m */; };
 		F2D814641834B7A900FE0839 /* btn_save_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = F2D814621834B7A900FE0839 /* btn_save_pressed.png */; };
 		F2D814651834B7A900FE0839 /* btn_save.png in Resources */ = {isa = PBXBuildFile; fileRef = F2D814631834B7A900FE0839 /* btn_save.png */; };
 		F2D814681834D65E00FE0839 /* SKCTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = F2D814671834D65E00FE0839 /* SKCTextField.m */; };
@@ -1036,6 +1040,14 @@
 		F2C89BBE17F6B73D0099A62D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F2C89BC017F6B73D0099A62D /* NewZhongYanTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewZhongYanTests.h; sourceTree = "<group>"; };
 		F2C89BC117F6B73D0099A62D /* NewZhongYanTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NewZhongYanTests.m; sourceTree = "<group>"; };
+		F2CE6E1D1862B28900D95B34 /* SKClientApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKClientApp.h; sourceTree = "<group>"; };
+		F2CE6E1E1862B28900D95B34 /* SKClientApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKClientApp.m; sourceTree = "<group>"; };
+		F2CE6E211862B8F900D95B34 /* SKChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKChannel.h; sourceTree = "<group>"; };
+		F2CE6E221862B8F900D95B34 /* SKChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKChannel.m; sourceTree = "<group>"; };
+		F2CE6E241862BB5800D95B34 /* SKChanneltp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKChanneltp.h; sourceTree = "<group>"; };
+		F2CE6E251862BB5800D95B34 /* SKChanneltp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKChanneltp.m; sourceTree = "<group>"; };
+		F2CE6E2B1862F1F700D95B34 /* SKECMURLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKECMURLManager.h; sourceTree = "<group>"; };
+		F2CE6E2C1862F1F700D95B34 /* SKECMURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKECMURLManager.m; sourceTree = "<group>"; };
 		F2D814621834B7A900FE0839 /* btn_save_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_save_pressed.png; sourceTree = "<group>"; };
 		F2D814631834B7A900FE0839 /* btn_save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_save.png; sourceTree = "<group>"; };
 		F2D814661834D65E00FE0839 /* SKCTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKCTextField.h; sourceTree = "<group>"; };
@@ -2266,6 +2278,8 @@
 		F2C89B9617F6B73D0099A62D /* NewZhongYan */ = {
 			isa = PBXGroup;
 			children = (
+				F2CE6E271862C4B000D95B34 /* URLManager */,
+				F2CE6E201862B29B00D95B34 /* model */,
 				F2D814851835C33300FE0839 /* helper */,
 				F2F79E87180D1A120004CAFC /* agent */,
 				F2F79E80180D16C40004CAFC /* dbutils */,
@@ -2326,6 +2340,28 @@
 				F2C89BBD17F6B73D0099A62D /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F2CE6E201862B29B00D95B34 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				F2CE6E1D1862B28900D95B34 /* SKClientApp.h */,
+				F2CE6E1E1862B28900D95B34 /* SKClientApp.m */,
+				F2CE6E211862B8F900D95B34 /* SKChannel.h */,
+				F2CE6E221862B8F900D95B34 /* SKChannel.m */,
+				F2CE6E241862BB5800D95B34 /* SKChanneltp.h */,
+				F2CE6E251862BB5800D95B34 /* SKChanneltp.m */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		F2CE6E271862C4B000D95B34 /* URLManager */ = {
+			isa = PBXGroup;
+			children = (
+				F2CE6E2B1862F1F700D95B34 /* SKECMURLManager.h */,
+				F2CE6E2C1862F1F700D95B34 /* SKECMURLManager.m */,
+			);
+			name = URLManager;
 			sourceTree = "<group>";
 		};
 		F2D814811834DBF100FE0839 /* cell */ = {
@@ -2965,6 +3001,7 @@
 				F22450E6183EF7AB003B32D3 /* SDWebImagePrefetcher.m in Sources */,
 				F2F79EA3180D2F400004CAFC /* NSData+AES256.m in Sources */,
 				F2F79EB5180D30C60004CAFC /* UIDevice-Hardware.m in Sources */,
+				F2CE6E261862BB5800D95B34 /* SKChanneltp.m in Sources */,
 				F28DF83B185AA97A000B6C1F /* UIImage+BlurredFrame.m in Sources */,
 				F2B8322E1829F0BC007E2CC0 /* participants.m in Sources */,
 				F2F79EAE180D2FAF0004CAFC /* GTMNSString+HTML.m in Sources */,
@@ -2983,6 +3020,7 @@
 				F28846D41803FAC3006A5D62 /* DDXMLElement.m in Sources */,
 				F2F0392218190A9000B9116C /* MWCaptionView.m in Sources */,
 				F2D814681834D65E00FE0839 /* SKCTextField.m in Sources */,
+				F2CE6E2D1862F1F700D95B34 /* SKECMURLManager.m in Sources */,
 				F259A8FF18237B87000D95C2 /* SKInboxCell.m in Sources */,
 				F259A8B918236E31000D95C2 /* SKEmailController.m in Sources */,
 				F23CE473182B92650066F214 /* SKCompIssueViewController.m in Sources */,
@@ -3007,6 +3045,7 @@
 				F28846D11803FAC3006A5D62 /* DDXMLElementAdditions.m in Sources */,
 				F22C959F180EBCDC00BC6D71 /* UINavigationController+SGProgress.m in Sources */,
 				F22967FF181F64E9006373CA /* SKSearchCell.m in Sources */,
+				F2CE6E231862B8F900D95B34 /* SKChannel.m in Sources */,
 				F299A5E81839C5AA00ACFDC6 /* SKQLPreviewController.m in Sources */,
 				F2A48542182A56AD0068A4D7 /* SKColumnDetailController.m in Sources */,
 				F2D814A31835CFB600FE0839 /* SKAppMaintainCell.m in Sources */,
@@ -3054,6 +3093,7 @@
 				F2F038F6181908C300B9116C /* EGOImageLoadConnection.m in Sources */,
 				F291E24E180CDD010027F0C9 /* ASIInputStream.m in Sources */,
 				F28DE6FC1816763E00E8CA79 /* SKNewsAttachController.m in Sources */,
+				F2CE6E1F1862B28900D95B34 /* SKClientApp.m in Sources */,
 				F2FFDBBF18346291001B9B84 /* SKPersonInfoController.m in Sources */,
 				F2B832311829F104007E2CC0 /* TextDownView.m in Sources */,
 				F275EA7E1827206B00EF28E1 /* SKNewMailController.m in Sources */,

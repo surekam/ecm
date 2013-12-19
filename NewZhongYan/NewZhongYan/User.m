@@ -17,6 +17,12 @@
 @synthesize departmentId;
 @synthesize departmentName;
 @synthesize mobile;
+@synthesize email;
+@synthesize telephone;
+@synthesize officeaddress;
+@synthesize UCNAME;
+@synthesize UDPID;
+@synthesize DPNAME;
 @synthesize logged;
 @synthesize logonabled;
 @synthesize enabled;

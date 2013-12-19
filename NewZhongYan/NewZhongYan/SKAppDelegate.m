@@ -63,7 +63,9 @@ NSUInteger DeviceSystemMajorVersion() {
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"DBVERSION"];
             [[NSUserDefaults standardUserDefaults] synchronize];
             [Sqlite setDBVersion];
-        }
+        }else{
+            [Sqlite setDBVersion];
+        }    
     }
 }
 

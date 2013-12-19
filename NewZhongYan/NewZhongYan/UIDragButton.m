@@ -29,11 +29,11 @@
     switch (sender.state) {
         case UIGestureRecognizerStateBegan:
         {
-            [self setAlpha:0.7];
             lastPoint = point;
             [self.layer setShadowColor:[UIColor grayColor].CGColor];
             [self.layer setShadowOpacity:1.0f];
             [self.layer setShadowRadius:10.0f];
+            [self setAlpha:0.7];
             [self startShake];
             break;
         }

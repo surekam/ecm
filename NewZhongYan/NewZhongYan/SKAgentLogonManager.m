@@ -258,11 +258,24 @@
         [user setName:[item objectForKey:@"CNAME"]];
         [user setTitle:[item objectForKey:@"TNAME"]];
         [user setDepartmentName:[item objectForKey:@"DNAME"]];
+        [user setDepartmentId:[item objectForKey:@"DPID"]];
         [user setPassword:[[item objectForKey:@"WPWD"] decrypted]];
         [user setLogged:NO];
         [user setEnabled:YES];
         [user setMobile:[item objectForKey:@"MOBILE"]];
-        [user setDepartmentId:[item objectForKey:@"DPID"]];
+        
+        NSString* sql = [NSString stringWithFormat:@"SELECT E.CNAME,E.DPNAME,E.MOBILE,E.TELEPHONE,E.OFFICEADDRESS,E.EMAIL,U.CNAME UCNAME,U.DPID UDPID FROM T_EMPLOYEE E,T_UNIT U ,T_ORGANIZATIONAL O WHERE E.UID = O.OID AND U.DPID = O.POID AND E.ENABLED = 1 AND (E.UID = '%@');",[item objectForKey:@"UID"]];
+        item = nil;
+        item =[[DBQueue sharedbQueue] getSingleRowBySQL:sql];
+        if (item) {
+            user.email = item[@"EMAIL"];
+            user.telephone = item[@"TELEPHONE"];
+            user.mobile = item[@"MOBILE"];
+            user.officeaddress = item[@"OFFICEADDRESS"];
+            user.DPNAME = item[@"DPNAME"];
+            user.UDPID = item[@"UDPID"];
+            user.UCNAME = item[@"UCNAME"];
+        }
     }
     return user;
 }

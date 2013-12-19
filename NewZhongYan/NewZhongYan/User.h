@@ -16,6 +16,12 @@
 @property(nonatomic,strong) NSString* departmentName;   //部门名
 @property(nonatomic,strong) NSString* departmentId;     //部门ID
 @property(nonatomic,strong) NSString* mobile;
+@property(nonatomic,strong) NSString* email;            //
+@property(nonatomic,strong) NSString* telephone;           //
+@property(nonatomic,strong) NSString* officeaddress;           //
+@property(nonatomic,strong) NSString* UCNAME;           //通讯录里面的值      人力资源部门
+@property(nonatomic,strong) NSString* DPNAME;           //通讯录里面的部门位置 长沙
+@property(nonatomic,strong) NSString* UDPID;            //通讯录里面的值      部门ID
 @property(nonatomic,strong) NSDate*  lastLoginDate;
 @property   BOOL logged;                                //是否已经登录
 @property   BOOL logonabled;                            //能否登录

@@ -254,6 +254,11 @@ static LocalDataMeta * sharedChannelType = nil;
                            version:0];
 }
 
+/**
+ *  像工作动态 公司公文 可能会用到这个接口
+ *
+ *  @return
+ */
 -(id)initWithChannelType
 {
     return  [self initWithDataCode:@"channeltp"

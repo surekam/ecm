@@ -15,6 +15,7 @@
 @interface SKViewController : UIViewController<UIDragButtonDelegate,drawPatternLockDelegate,SKDataDaemonHelperDelegate>
 {
     NSMutableArray *upButtons;
+    NSMutableArray* clientAppArray;
     BOOL isFirstLogin;
 }
 

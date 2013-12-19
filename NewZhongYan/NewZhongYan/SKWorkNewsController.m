@@ -176,8 +176,20 @@
         NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
         NSString* sectionName  = [_sectionArray objectAtIndex:selectedIndexPath.section];
         NSArray * sectionArray = [_sectionDictionary objectForKey:sectionName];
-        attachController.cmsInfo = sectionArray[selectedIndexPath.row];
+        NSMutableDictionary* dataDict = sectionArray[selectedIndexPath.row];
+        attachController.cmsInfo = dataDict;
         attachController.doctype = SKWorkNews;
+        
+        if (![[dataDict objectForKey:@"READED"] intValue])
+        {
+            NSString* sql =[NSString stringWithFormat:@"update T_WORKNEWS set READED = 1 where TID = '%@';",[dataDict objectForKey:@"TID"]];
+            [dataDict setObject:@"1" forKey:@"READED"];
+            [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
+            });
+        }
+        
         [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
     }
 }

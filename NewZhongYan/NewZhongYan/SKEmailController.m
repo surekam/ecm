@@ -394,8 +394,17 @@
     if ([[segue identifier] isEqualToString:@"emailDetail"]) {
         SKMailDetailController *mailItem = segue.destinationViewController;
         NSIndexPath *selectindexpath = [self.tableview indexPathForSelectedRow];
-        mailItem.EmailDetailDictionary = _dataArray[selectindexpath.row];
-        [self setMailIsRead: _dataArray[selectindexpath.row][@"MESSAGEID"]];
+        NSMutableDictionary* dataDict = _dataArray[selectindexpath.row];
+        mailItem.EmailDetailDictionary = dataDict;
+        
+        if (![[dataDict objectForKey:@"READED"] intValue])
+        {
+            [dataDict setObject:@"1" forKey:@"ISREAD"];
+            [self.tableview reloadRowsAtIndexPaths:@[selectindexpath] withRowAnimation:UITableViewRowAnimationNone];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                [self setMailIsRead: _dataArray[selectindexpath.row][@"MESSAGEID"]];
+            });
+        }
         [self.tableview deselectRowAtIndexPath:selectindexpath animated:YES];
     }
     if ([[segue identifier] isEqualToString:@"newmail"]) {
