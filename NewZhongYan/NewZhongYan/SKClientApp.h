@@ -11,7 +11,7 @@
  *  把clientapp 的根版本号存在plist文件中
  */
 
-typedef void (^ClientBlock)(void);
+typedef void (^clientCompleteBlock)(void);
 
 @interface SKClientApp : NSObject
 @property(nonatomic,strong)NSString* CODE;      //应用编码
@@ -24,5 +24,5 @@ typedef void (^ClientBlock)(void);
 
 -(id)initWithDictionary:(NSDictionary*)appinfo;
 
-+(void)getClientAppWithConpleteBlock:(ClientBlock)block;
++(void)getClientAppWithConpleteBlock:(clientCompleteBlock)block;
 @end

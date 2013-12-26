@@ -28,6 +28,10 @@
 +(DBQueue*)sharedbQueue;
 
 //返回成功插入的记录数
+
+
+-(void)insertDataToTableWithDataArray:(SKMessageEntity*)entity TableName:(NSString*)table;
+
 -(void)insertDataToTableWithDataArray:(SKMessageEntity*)entity LocalDataMeta:(LocalDataMeta*)dataMeta;
 
 /**

@@ -31,6 +31,41 @@ static DBQueue *gSharedInstance = nil;
     return gSharedInstance;
 }
 
+
+-(void)insertDataToTableWithDataArray:(SKMessageEntity*)entity TableName:(NSString*)table
+{
+    [self.dbQueue inTransaction:^(FMDatabase *db,BOOL *roolBack) {
+        for (int i = 0; i < [entity dataItemCount]; i++)
+        {
+            NSMutableDictionary* dict = [entity dataItem:i];
+                for (NSString* key in [dict allKeys])
+                {
+                    id value = [dict objectForKey:key];
+                    if ([value isKindOfClass:[NSString class]])
+                    {
+                        //针对敏感字符 单引号
+                        if ([value rangeOfString:@"'"].location != NSNotFound)
+                        {
+                            value = [value stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+                            [dict setObject:value forKey:key];
+                        }
+                        //别的敏感字符
+                    }
+                }
+                NSString* value = [NSString stringWithFormat:@"'%@'",[[dict allValues] componentsJoinedByString:@"','"]];
+                NSString* sql = [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",table,[[dict allKeys] componentsJoinedByString:@","],value];
+                [db executeUpdate:sql];
+                if ([db hadError])
+                {
+                    if (db.lastErrorCode == SQLITE_CONSTRAINT) {
+                        continue;
+                    }
+                    NSLog(@"数据库插入错误:%@ 错误码%d",[db lastErrorMessage],db.lastErrorCode);
+                }
+        }
+    }];
+}
+
 -(void)insertDataToTableWithDataArray:(SKMessageEntity*)entity LocalDataMeta:(LocalDataMeta*)dataMeta
 {
     [self.dbQueue inTransaction:^(FMDatabase *db,BOOL *roolBack) {

@@ -11,6 +11,7 @@
 		F200C88918272F3700161747 /* SKTokenField.m in Sources */ = {isa = PBXBuildFile; fileRef = F200C88518272F3700161747 /* SKTokenField.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F200C88A18272F3700161747 /* SKTokenFieldInternalDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F200C88718272F3700161747 /* SKTokenFieldInternalDelegate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F200C88D1827300300161747 /* SKPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F200C88C1827300300161747 /* SKPlaceholderTextView.m */; };
+		F20E559D1863DFC500660A60 /* SKDaemonManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F20E559C1863DFC500660A60 /* SKDaemonManager.m */; };
 		F20EC76C1824CE4B00427D54 /* SKMailDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = F20EC76B1824CE4B00427D54 /* SKMailDetailController.m */; };
 		F20EC7721824DE0B00427D54 /* SKAttachButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F20EC7711824DE0B00427D54 /* SKAttachButton.m */; };
 		F20EC7741824F96600427D54 /* oa_title_unfoldbg.png in Resources */ = {isa = PBXBuildFile; fileRef = F20EC7731824F96600427D54 /* oa_title_unfoldbg.png */; };
@@ -498,6 +499,8 @@
 		F200C88718272F3700161747 /* SKTokenFieldInternalDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTokenFieldInternalDelegate.m; sourceTree = "<group>"; };
 		F200C88B1827300300161747 /* SKPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPlaceholderTextView.h; sourceTree = "<group>"; };
 		F200C88C1827300300161747 /* SKPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPlaceholderTextView.m; sourceTree = "<group>"; };
+		F20E559B1863DFC500660A60 /* SKDaemonManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKDaemonManager.h; sourceTree = "<group>"; };
+		F20E559C1863DFC500660A60 /* SKDaemonManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKDaemonManager.m; sourceTree = "<group>"; };
 		F20EC76A1824CE4B00427D54 /* SKMailDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKMailDetailController.h; sourceTree = "<group>"; };
 		F20EC76B1824CE4B00427D54 /* SKMailDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKMailDetailController.m; sourceTree = "<group>"; };
 		F20EC7701824DE0B00427D54 /* SKAttachButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKAttachButton.h; sourceTree = "<group>"; };
@@ -2529,6 +2532,8 @@
 			children = (
 				F2F79EBC180D327F0004CAFC /* SKDataDaemonHelper.h */,
 				F2F79EBD180D327F0004CAFC /* SKDataDaemonHelper.m */,
+				F20E559B1863DFC500660A60 /* SKDaemonManager.h */,
+				F20E559C1863DFC500660A60 /* SKDaemonManager.m */,
 				F2F79E9A180D2DAF0004CAFC /* SKAgentLogonManager.h */,
 				F2F79E9B180D2DAF0004CAFC /* SKAgentLogonManager.m */,
 				F2F79E88180D1A900004CAFC /* LocalDataMeta.h */,
@@ -2943,6 +2948,7 @@
 				F2A48538182A426A0068A4D7 /* SKImageView.m in Sources */,
 				F2B8320E1829EE7B007E2CC0 /* SKGtaskDetailController.m in Sources */,
 				F28846D21803FAC3006A5D62 /* NSString+DDXML.m in Sources */,
+				F20E559D1863DFC500660A60 /* SKDaemonManager.m in Sources */,
 				F2F0392418190A9000B9116C /* MWPhotoBrowser.m in Sources */,
 				F23AA256184F2338004248DB /* Base64.m in Sources */,
 				F2F79EAF180D2FAF0004CAFC /* NSString+HTML.m in Sources */,

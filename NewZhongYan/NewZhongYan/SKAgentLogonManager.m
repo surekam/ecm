@@ -1,4 +1,4 @@
-//
+ //
 //  SKAgentLogonManager.m
 //  NewZhongYan
 //
@@ -49,6 +49,11 @@
         {
             NSLog(@"保存个人信息数据时发生错误");
         }
+        NSLog(@"afterAgentLogon");
+        [SKClientApp getClientAppWithConpleteBlock:^{
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"SynedClientApp"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }];
     }
     @catch (NSException *e) {
         @throw [NSException exceptionWithName:[e name] reason:[e reason] userInfo:nil];

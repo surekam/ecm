@@ -12,6 +12,7 @@
 #import "DDXMLElement.h"
 #import "UIButton+WebCache.h"
 #import "SKViewController.h"
+#import "SKDaemonManager.h"
 @interface SKGridController ()
 {
     NSMutableArray *upButtons;
@@ -19,37 +20,50 @@
 @end
 
 @implementation SKGridController
+
+-(NSString*)controllerWithCode:(NSString*)code
+{
+    if ([code isEqualToString:@"copublicnotice"]) {
+        return @"SKAnnouncementItemController";
+    }
+    return @"SKAnnouncementItemController";
+}
+
 -(void)jumpToController:(id)sender
 {
     UIDragButton *btn=(UIDragButton *)[(UIDragButton *)sender superview] ;
     //UIViewController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:btn.controllerName];
     //[self.navigationController pushViewController:controller animated:YES];
-    [_rootController performSegueWithIdentifier:btn.controllerName sender:_rootController];
+    [_rootController performSegueWithIdentifier:[self controllerWithCode:btn.controllerName] sender:_rootController];
 }
 
--(void)initCompanyView
+-(void)initSelfFactoryView
 {
-    upButtons = [[NSMutableArray alloc] init];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CHANNEL WHERE OWNERAPP = 'csfactory';"];
-    for (int i=0;i<array.count;i++)
-    {
-        NSDictionary *dict=[array objectAtIndex:i];
-        UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
-        [dragbtn setTitle:dict[@"NAME"]];
-        [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
-        [dragbtn setNormalImage:dict[@"NAME"]];
-        [dragbtn setLocation:up];
-        [dragbtn setDelegate:self];
-        [dragbtn setTag:i];
-        //[dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:dragbtn];
-        [upButtons addObject:dragbtn];
-    }
-
-    [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        upButtons = [[NSMutableArray alloc] init];
+        NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE OWNERAPP = '%@' and LEVL = 1;",self.clientApp.CODE];
+        NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
+        for (int i=0;i<array.count;i++)
+        {
+            NSDictionary *dict=[array objectAtIndex:i];
+            UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
+            [dragbtn setTitle:dict[@"NAME"]];
+            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
+            [dragbtn setNormalImage:dict[@"NAME"]];
+            [dragbtn setControllerName:dict[@"CODE"]];
+            [dragbtn setLocation:up];
+            [dragbtn setDelegate:self];
+            [dragbtn setTag:i];
+            [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:dragbtn];
+            [upButtons addObject:dragbtn];
+        }
+        
+        [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
+    });
 }
 
--(void)initSelfCompanyView
+-(void)initCompanyPageView
 {
     upButtons = [[NSMutableArray alloc] init];
     NSArray *dataArray=[self dataFromXml];
@@ -72,16 +86,22 @@
 
 -(void)reloadData
 {
-    for (UIView* v in self.view.subviews) {
-        if (v.class == [UIDragButton class]) {
-            [v removeFromSuperview];
+    [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
+        for (UIView* v in self.view.subviews) {
+            if (v.class == [UIDragButton class]) {
+                [v removeFromSuperview];
+            }
         }
-    }
-    if (self.isCompanyPage) {
-        [self initCompanyView];
-    }else{
-        [self initSelfCompanyView];
-    }
+        [self initSelfFactoryView];
+//        if (self.isCompanyPage) {
+//            [self initCompanyPageView];
+//        }else{
+//            [self initSelfFactoryView];
+//        }
+    } faliure:^(NSError* error){
+        NSLog(@"%@",[error userInfo][@"reason"]);
+    }];
+
 }
 
 //取出xml中的app节点  并按照app节点中的location节点的值升序排序
@@ -90,7 +110,6 @@
     NSString *path=[[FileUtils documentPath] stringByAppendingPathComponent:@"main_config.xml"];
     NSData *data=[NSData dataWithContentsOfFile:path];
     DDXMLDocument *doc = [[DDXMLDocument alloc]initWithData:data options:0 error:nil];
-    /////解析
     NSArray *items = [doc nodesForXPath:@"//app" error:nil];
     
     NSArray *array=[items sortedArrayUsingComparator:^NSComparisonResult(id obj1,id obj2)
@@ -202,12 +221,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"%d",self.isCompanyPage);
-    if (self.isCompanyPage) {
-        [self initCompanyView];
-    }else{
-        [self initSelfCompanyView];
-    }
+     [self initSelfFactoryView];
+    
+//    if (self.isCompanyPage) {
+//        [self initCompanyPageView];
+//    }else{
+//        [self initSelfFactoryView];
+//    }
 }
 
 @end

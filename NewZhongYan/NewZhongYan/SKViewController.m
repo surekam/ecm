@@ -22,6 +22,7 @@
 #import "SKGridController.h"
 #import "UIView+screenshot.h"
 #import "UIImage+BlurredFrame.h"
+#import "SKDaemonManager.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
 @interface SKViewController ()
 {
@@ -325,11 +326,11 @@
 }
 
 
-- (void)loadScrollViewWithClientApp:(SKClientApp*)app PageNo:(int)page
+- (SKGridController*)loadScrollViewWithClientApp:(SKClientApp*)app PageNo:(int)page
 {
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
     SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
-    controller.isCompanyPage = !page;
+    controller.isCompanyPage = [app.DEFAULTED intValue];
     controller.rootController = self;
     controller.clientApp = app;
     [controllerArray addObject:controller];
@@ -342,24 +343,22 @@
         [self addChildViewController:controller];
         [bgScrollView addSubview:controller.view];
     }
+    return controller;
 }
 
 -(void)initClientApp
 {
+    NSLog(@"initClientApp");
     clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP;"];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP ORDER BY DEFAULTED;"];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];
     }
-    [self initSrollView];
-}
-
--(void)initSrollView
-{
     for (SKClientApp* app in clientAppArray) {
         [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
     }
+
 }
 
 - (void)viewDidLoad
@@ -370,7 +369,6 @@
     [self copyXMLToDocument];
     [self initNavBar];
     [self initPageController];
-    [self initClientApp];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];
         [FileUtils setvalueToPlistWithKey:@"EPSIZE" Value:@"5"];
@@ -405,56 +403,9 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if ([[SKAppDelegate sharedCurrentUser] isLogged] && [APPUtils currentReachabilityStatus] != NotReachable){
-        [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
-    }
 }
 
--(NSArray *)dataFromXml
-{
-    NSString *path=[[FileUtils documentPath] stringByAppendingPathComponent:@"main_config.xml"];
-    NSData *data=[NSData dataWithContentsOfFile:path];
-    DDXMLDocument *doc = [[DDXMLDocument alloc]initWithData:data options:0 error:nil];
-    NSArray *items = [doc nodesForXPath:@"//app" error:nil];
-    NSArray *array=[items sortedArrayUsingComparator:^NSComparisonResult(id obj1,id obj2)
-                    {
-                        DDXMLElement *element1=(DDXMLElement *)obj1;
-                        DDXMLElement *element2=(DDXMLElement *)obj2;
-                        DDXMLNode *locationElement1=[element1 elementForName:@"location"];
-                        DDXMLNode *locationElement2=[element2 elementForName:@"location"];
-                        int index1=[locationElement1.stringValue integerValue];
-                        int index2=[locationElement2.stringValue integerValue];
-                        if (index1 > index2) {
-                            return (NSComparisonResult)NSOrderedDescending;
-                        }if (index1 < index2){
-                            return (NSComparisonResult)NSOrderedAscending;
-                        }
-                        return (NSComparisonResult)NSOrderedSame;
-                    }];
-    return array;
-}
 
--(void)writeDataToXml
-{
-    NSString *path=[[FileUtils documentPath] stringByAppendingPathComponent:@"main_config.xml"];
-    NSData *data=[NSData dataWithContentsOfFile:path];
-    DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:nil];
-    NSArray *items = [doc nodesForXPath:@"//app//controller" error:nil];
-    for (int i=0;i<upButtons.count;i++)
-    {
-        NSString *controllerName=((UIDragButton *)[upButtons objectAtIndex:i]).controllerName;
-        for (DDXMLElement *obj in items) {
-            if ([obj.stringValue isEqualToString:controllerName])
-            {
-                DDXMLElement *parentElement= (DDXMLElement *)[obj parent];
-                DDXMLElement*locationElement= [parentElement elementForName:@"location"];
-                [locationElement setStringValue:[NSString stringWithFormat:@"%d",i]];
-            }
-        }
-    }
-    NSString *result=[[NSString alloc] initWithFormat:@"%@",doc];
-    [result writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
-}
 
 #pragma mark - 屏保代理函数
 -(void)onGetNewVersionDoneWithDic:(NSDictionary *)dic
@@ -490,24 +441,48 @@
     }
 }
 
+
+-(void)updateClientAppinfo
+{
+    for (SKGridController* controller in controllerArray) {
+        [controller reloadData];
+    }
+}
+
+-(void)firstInitClientApp
+{
+    clientAppArray = [NSMutableArray array];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP ORDER BY DEFAULTED;;"];
+    for (NSDictionary* dict in array) {
+        SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
+        [clientAppArray addObject:clientApp];
+    }
+    for (SKClientApp* app in clientAppArray) {
+        SKGridController* controller =  [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
+        [controller reloadData];
+    }
+}
+
+
+
 -(void)onPatternLockSuccess
 {
-    if (isFirstLogin) {//这里还有bug//测试 登陆后会不会到这里
+    if (isFirstLogin){//这里还有bug//测试 登陆后会不会到这里
         isFirstLogin = NO;
         NSString* username = [FileUtils valueFromPlistWithKey:@"gpusername"];
-        if ([username length] >0 ) {
-            [FileUtils setvalueToPlistWithKey:@"gpusername" Value:@""];
+        if ([username length] > 0 ) {
+            [FileUtils setvalueToPlistWithKey:@"gpusername" Value:@""];//这里一般不是第一次登陆 比如屏幕保护密码输错
         }else{
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
+            [self firstInitClientApp];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
         }
     }else{
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
+            [self initClientApp];
             NSDate *date=[FileUtils valueFromPlistWithKey:@"sleepTime"];
             int sleepSecond = [[NSDate date] secondsAfterDate:date];
             if (sleepSecond > 1500 || sleepSecond < 0)
@@ -523,9 +498,8 @@
                                                 CompleteBlock:^{
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [BWStatusBarOverlay showSuccessWithMessage:@"登录成功" duration:1 animated:1];
-                                                        [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                     });
-                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedClientApp] delegate:self];
+                                                    [self updateClientAppinfo];
                                                     [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
                                                     [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
                                                     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
@@ -535,10 +509,10 @@
                                                             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
                                                         }
                                                     }
-//                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
-//                                                        [self onGetNewVersionDoneWithDic:dict];
-//                                                    } FaliureBlock:^(NSDictionary* error){
-//                                                    }];
+                                                    //                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
+                                                    //                                                        [self onGetNewVersionDoneWithDic:dict];
+                                                    //                                                    } FaliureBlock:^(NSDictionary* error){
+                                                    //                                                    }];
                                                 }
                                                  failureBlock:^(NSDictionary* dict){
                                                      [self setBadgeNumber];
@@ -555,14 +529,12 @@
                 });
             }
         }else{
-            [self setBadgeNumber];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [SKAppDelegate sharedCurrentUser].logging = NO;
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                //[BWStatusBarOverlay showErrorWithMessage:@"当前没有网络连接" duration:1 animated:YES];
             });
         }
     }
+    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -583,9 +555,6 @@
 -(void)didBeginSynData:(LocalDataMeta *)metaData
 {
     if ([metaData.dataCode isEqualToString:@"versioninfo"]) {
-//        dispatch_sync(dispatch_get_main_queue(), ^{
-//            [BWStatusBarOverlay setMessage:@"正在获取版本数据信息..." animated:YES];
-//        });
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([metaData.dataCode isEqualToString:@"employee"]  && ![metaData isUserOwner])  {
@@ -616,21 +585,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [BWStatusBar showSuccessWithMessage:@"通讯录同步完成" duration:2 animated:YES];
             //这里需要完善用户信息
-        });
-    }
-    
-    if ([metaData.dataCode isEqualToString:@"clientapp"]) {
-//        LocalDataMeta* datameta = [LocalDataMeta sharedChannel];
-//        [datameta setPECMName:[self ECMPName]];
-//        [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedChannel] delegate:self];
-        [self initClientApp];
-    }
-    
-    if ([metaData.dataCode isEqualToString:@"channel"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            for (SKGridController* controller in controllerArray) {
-                [controller reloadData];
-            }
         });
     }
 }

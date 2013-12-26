@@ -1024,7 +1024,6 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     NSString* t_ClientApp_sql = [NSString stringWithFormat:@"create table  if not exists %@\
                                (\
                                CODE             VARCHAR(24) NOT NULL,\
-                               OWUID            VARCHAR(48),\
                                NAME             VARCHAR(48),\
                                DEPARTMENT       VARCHAR(24),\
                                DEFAULTED 		SMALLINT,\
@@ -1045,6 +1044,11 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     return YES;
 }
 
+/*
+{"v":{"CODE":"copublicnotice","NAME":"公司公告","OWNERAPP":"company","TYPELABLE":"","LOGO":"http://tam.hngytobacco.com/ZZZobta/public/icon/copublicnotice.png","FIDLIST":"1010101","HASSUBTYPE":"0","CURRENTID":"10002","PARENDID":"100","LEVL":"1","ENABLED":"1"}}
+*/
+
+
 +(BOOL)createChannel
 {
     NSString* t_channel_sql = [NSString stringWithFormat:@"create table  if not exists %@\
@@ -1056,18 +1060,13 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
                                  FIDLIST 			varchar(1024),\
                                  TYPELABLE          varchar(48),\
                                  HASSUBTYPE 		SMALLINT,\
+                                 CURRENTID 		    varchar(24),\
+                                 PARENTID 		    varchar(24),\
+                                 LEVL 		        SMALLINT,\
                                  ENABLED 			SMALLINT,\
                                  constraint P_CLIENTAPP_KEY primary key (CODE)\
                                  );",@"T_CHANNEL"];
     
-    NSString* t_channel_tp_sql  = [NSString stringWithFormat:@"create table  if not exists %@\
-                           (\
-                           TID					VARCHAR(24) NOT NULL,\
-                           TNAME 				VARCHAR(48),\
-                           OWNER				VARCHAR(24),\
-                           ENABLED 			    SMALLINT,\
-                           constraint P_CHANNELTP_KEY primary key (TID)\
-                           );",@"T_CHANNELTP"];
     
     char *error = NULL;
     [self openDb];
@@ -1077,15 +1076,29 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
         [self closeDb];
         return NO;
     }
-    
-    if (sqlite3_exec(dataBase, [t_channel_tp_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
-        NSLog(@"create table %@ error:%s",@"T_CHANNELTP",error);
+    [self closeDb];
+    return YES;
+}
+
++(BOOL)createCilentVersion
+{
+    NSString* t_client_sql = [NSString stringWithFormat:@"create table  if not exists %@\
+                               (\
+                               CODE 				varchar(24) NOT NULL,\
+                               VERSION 				varchar(48),\
+                               constraint P_CLIENTVERSION_KEY primary key (CODE)\
+                               );",@"T_CLIENTVERSION"];
+    char *error = NULL;
+    [self openDb];
+    if (sqlite3_exec(dataBase, [t_client_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
+        NSLog(@"create table %@ error:%s",@"T_CLIENTVERSION",error);
         [self closeDb];
         return NO;
     }
     [self closeDb];
     return YES;
 }
+
 
 +(void)setDBVersion
 {
@@ -1106,6 +1119,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     if ([[FileUtils valueFromPlistWithKey:@"DBVERSION"] intValue] == 1) {
         [self createClientApp];
         [self createChannel];
+        [self createCilentVersion];
         [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
     }
 }
@@ -1128,6 +1142,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     [self createDraft];
     [self createClientApp];
     [self createChannel];
+    [self createCilentVersion];
     [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
     return YES;
 }

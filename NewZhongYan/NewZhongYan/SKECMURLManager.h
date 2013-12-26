@@ -41,8 +41,11 @@
 #pragma mark -
 #pragma mark ===========  频道接口  =========
 #pragma mark -
++(NSURL*)getAllChannelWithAppCode:(NSString*)code;
 
++(NSURL*)getChannelVmetaInfoWithAppCode:(NSString*)code ChannelVersion:(int)version;
 
++(NSURL*)getChannelUpdateInfoWithAppCode:(NSString*)code ChannelVersion:(int)version;
 #pragma mark -
 #pragma mark ===========  频道类型接口  =========
 #pragma mark -
