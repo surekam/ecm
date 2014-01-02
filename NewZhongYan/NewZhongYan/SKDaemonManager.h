@@ -11,14 +11,8 @@ typedef enum
 {
     SKDaemonClientApp,
     SKDaemonChannel,
+    SKDaemonDocuments
 }SKDaemontype;    //列的类型 决定 列如何显示
-
-//typedef enum
-//{
-//    SKRequestRepeated,
-//    SKRequestDataError,
-//    SKRequestMetaError,
-//}SKDaemontErrorType;    //列的类型 决定 列如何显示
 
 #if NS_BLOCKS_AVAILABLE
 typedef void (^SKDaemonBasicBlock)(void);
@@ -29,8 +23,28 @@ typedef void (^SKDaemonErrorBlock)(NSError* error);
 {
     
 }
-+(void)SynClientAppData:(SKClientApp*)client complete:(SKDaemonBasicBlock)completeBlock faliure:(SKDaemonErrorBlock)faliureBlock;
 
-+(void)SynChannelWithClientApp:(SKClientApp*)client complete:(SKDaemonBasicBlock)completeBlock faliure:(SKDaemonErrorBlock)faliureBlock;
+/**
+ *  获取应用下频道列表
+ *
+ *  @param client        应用
+ *  @param completeBlock 完成block
+ *  @param faliureBlock  失败block
+ */
++(void)SynChannelWithClientApp:(SKClientApp*)client
+                      complete:(SKDaemonBasicBlock)completeBlock
+                       faliure:(SKDaemonErrorBlock)faliureBlock;
 
+/**
+ *  获取频道下文档列表
+ *
+ *  @param channel       频道
+ *  @param completeBlock 完成block
+ *  @param faliureBlock  失败block
+ *  @param isUp          取文档的方向
+ */
++(void)SynDocumentsWithChannel:(SKChannel*)channel
+                      complete:(SKDaemonBasicBlock)completeBlock
+                       faliure:(SKDaemonErrorBlock)faliureBlock
+                          Type:(BOOL)isUp;
 @end

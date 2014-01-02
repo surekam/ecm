@@ -9,13 +9,17 @@
 #import "SKClientApp.h"
 #import "SKMessageEntity.h"
 @implementation SKClientApp
+
 -(void)initChanels
 {
-    NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL where OWNERAPP = '%@'",self.CODE];
+    NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL where OWNERAPP = '%@' and LEVL = 1;",self.CODE];
     NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
     _channels = [NSMutableArray array];
     for (NSDictionary* dict in array) {
         SKChannel* channel = [[SKChannel alloc] initWithDictionary:dict];
+        if (![channel.FIDLIST isEqual:[NSNull null]]) {
+            [channel restoreVersionInfo];
+        }
         [_channels addObject:channel];
     }
 }
@@ -24,10 +28,10 @@
 {
     NSString* sql = [NSString stringWithFormat:@"select VERSION from T_CLIENTVERSION where CODE = '%@';",self.CODE];
     self.version = [[DBQueue sharedbQueue] intValueFromSQL:sql];
-    NSLog(@"%d",self.version);
-    if (self.version) {
-        [self initChanels];
-    }
+//    NSLog(@"%d",self.version);
+//    if (self.version) {
+//        [self initChanels];
+//    }
 }
 
 -(id)initWithDictionary:(NSDictionary*)appinfo

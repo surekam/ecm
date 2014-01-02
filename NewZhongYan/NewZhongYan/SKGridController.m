@@ -13,6 +13,7 @@
 #import "UIButton+WebCache.h"
 #import "SKViewController.h"
 #import "SKDaemonManager.h"
+#import "SKECMRootController.h"
 @interface SKGridController ()
 {
     NSMutableArray *upButtons;
@@ -31,10 +32,13 @@
 
 -(void)jumpToController:(id)sender
 {
-    UIDragButton *btn=(UIDragButton *)[(UIDragButton *)sender superview] ;
-    //UIViewController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:btn.controllerName];
-    //[self.navigationController pushViewController:controller animated:YES];
-    [_rootController performSegueWithIdentifier:[self controllerWithCode:btn.controllerName] sender:_rootController];
+    UIDragButton *btn=(UIDragButton *)[(UIDragButton *)sender superview];
+    [_rootController performSegueWithIdentifier:@"SKECMRootController" sender:btn.channel];
+    
+    
+//    SKECMRootController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMRootController"];
+//    controller.channel = btn.channel;
+//    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)initSelfFactoryView
@@ -46,12 +50,17 @@
         for (int i=0;i<array.count;i++)
         {
             NSDictionary *dict=[array objectAtIndex:i];
+            SKChannel* channel = [[SKChannel alloc] initWithDictionary:dict];
+            if (![channel.FIDLIST isEqual:[NSNull null]]) {
+                [channel restoreVersionInfo];
+            }
+            
             UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
+            [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
             [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
-            [dragbtn setNormalImage:dict[@"NAME"]];
+            //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
-            [dragbtn setLocation:up];
             [dragbtn setDelegate:self];
             [dragbtn setTag:i];
             [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
@@ -169,21 +178,18 @@
 
 - (void)checkLocationOfOthersWithButton:(UIDragButton *)shakingButton
 {
-    if (shakingButton.location == up)
+    for (int i = 0; i < [upButtons count]; i++)
     {
-        for (int i = 0; i < [upButtons count]; i++)
+        UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
+        if (button.tag != shakingButton.tag)
         {
-            UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-            if (button.tag != shakingButton.tag)
+            CGRect intersectionRect=CGRectIntersection(shakingButton.frame, button.frame);//两个按钮接触的大小
+            if (intersectionRect.size.width>15&&intersectionRect.size.height>25)
             {
-                CGRect intersectionRect=CGRectIntersection(shakingButton.frame, button.frame);//两个按钮接触的大小
-                if (intersectionRect.size.width>15&&intersectionRect.size.height>25)
-                {
-                    [upButtons exchangeObjectAtIndex:i withObjectAtIndex:[upButtons indexOfObject:shakingButton]];
-                    [self setUpButtonsFrameWithAnimate:YES withoutShakingButton:shakingButton];
-                    //[self writeDataToXml];
-                    break;
-                }
+                [upButtons exchangeObjectAtIndex:i withObjectAtIndex:[upButtons indexOfObject:shakingButton]];
+                [self setUpButtonsFrameWithAnimate:YES withoutShakingButton:shakingButton];
+                //[self writeDataToXml];
+                break;
             }
         }
     }

@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "SKLauncherItem.h"
+#import "SKChannel.h"
 typedef enum{
     up = 0,
     down = 1,
@@ -27,10 +28,11 @@ typedef enum{
     NSTimer *timer;
 }
 
+@property (nonatomic, strong) SKChannel* channel;
 @property (nonatomic, assign) Location location;
 @property (nonatomic, assign) CGPoint lastCenter;
 @property (nonatomic, assign) id<UIDragButtonDelegate> delegate;
-@property (nonatomic, retain) NSString *controllerName;
+@property (nonatomic, strong) NSString *controllerName;
 - (id)initWithFrame:(CGRect)frame inView:(UIView *)view;
 - (void)startShake;
 - (void)stopShake;

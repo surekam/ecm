@@ -8,6 +8,7 @@
 @synthesize lastCenter;
 @synthesize delegate;
 @synthesize controllerName;
+@synthesize channel;
 - (id)initWithFrame:(CGRect)frame inView:(UIView *)view
 {
     self = [super initWithFrame:frame];

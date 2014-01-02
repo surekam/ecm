@@ -125,6 +125,9 @@
         NSString *authorizeID =  [[entity dataItem:0] objectForKey:@"MESSAGE"];
         if (entity.praserError)
         {   //这里一般出现在代办处理中
+            if (entity.praserError.code == 2001) {//用于从服务器上没有取到数据时抛的错误
+                [super reportFinished];return;
+            }
             NSError* xmlerror = nil;
             DDXMLDocument* doc = [[DDXMLDocument alloc] initWithData:self.responseData options:0 error:&xmlerror];
             if (!xmlerror) {

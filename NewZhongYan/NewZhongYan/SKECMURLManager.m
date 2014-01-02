@@ -45,4 +45,13 @@
     [NSURL URLWithString:[NSString stringWithFormat:@"%@/commons/%@/channel/vupdate?version=%d",ZZZobt,code,version]];
 }
 
++(NSURL*)getDocunmentWithChannelCode:(NSString*)code QueryDate:(NSString*)date isUP:(BOOL)isUP{
+    if (isUP) {
+        return
+        [NSURL URLWithString:[NSString stringWithFormat:@"%@/users/%@/ecm/tupdate?queryDateTime=%@&queryType=UP",ZZZobt,code,date]];
+    } else {
+        return
+        [NSURL URLWithString:[NSString stringWithFormat:@"%@/users/%@/ecm/tupdate?queryDateTime=%@&queryType=DOWN",ZZZobt,code,date]];
+    }
+}
 @end

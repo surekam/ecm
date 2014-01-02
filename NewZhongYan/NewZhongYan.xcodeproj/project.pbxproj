@@ -477,6 +477,7 @@
 		F2F79EC3180D32940004CAFC /* SKHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F79EC0180D32940004CAFC /* SKHTTPRequest.m */; };
 		F2F79EC4180D32940004CAFC /* SKFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F79EC2180D32940004CAFC /* SKFormDataRequest.m */; };
 		F2F79EC7180D32B70004CAFC /* NetUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F79EC6180D32B70004CAFC /* NetUtils.m */; };
+		F2FA2F07186BD8D900647728 /* SKECMRootController.m in Sources */ = {isa = PBXBuildFile; fileRef = F2FA2F06186BD8D900647728 /* SKECMRootController.m */; };
 		F2FFDBBF18346291001B9B84 /* SKPersonInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F2FFDBBE18346290001B9B84 /* SKPersonInfoController.m */; };
 /* End PBXBuildFile section */
 
@@ -1182,6 +1183,8 @@
 		F2F79EC2180D32940004CAFC /* SKFormDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKFormDataRequest.m; sourceTree = "<group>"; };
 		F2F79EC5180D32B70004CAFC /* NetUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetUtils.h; sourceTree = "<group>"; };
 		F2F79EC6180D32B70004CAFC /* NetUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetUtils.m; sourceTree = "<group>"; };
+		F2FA2F05186BD8D900647728 /* SKECMRootController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKECMRootController.h; sourceTree = "<group>"; };
+		F2FA2F06186BD8D900647728 /* SKECMRootController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKECMRootController.m; sourceTree = "<group>"; };
 		F2FFDBBD18346290001B9B84 /* SKPersonInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPersonInfoController.h; sourceTree = "<group>"; };
 		F2FFDBBE18346290001B9B84 /* SKPersonInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPersonInfoController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1295,6 +1298,10 @@
 				F2F038EC1818FC4B00B9116C /* SKAttachManger.m */,
 				F291E255180CDF6C0027F0C9 /* SKCMSRootController.h */,
 				F291E256180CDF6C0027F0C9 /* SKCMSRootController.m */,
+				F2FA2F05186BD8D900647728 /* SKECMRootController.h */,
+				F2FA2F06186BD8D900647728 /* SKECMRootController.m */,
+				F24E7F74183DEF5500B7F23A /* SKECMAttahController.h */,
+				F24E7F75183DEF5500B7F23A /* SKECMAttahController.m */,
 			);
 			name = utilView;
 			sourceTree = "<group>";
@@ -1670,8 +1677,6 @@
 				F2731971183B8E9E000FAF94 /* test1.xml */,
 				F273196E183B8C59000FAF94 /* SKECMContentViewController.h */,
 				F273196F183B8C59000FAF94 /* SKECMContentViewController.m */,
-				F24E7F74183DEF5500B7F23A /* SKECMAttahController.h */,
-				F24E7F75183DEF5500B7F23A /* SKECMAttahController.m */,
 				F2731967183B8C3F000FAF94 /* Model */,
 			);
 			name = ECM;
@@ -3036,6 +3041,7 @@
 				F2A4853F182A567E0068A4D7 /* ParseOperation.m in Sources */,
 				F200C88918272F3700161747 /* SKTokenField.m in Sources */,
 				F2F0395918190BF700B9116C /* MBProgressHUD.m in Sources */,
+				F2FA2F07186BD8D900647728 /* SKECMRootController.m in Sources */,
 				F28846BC1803F7DD006A5D62 /* UIDragButton.m in Sources */,
 				F291E257180CDF6C0027F0C9 /* SKCMSRootController.m in Sources */,
 				F28DF84B185ABB19000B6C1F /* SKGridController.m in Sources */,

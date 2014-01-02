@@ -23,6 +23,7 @@
 #import "UIView+screenshot.h"
 #import "UIImage+BlurredFrame.h"
 #import "SKDaemonManager.h"
+#import "SKECMRootController.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
 @interface SKViewController ()
 {
@@ -146,9 +147,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	if ([segue.identifier isEqualToString:@"SKNewsItemController"])
+	if ([segue.identifier isEqualToString:@"SKECMRootController"])
 	{
-        //SKNewsItemController *newsItem = segue.destinationViewController;
+        SKECMRootController *ecmRoot = segue.destinationViewController;
+        ecmRoot.channel = sender;
 	}
 }
 
@@ -481,8 +483,8 @@
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
         }
     }else{
+        [self initClientApp];
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
-            [self initClientApp];
             NSDate *date=[FileUtils valueFromPlistWithKey:@"sleepTime"];
             int sleepSecond = [[NSDate date] secondsAfterDate:date];
             if (sleepSecond > 1500 || sleepSecond < 0)

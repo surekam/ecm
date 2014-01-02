@@ -22,4 +22,8 @@
 -(void)setDataDictionary:(NSDictionary*)dictionary;
 -(void)setRemindInfo:(NSDictionary*)remind;
 -(void)setCMSInfo:(NSDictionary*)info;
+
+-(void)setECMInfo:(NSDictionary*)info;
+//用于测试
+-(void)setCMSTestInfo;
 @end

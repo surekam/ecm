@@ -1099,6 +1099,59 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     return YES;
 }
 
+/*
+ {"v":{"AID":"ECM_134118_2","PAPERID":"134118","CHANNELID":"1010201","TFRM":"ZYECM","URL":"http://tam.hngytobacco.com/ecmapp/tecmeai/content/paper/134118","CRTM":"2013-11-20T16:50:06.000","AUTM":"2013-11-20T16:50:40.162","ATTRLABLE":"attachment,bodyimage","ADDITION":"","PMS":"u:testmobile;u:czadmin;u:goodman;","TITL":"【调试】测试发送图片附件004","ENABLED":"0"}}
+ */
+
+/*
+AID	主键ID
+PAPERID	文章ID
+CHANNELID	ECM栏目ID 值对应频道表的FIDLIST)
+TITL	标题
+TFRM	来源系统
+URL	获取详情URL
+CRTM	发布时间
+AUTM	入库时间
+BGTM	开始时间
+EDTM	结束时间
+ATTRLABLE	属性标识（bodyfile,attachment,bodyimage)
+ADDITION	附加
+PMS	权限
+ENABLED	是否可用，1表示可用，0表示不可用（删除掉了）
+*/
++(BOOL)createDocuments
+{
+    NSString* t_doc_sql = [NSString stringWithFormat:@"create table  if not exists %@\
+                              (\
+                              AID 				varchar(256) NOT NULL,\
+                              PAPERID 			varchar(32),\
+                              CHANNELID 		varchar(32),\
+                              TITL 			    varchar(256),\
+                              TFRM 			    varchar(64),\
+                              URL 			    varchar(128),\
+                              CRTM 			    TIMESTAMP,\
+                              AUTM 			    TIMESTAMP,\
+                              BGTM 			    TIMESTAMP,\
+                              EDTM 			    TIMESTAMP,\
+                              UPTM              TIMESTAMP,\
+                              ATTRLABLE 		varchar(128),\
+                              ADDITION 		    varchar(1024),\
+                              PMS 		        varchar(256),\
+                              READED            SMALLINT           DEFAULT 0,\
+                              ENABLED 			SMALLINT,\
+                              constraint P_CLIENTVERSION_KEY primary key (AID)\
+                              );",@"T_DOCUMENTS"];
+    char *error = NULL;
+    [self openDb];
+    if (sqlite3_exec(dataBase, [t_doc_sql UTF8String], 0, 0, &error) != SQLITE_OK) {
+        NSLog(@"create table %@ error:%s",@"T_DOCUMENTS",error);
+        [self closeDb];
+        return NO;
+    }
+    [self closeDb];
+    return YES;
+}
+
 
 +(void)setDBVersion
 {
@@ -1120,6 +1173,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
         [self createClientApp];
         [self createChannel];
         [self createCilentVersion];
+        [self createDocuments];
         [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
     }
 }
@@ -1143,6 +1197,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     [self createClientApp];
     [self createChannel];
     [self createCilentVersion];
+    [self createDocuments];
     [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
     return YES;
 }

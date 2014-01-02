@@ -43,6 +43,37 @@
     return self;
 }
 
+-(void)setCMSTestInfo
+{
+    _titleLabel.text =  @"公司开展兼职讲师集中备课 卢平对调查问卷进行点评思";
+    
+    [_crtmLabel setText:@"2013-11-20 16:50"];
+    
+    [_attachView setHidden:NO];
+    [_stateView  setImage:
+     [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
+    
+}
+
+-(void)setECMInfo:(NSDictionary*)info
+{
+    if ([info.allKeys containsObject:@"TITL"]) {
+        _titleLabel.text =  [info objectForKey:@"TITL"];
+    }
+    
+    if ([info.allKeys containsObject:@"CRTM"]) {
+        [_crtmLabel setText:[info objectForKey:@"CRTM"]];
+    }
+    
+    [_attachView setHidden:![self containAttachement:info]];
+    if (![[info objectForKey:@"READED"] intValue]) {
+        [_stateView  setImage:
+         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
+    }else{
+        [_stateView setImage:
+         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_read" ofType:@"png"]]];
+    }
+}
 
 -(void)setCMSInfo:(NSDictionary*)info
 {
