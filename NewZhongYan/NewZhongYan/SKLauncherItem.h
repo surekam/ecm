@@ -7,16 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGOImageButton.h"
 @class CustomBadge;
 //桌面上的主按钮
 @interface SKLauncherItem : UIView
 {
-    UIButton    *tapButton;
+    EGOImageButton    *tapButton;
     UILabel     *titleLabel;
     CustomBadge *badge;
 }
 
-@property(nonatomic,strong) UIButton    *tapButton;
+@property(nonatomic,strong) EGOImageButton    *tapButton;
 @property(nonatomic,strong) UILabel     *titleLabel;
 @property(nonatomic,strong) CustomBadge *badge;
 -(void)setTitle:(NSString *)title;

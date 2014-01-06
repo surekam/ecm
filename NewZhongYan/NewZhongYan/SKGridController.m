@@ -10,7 +10,7 @@
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
 #import "DDXMLElement.h"
-#import "UIButton+WebCache.h"
+//#import "UIButton+WebCache.h"
 #import "SKViewController.h"
 #import "SKDaemonManager.h"
 #import "SKECMRootController.h"
@@ -59,11 +59,14 @@
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
             NSLog(@"%@",[NSURL URLWithString:dict[@"LOGO"]]);
-            //[dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
-            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-                NSLog(@"%@",error);
-                NSLog(@"%@",error.userInfo);
-            }];
+            [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
+//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
+//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+//                NSLog(@"%@",error);
+//                NSLog(@"%@",error.userInfo);
+//            }];
+//            
+//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal placeholderImage:0 options:SDWebImageRetryFailed];
             //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
             [dragbtn setDelegate:self];

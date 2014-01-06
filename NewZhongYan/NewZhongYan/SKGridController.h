@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EGOImageButton.h"
 #import "UIDragButton.h"
 @interface SKGridController : UIViewController<UIDragButtonDelegate>
 @property BOOL isCompanyPage;

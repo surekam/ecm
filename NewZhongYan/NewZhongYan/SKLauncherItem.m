@@ -17,7 +17,7 @@
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         //self.backgroundColor = COLOR(17, 168, 171);
-        tapButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        tapButton = [EGOImageButton buttonWithType:UIButtonTypeCustom];
         tapButton.layer.cornerRadius = 10;
         [tapButton setFrame:CGRectMake(0, 0, 60, 60)];
         [self addSubview:tapButton];
