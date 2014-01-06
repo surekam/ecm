@@ -127,7 +127,7 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"%@",NSHomeDirectory());
+    NSLog(@"---%@",[ASIHTTPRequest defaultUserAgentString]);
     
     
     ASIHTTPRequest* r = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://117.18.98.241/s/1"]];

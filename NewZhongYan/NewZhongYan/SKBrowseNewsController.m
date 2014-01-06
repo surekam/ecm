@@ -107,9 +107,6 @@
 
 - (UIViewController *) controllerAtIndex:(NSInteger) index
 {
-    if (KinitialPage == 0 && index == kNumberOfPages - 1) {
-        return nil;
-    }
     if (index > viewControllerArray.count || index < 0) return nil;
     id res = [viewControllerArray objectAtIndex:index];
     if (res == [NSNull null])

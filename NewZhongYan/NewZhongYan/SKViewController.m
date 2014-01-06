@@ -327,7 +327,6 @@
     }
 }
 
-
 - (SKGridController*)loadScrollViewWithClientApp:(SKClientApp*)app PageNo:(int)page
 {
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
@@ -476,7 +475,7 @@
             [FileUtils setvalueToPlistWithKey:@"gpusername" Value:@""];//这里一般不是第一次登陆 比如屏幕保护密码输错
         }else{
             [self firstInitClientApp];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
+            //[SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];

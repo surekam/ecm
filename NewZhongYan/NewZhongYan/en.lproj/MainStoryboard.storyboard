@@ -3894,10 +3894,10 @@
             </objects>
             <point key="canvasLocation" x="379" y="-1799"/>
         </scene>
-        <!--Browse News Controller - 新闻详情-->
+        <!--Browse Controller - 新闻详情-->
         <scene sceneID="AZi-Al-Xs7">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="WM5-X9-EpB" customClass="SKBrowseNewsController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="WM5-X9-EpB" customClass="SKECMBrowseController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Sha-ck-sm5"/>
                         <viewControllerLayoutGuide type="bottom" id="hYb-a9-sqy"/>
@@ -3919,28 +3919,14 @@
                             <constraint firstAttribute="trailing" secondItem="Zyj-UO-BeG" secondAttribute="trailing" id="fSY-s2-xsD"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="新闻详情" id="pnu-ge-XbG">
-                        <barButtonItem key="rightBarButtonItem" title="Item" style="done" id="XTC-qI-Ujg">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="juK-F9-7F8">
-                                <rect key="frame" x="244" y="2" width="60" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" backgroundImage="btn_help.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="onHelpButtonClick:" destination="WM5-X9-EpB" eventType="touchUpInside" id="fv3-36-95s"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="新闻详情" id="pnu-ge-XbG"/>
                     <connections>
                         <outlet property="lazyScrollView" destination="Zyj-UO-BeG" id="72w-W3-bfX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UeR-Di-pOp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="778" y="-1799"/>
+            <point key="canvasLocation" x="1052" y="-1813"/>
         </scene>
     </scenes>
     <resources>

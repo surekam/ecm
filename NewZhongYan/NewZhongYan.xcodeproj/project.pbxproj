@@ -26,6 +26,7 @@
 		F212E45818233BA3001A0A74 /* REMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F212E45118233BA3001A0A74 /* REMenuItem.m */; };
 		F212E45918233BA3001A0A74 /* REMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = F212E45318233BA3001A0A74 /* REMenuItemView.m */; };
 		F212E45A18233BA3001A0A74 /* REMenuContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F212E45518233BA3001A0A74 /* REMenuContainerView.m */; };
+		F21B48821876528400842931 /* SKECMBrowseController.m in Sources */ = {isa = PBXBuildFile; fileRef = F21B48811876528400842931 /* SKECMBrowseController.m */; };
 		F22450DF183EF7AB003B32D3 /* NSData+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = F22450C5183EF7AB003B32D3 /* NSData+GIF.m */; };
 		F22450E0183EF7AB003B32D3 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F22450C7183EF7AB003B32D3 /* SDImageCache.m */; };
 		F22450E1183EF7AB003B32D3 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = F22450C9183EF7AB003B32D3 /* SDWebImageCompat.m */; };
@@ -523,6 +524,8 @@
 		F212E45318233BA3001A0A74 /* REMenuItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REMenuItemView.m; sourceTree = "<group>"; };
 		F212E45418233BA3001A0A74 /* REMenuContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = REMenuContainerView.h; sourceTree = "<group>"; };
 		F212E45518233BA3001A0A74 /* REMenuContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = REMenuContainerView.m; sourceTree = "<group>"; };
+		F21B48801876528400842931 /* SKECMBrowseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKECMBrowseController.h; sourceTree = "<group>"; };
+		F21B48811876528400842931 /* SKECMBrowseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKECMBrowseController.m; sourceTree = "<group>"; };
 		F22450C4183EF7AB003B32D3 /* NSData+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GIF.h"; sourceTree = "<group>"; };
 		F22450C5183EF7AB003B32D3 /* NSData+GIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GIF.m"; sourceTree = "<group>"; };
 		F22450C6183EF7AB003B32D3 /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCache.h; sourceTree = "<group>"; };
@@ -1300,6 +1303,8 @@
 				F291E256180CDF6C0027F0C9 /* SKCMSRootController.m */,
 				F2FA2F05186BD8D900647728 /* SKECMRootController.h */,
 				F2FA2F06186BD8D900647728 /* SKECMRootController.m */,
+				F21B48801876528400842931 /* SKECMBrowseController.h */,
+				F21B48811876528400842931 /* SKECMBrowseController.m */,
 				F24E7F74183DEF5500B7F23A /* SKECMAttahController.h */,
 				F24E7F75183DEF5500B7F23A /* SKECMAttahController.m */,
 			);
@@ -3006,6 +3011,7 @@
 				F2F79EB2180D309D0004CAFC /* RegisterDevice.m in Sources */,
 				F2F79E9C180D2DAF0004CAFC /* SKAgentLogonManager.m in Sources */,
 				F291E22C180CDACC0027F0C9 /* FMDatabase.m in Sources */,
+				F21B48821876528400842931 /* SKECMBrowseController.m in Sources */,
 				F288468F180397EB006A5D62 /* SKLoginViewController.m in Sources */,
 				F2D8149F1835C75300FE0839 /* WorkNewsHelper.m in Sources */,
 				F2BD53891828D50B00CBEA30 /* SKTrashboxCell.m in Sources */,

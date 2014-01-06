@@ -43,6 +43,7 @@
 #define RegistInfoCode      3005 //注册信息无效
 #define AuthInfoCode        3006
 
+//#define SD_WEBP 1
 
 typedef void (^basicBlock)(void);
 typedef void (^errorBlock)(NSDictionary *errorinfo);
@@ -79,6 +80,7 @@ typedef void (^resultsetBlock)(NSArray *resultset);
 #define Image(_pointer) [UIImage imageNamed:_pointer]
 
 #define ZZZobt @"http://tam.hngytobacco.com/ZZZobta/aaa-agents/avs"
+
 
 
 

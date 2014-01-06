@@ -19,7 +19,7 @@
         self.CMSInfo = [NSMutableDictionary dictionaryWithDictionary:cmsInfo];
         self.tid = [cmsInfo objectForKey:@"TID"];
         self.doctype = SKNews;//默认值
-        [self praseAttachmentItem];
+        //[self praseAttachmentItem];
     }
     return self;
 }

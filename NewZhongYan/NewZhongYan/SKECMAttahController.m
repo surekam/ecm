@@ -67,7 +67,6 @@
 -(void) analysisXml:(NSString *) contentPath
 {
     NSData *data=[NSData dataWithContentsOfFile:contentPath];
-    //NSLog(@"%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:0];
     _detail = [[SKECMDetail alloc] init];
     
@@ -100,6 +99,8 @@
 {
     NSString* contentPath = [AM contentPath];
     NSURL*    contentUrl =  [NSURL URLWithString:@"http://10.159.30.88/aaa-agents/xml/ECMDetail.xml"];
+    contentUrl = [NSURL URLWithString:_news[@"URL"]];
+    NSLog(@"%@",contentUrl);
     if ([AM contentExisted])
     {
         [self analysisXml:contentPath];
@@ -143,6 +144,7 @@
     _titleLabel.font = [UIFont boldSystemFontOfSize:19];
     _titleLabel.numberOfLines = 0;
     _titleLabel.text = _detail.title;
+    _titleLabel.text = _news[@"TITL"];
     [_titleLabel sizeToFit];
     [_titleLabel setBackgroundColor:[UIColor clearColor]];
     [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
@@ -296,7 +298,7 @@
 }
 
 -(void) showContent:(Content *) content{
-    [content show];
+    //[content show];
     if (content.type == nil) {
         [self addText:content];
     }
@@ -327,55 +329,4 @@
     [self initData];
     [self loadContent];
 }
-
-//    NSString* urlstring = [content.value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//    EGOImageView *imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(60, _curHeight, 200, 160)];
-//    [imageView setImageWithURL:[NSURL URLWithString:urlstring] placeholderImage:Image(@"reload") options:SDWebImageHandleCookies completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-//        NSLog(@"%@  %@ %d",image,error.localizedDescription,cacheType);
-//    }];
-//    imageView.caption = _detail.title;
-//    [imageView addDetailShow];
-//    [_bgscrollview addSubview:imageView];
-//    _curHeight += 162;
-//    NSString *imagePath = [[AM TIDPath]stringByAppendingPathComponent:content.name];
-//    if ([AM fileExisted:imagePath]) {
-//        UIImage* image = [UIImage imageWithContentsOfFile:imagePath];
-//        if (!image) {
-//            [ASIHTTPRequest removeFileAtPath:imagePath error:0];
-//        }
-//        [imageView setImage:[UIImage imageWithContentsOfFile:imagePath]];
-//        [imageView setCaption:content.name];
-//        [imageView addDetailShow];
-//        return;
-//    }
-//
-//    NSString* urlstring = [[content.value gtm_stringByEscapingForHTML] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-//
-//    NSLog(@"content.value = %@",content.value);
-//    NSLog(@"urlstring = %@",urlstring);
-//    NSURL* imageUrl =  [NSURL URLWithString:urlstring];
-//    NSLog(@"imageUrl = %@",imageUrl);
-
-//    SKHTTPRequest* request = [[SKHTTPRequest alloc] initWithURL:imageUrl];
-//    __weak SKHTTPRequest*imageRequest = request;
-//    [request setDownloadDestinationPath:imagePath];
-//    [request setTimeOutSeconds:15];
-//    [request setCompletionBlock:^{
-//        if ([imageRequest responseStatusCode] != 200) {
-//            [ASIHTTPRequest removeFileAtPath:imagePath error:0];
-//            return ;
-//        }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [imageView setImage:[UIImage imageWithContentsOfFile:imagePath]];
-//            [imageView setCaption:content.name];
-//            [imageView addDetailShow];
-//        });
-//    }];
-//    [request setFailedBlock:^{
-//        if ([AM fileExisted:imagePath]) {
-//            [ASIHTTPRequest removeFileAtPath:imagePath error:0];
-//        }
-//    }];
-//    [request startAsynchronous];
-
 @end

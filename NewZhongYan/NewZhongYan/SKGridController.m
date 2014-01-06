@@ -58,7 +58,12 @@
             UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
-            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
+            NSLog(@"%@",[NSURL URLWithString:dict[@"LOGO"]]);
+            //[dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
+            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
+                NSLog(@"%@",error);
+                NSLog(@"%@",error.userInfo);
+            }];
             //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
             [dragbtn setDelegate:self];

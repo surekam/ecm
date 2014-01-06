@@ -11,6 +11,7 @@
 #import "SKToolBar.h"
 #import "SKDaemonManager.h"
 #import "SKBrowseNewsController.h"
+#import "SKECMBrowseController.h"
 #define UP 1
 #define DOWN 0
 #define READ 1
@@ -154,11 +155,12 @@
     [self initToolView];
 }
 
+
 -(void)dataFromDataBaseWithComleteBlock:(resultsetBlock)block
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL, ATTRLABLE,PMS,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL,ATTRLABLE,PMS,URL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
         NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
         for (NSMutableDictionary* d in dataArray)
         {
@@ -252,7 +254,8 @@
 //        attachController.news = _dataItems[selectedIndexPath.row];
     }
     if ([[segue identifier] isEqualToString:@"browse"]) {
-        SKBrowseNewsController *browser = (SKBrowseNewsController *)[segue destinationViewController];
+        SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
+        browser.channel = self.channel;
         NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
         NSMutableDictionary* dict = _dataItems[selectedIndexPath.row];
         browser.currentDictionary = dict;

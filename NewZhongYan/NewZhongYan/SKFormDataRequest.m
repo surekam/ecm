@@ -25,6 +25,7 @@
             NSParameterAssert([APPUtils authcode] != nil);
             [self addRequestHeader:@"iv-user" value:[APPUtils userUid]];
             [self addRequestHeader:@"authcode" value:[APPUtils authcode]];
+            [self addRequestHeader:@"User-Agent" value:@"iphone"];
         //}
     }
     return self;
