@@ -20,6 +20,7 @@ typedef enum
 @interface SKAttachManger : NSObject
 {
     NSString        *tid;
+    NSString        *paperID;
     NSString        *contentPath;
     NSMutableArray  *_attachItems;
     NSMutableDictionary    *_CMSInfo;
@@ -29,6 +30,7 @@ typedef enum
 
 @property SKDocType  doctype;
 @property(nonatomic,strong)NSString *tid;
+@property(nonatomic,strong)NSString *paperID;
 @property(nonatomic,strong)NSMutableArray *attachItems;
 @property(nonatomic,strong)NSMutableDictionary *CMSInfo;
 
@@ -137,8 +139,9 @@ typedef enum
  */
 -(NSString*)contentPath;
 
+-(NSString*)ecmContentPath;
 
-
+-(BOOL)ecmContentExisted;
 //附件工具函数
 /**
  *  该函数在搜索界面会用到 他会作为一个参数传给服务器
@@ -210,6 +213,17 @@ typedef enum
  *  @return tid文件夹路径
  */
 +(NSString*)TIDPath:(SKDocType)doctype Tid:(NSString*)tid;
+
+
+/**
+ *  保证获取路径的同事对应的文件一定被存在 因为如果不存在代码会自动创建
+ *
+ *  @param doctype 文件类型
+ *  @param paperID paperID
+ *
+ *  @return 0
+ */
++(NSString*)ecmDocPathWithpaperId:(NSString*)paperID;
 
 /**
  *  不能保证获取路径的同事对应的文件一定被存在 因为如果不存在代码也不会自动创建

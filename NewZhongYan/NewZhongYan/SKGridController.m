@@ -41,6 +41,14 @@
 //    [self.navigationController pushViewController:controller animated:YES];
 }
 
+-(void)jumoController:(id)sender
+{
+    UIDragButton *btn=(UIDragButton *)[(UIDragButton *)sender superview] ;
+    //UIViewController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:btn.controllerName];
+    //[self.navigationController pushViewController:controller animated:YES];
+    [_rootController performSegueWithIdentifier:btn.controllerName sender:self];
+}
+
 -(void)initSelfFactoryView
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -58,15 +66,7 @@
             UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
-            NSLog(@"%@",[NSURL URLWithString:dict[@"LOGO"]]);
             [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
-//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal];
-//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType){
-//                NSLog(@"%@",error);
-//                NSLog(@"%@",error.userInfo);
-//            }];
-//            
-//            [dragbtn.tapButton setImageWithURL:[NSURL URLWithString:dict[@"LOGO"]] forState:UIControlStateNormal placeholderImage:0 options:SDWebImageRetryFailed];
             //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
             [dragbtn setDelegate:self];
@@ -94,7 +94,7 @@
         [dragbtn setLocation:up];
         [dragbtn setDelegate:self];
         [dragbtn setTag:i];
-        [dragbtn.tapButton addTarget:self action:@selector(jumpToController:) forControlEvents:UIControlEventTouchUpInside];
+        [dragbtn.tapButton addTarget:self action:@selector(jumoController:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:dragbtn];
         [upButtons addObject:dragbtn];
     }
@@ -109,12 +109,12 @@
                 [v removeFromSuperview];
             }
         }
-        [self initSelfFactoryView];
-//        if (self.isCompanyPage) {
-//            [self initCompanyPageView];
-//        }else{
-//            [self initSelfFactoryView];
-//        }
+//        [self initSelfFactoryView];
+        if (self.isCompanyPage) {
+            [self initCompanyPageView];
+        }else{
+            [self initSelfFactoryView];
+        }
     } faliure:^(NSError* error){
         NSLog(@"%@",[error userInfo][@"reason"]);
     }];
@@ -235,13 +235,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     [self initSelfFactoryView];
+     //[self initSelfFactoryView];
     
-//    if (self.isCompanyPage) {
-//        [self initCompanyPageView];
-//    }else{
-//        [self initSelfFactoryView];
-//    }
+    if (self.isCompanyPage) {
+        [self initCompanyPageView];
+    }else{
+        [self initSelfFactoryView];
+    }
 }
 
 @end

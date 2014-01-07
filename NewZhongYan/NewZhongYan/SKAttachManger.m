@@ -11,6 +11,7 @@
 @implementation SKAttachManger
 @synthesize tid = _tid;
 @synthesize doctype = _doctype;
+@synthesize paperID;
 
 -(id)initWithCMSInfo:(NSMutableDictionary*)cmsInfo
 {
@@ -18,6 +19,7 @@
     if (self) {
         self.CMSInfo = [NSMutableDictionary dictionaryWithDictionary:cmsInfo];
         self.tid = [cmsInfo objectForKey:@"TID"];
+        self.paperID = cmsInfo[@"PAPERID"];
         self.doctype = SKNews;//默认值
         //[self praseAttachmentItem];
     }
@@ -199,6 +201,26 @@
             return nil;
     }
     
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:0])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:0];
+    }
+    return path;
+}
+
+-(BOOL)ecmContentExisted
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self ecmContentPath] isDirectory:0];
+}
+
+-(NSString*)ecmContentPath
+{
+    return [[SKAttachManger ecmDocPathWithpaperId:self.paperID] stringByAppendingPathComponent:@"CONTENT.xml"];
+}
+
++(NSString*)ecmDocPathWithpaperId:(NSString*)paperID
+{
+    NSString* path = [[self ecmDocPath] stringByAppendingPathComponent:paperID];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:0])
     {
         [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:0];
@@ -434,6 +456,16 @@
         [[NSFileManager defaultManager] createDirectoryAtPath:TIDPath withIntermediateDirectories:YES attributes:nil error:0];
         return NO;
     }
+}
+
++(NSString*)ecmDocPath
+{
+    NSError* error = nil;
+    NSString* codocsPath = [[FileUtils documentPath] stringByAppendingPathComponent:@"ecm"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:codocsPath isDirectory:0]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:codocsPath  withIntermediateDirectories:YES attributes:nil error:&error];
+    }
+    return codocsPath;
 }
 
 +(NSString*)codocsPath
