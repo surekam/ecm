@@ -14,6 +14,7 @@
 #import "SKViewController.h"
 #import "SKDaemonManager.h"
 #import "SKECMRootController.h"
+#import "LocalMetaDataManager.h"
 @interface SKGridController ()
 {
     NSMutableArray *upButtons;
@@ -66,7 +67,11 @@
             UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
-            [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
+            if (dict[@"LOGO"] == [NSNull null]) {
+                   [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobta/public/icon/copublicnotice.png"]];
+            }else{
+                [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
+            }
             //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
             [dragbtn setDelegate:self];
@@ -75,7 +80,6 @@
             [self.view addSubview:dragbtn];
             [upButtons addObject:dragbtn];
         }
-        
         [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
     });
 }
@@ -103,6 +107,7 @@
 
 -(void)reloadData
 {
+    NSLog(@"reloadData");
     [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
         for (UIView* v in self.view.subviews) {
             if (v.class == [UIDragButton class]) {
@@ -118,6 +123,18 @@
     } faliure:^(NSError* error){
         NSLog(@"%@",[error userInfo][@"reason"]);
     }];
+    if ([[self.clientApp NAME] isEqualToString:@"长烟主页"]) {
+        [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                           complete:^(NSMutableArray* array){
+                                               NSString* timestr = array[1][@"v"][@"LATESTTIME"];
+                                               NSTimeInterval time = [[[DateUtils stringToDate:timestr DateFormat:dateTimeFormat] dateByAddingHours:8] timeIntervalSince1970];
+                                               NSLog(@"server %@ :: date =%@  time == %.0f",array[1][@"v"][@"CHANNELCODE"],timestr,time*1000);
+                                               [self reloadBageNumber];
+                                           }
+                                            faliure:^(NSError* error){
+                                                
+                                            }];
+    }
 
 }
 
@@ -232,16 +249,133 @@
     }
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if ([[self.clientApp NAME] isEqualToString:@"长烟主页"]) {
+        [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                           complete:^(NSMutableArray* array){
+                                               NSLog(@"%@",array);
+                                           }
+                                            faliure:^(NSError* error){
+                                            }];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
      //[self initSelfFactoryView];
-    
     if (self.isCompanyPage) {
         [self initCompanyPageView];
     }else{
         [self initSelfFactoryView];
     }
+    [self reloadBageNumber];
 }
 
+-(void)reloadBageNumber{
+    if (self.isCompanyPage) {
+        [self setBadgeNumber];
+    }else{
+        [self setECMBadgeNumber];
+    }
+}
+
+-(void)setECMBadgeNumber
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (UIDragButton *btn in upButtons)
+        {
+            //NSLog(@"%@ ----- %@",btn.channel.NAME,btn.channel.MAXUPTM);
+        }
+    });
+}
+
+-(void)setBadgeNumber
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (UIDragButton *btn in upButtons)
+        {
+            NSString *controllerName=btn.controllerName;
+            if([controllerName isEqualToString:@"SKGTaskViewController"])
+            {
+                //代办
+                if ( [LocalMetaDataManager existedNewData:[LocalDataMeta sharedRemind]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedRemind]]];
+                }
+            }
+            else if([controllerName isEqualToString:@"SKMeetingItemController"])
+            {
+                //会议
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedMeeting]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMeeting]]];
+                }
+            }else if([controllerName isEqualToString:@"SKEmailController"]){
+                [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMail]]];
+            }else if([controllerName isEqualToString:@"SKNotifyItemController"]){
+                //通知
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedNotify]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedNotify]]];
+                }
+            } else if([controllerName isEqualToString:@"SKWorkNewsController"])  {
+                //动态
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedWorkNews]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedWorkNews]]];
+                }
+            }else if([controllerName isEqualToString:@"SKAddressBookController"]){
+                //通讯录
+            }else if([controllerName isEqualToString:@"SKAnnouncementItemController"]){
+                //公告
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedAnnouncement]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedAnnouncement]]];
+                }
+            }else if([controllerName isEqualToString:@"SKNewsItemController"]){
+                //新闻
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedNews]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedNews]]];
+                }
+            }else if([controllerName isEqualToString:@"SKCompIssueViewController"]){
+                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedCompanyDocuments]])
+                {
+                    [btn setBadgeNumber:@"new"];
+                }
+                else
+                {
+                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedCompanyDocuments]]];
+                }
+            }
+        }
+    });
+}
 @end

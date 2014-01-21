@@ -28,6 +28,7 @@ static NSOperationQueue* sharedQueue = nil;
 @implementation SKDaemonManager
 {
     SKDaemonBasicBlock _completeBlock;
+    SKDaemonBasicArrayBlock _completeArrayBlock;
     SKDaemonErrorBlock _faliureBlock;
     SKClientApp* _client;
     SKChannel* _channel;
@@ -57,6 +58,18 @@ static NSOperationQueue* sharedQueue = nil;
 }
 
 //同步client
+-(id)initUpdateInfoWithClientAppData:(SKClientApp*)client complete:(SKDaemonBasicArrayBlock)completeArrayBlock faliure:(SKDaemonErrorBlock)faliureBlock
+{
+    self = [super init];
+    if (self) {
+        _completeArrayBlock = [completeArrayBlock copy];
+        _faliureBlock = [faliureBlock copy];
+        _client = client;
+    }
+    return self;
+}
+
+//同步client
 -(id)initDocumentsWithChannelData:(SKChannel*)channel
                          complete:(SKDaemonBasicBlock)completeBlock
                           faliure:(SKDaemonErrorBlock)faliureBlock
@@ -72,7 +85,28 @@ static NSOperationQueue* sharedQueue = nil;
     return self;
 }
 
++(void)SynMaxUpdateDateWithClient:(SKClientApp*)client
+                         complete:(SKDaemonBasicArrayBlock)completeArrayBlock
+                          faliure:(SKDaemonErrorBlock)faliureBlock
+{
+    for (SKDaemonManager* helper  in [SKDaemonManager sharedQueue].operations) {
+        if ([helper.Daemonidentify isEqualToString:[NSString stringWithFormat:@"%@VersionInfo",client.CODE]]) {
+            if (faliureBlock) {
+                faliureBlock([NSError errorWithDomain:ERRORDOMAIN code:RequestRepeatedError userInfo:@{@"reason": @"已有相同频道的请求"}]);
+            }
+            return;
+        }
+    }
+    SKDaemonManager* helper = [[SKDaemonManager alloc] initUpdateInfoWithClientAppData:client
+                                                                              complete:completeArrayBlock
+                                                                               faliure:faliureBlock];
+    helper.Daemonidentify = [NSString stringWithFormat:@"%@VersionInfo",client.CODE];
+    helper.daemontype = SKDaemonClientVersion;
+    [[SKDaemonManager sharedQueue] addOperation:helper];
+}
+
 //频道的更新是属于删除重建的更新
+//关于operation的唯一标示 采用 clientcode+@"VersionInfo"的形式
 +(void)SynChannelWithClientApp:(SKClientApp*)client
                       complete:(SKDaemonBasicBlock)completeBlock
                        faliure:(SKDaemonErrorBlock)faliureBlock
@@ -216,6 +250,29 @@ static NSOperationQueue* sharedQueue = nil;
     }
 }
 
+-(void)synChannelUpdateInfo{
+    NSURL* url = [SKECMURLManager getUpdateClientAppWithClientCode:_client.CODE QueryDate:@"0"];
+    SKHTTPRequest* request = [SKHTTPRequest requestWithURL:url];
+    [request startSynchronous];
+    if (!request.error) {
+        SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
+        if (!entity.praserError) {
+            if (_completeArrayBlock) {
+                _completeArrayBlock(entity.dataItems);
+            }
+        }else{
+            if (_faliureBlock) {
+                _faliureBlock(entity.praserError);
+            }
+        }
+    }else{
+        if (_faliureBlock) {
+            _faliureBlock([NSError errorWithDomain:ERRORDOMAIN code:RequestMetaError userInfo:@{@"reason": @"获取文档列表错误"}]);
+        }
+        return;
+    }
+}
+
 -(void)main
 {
     @autoreleasepool{
@@ -223,6 +280,9 @@ static NSOperationQueue* sharedQueue = nil;
             [self synChannelInfo];
         }else if (self.daemontype == SKDaemonDocuments){
             [self synDocumentInfo];
+        }
+        else if (self.daemontype == SKDaemonClientVersion){
+            [self synChannelUpdateInfo];
         }
     }
 }

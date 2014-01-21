@@ -39,6 +39,12 @@
 +(NSURL*)getUpdateClientAppWithVersion:(int)version;
 
 #pragma mark -
+#pragma mark ===========  频道数据集合接口  =========
+#pragma mark -
+
++(NSURL*)getUpdateClientAppWithClientCode:(NSString*)code QueryDate:(NSString*)date;
+
+#pragma mark -
 #pragma mark ===========  频道接口  =========
 #pragma mark -
 +(NSURL*)getAllChannelWithAppCode:(NSString*)code;
@@ -48,7 +54,7 @@
 +(NSURL*)getChannelUpdateInfoWithAppCode:(NSString*)code ChannelVersion:(int)version;
 
 #pragma mark -
-#pragma mark ===========  文档类型接口接口  =========
+#pragma mark ===========  文档类型接口  =========
 #pragma mark -
 /**
  *  获取文档列表
@@ -61,4 +67,30 @@
  *  @return 查询url
  */
 +(NSURL*)getDocunmentWithChannelCode:(NSString*)code QueryDate:(NSString*)date isUP:(BOOL)isUP;
+
+#pragma mark -
+#pragma mark ===========  ECM查询接口  =========
+#pragma mark -
+
+/**
+ *  ECM查询标题
+ *
+ *  @param pagenum   起始页
+ *  @param content   内容
+ *  @param channelid 频道ID
+ *
+ *  @return 返回查询结果
+ */
++(NSURL*)queryTitleWith:(int)pagenum ECMContent:(NSString*)content ChannelID:(NSString*)channelid;
+
+/**
+ *  ECM查询全文
+ *
+ *  @param pagenum   起始页
+ *  @param content   内容
+ *  @param channelid 频道ID
+ *
+ *  @return 返回查询结果
+ */
++(NSURL*)queryContentWith:(int)pagenum ECMContent:(NSString*)content ChannelID:(NSString*)channelid;
 @end

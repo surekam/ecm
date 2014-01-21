@@ -142,6 +142,8 @@ typedef enum
 -(NSString*)ecmContentPath;
 
 -(BOOL)ecmContentExisted;
+
+-(NSString*)ecmAttachmentWithAttachName:(NSString*)filename;
 //附件工具函数
 /**
  *  该函数在搜索界面会用到 他会作为一个参数传给服务器

@@ -30,16 +30,23 @@
 
 -(void)restoreVersionInfo
 {
-    NSString* sql = [NSString stringWithFormat:@"select strftime('%%s',max(uptm)) MAXUPTM,strftime('%%s',min(uptm)) MINUPTM from T_DOCUMENTS where channelid in (%@);",_FIDLIST];
+    NSString* sql = [NSString stringWithFormat:@"select strftime('%%s000',max(uptm)) MAXUPTM,strftime('%%s',min(uptm)) MINUPTM from T_DOCUMENTS where channelid in (%@);",_FIDLIST];
+    sql = [NSString stringWithFormat:@"select max(uptm) MAXUPTM,min(uptm) MINUPTM from T_DOCUMENTS where channelid in (%@);",_FIDLIST];
+    
     NSDictionary* dict = [[DBQueue  sharedbQueue] getSingleRowBySQL:sql];
+    NSLog(@"%@",dict);
     if (dict) {
         if (![dict[@"MAXUPTM"] isEqual:[NSNull null]]) {
             _MAXUPTM = dict[@"MAXUPTM"];
+            NSTimeInterval time = [[[DateUtils stringToDate:_MAXUPTM DateFormat:dateTimeFormat] dateByAddingHours:8] timeIntervalSince1970];
+            _MAXUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
         }
         if (![dict[@"MINUPTM"] isEqual:[NSNull null]]) {
             _MINUPTM = dict[@"MINUPTM"];
+            NSTimeInterval time = [[[DateUtils stringToDate:_MINUPTM DateFormat:dateTimeFormat] dateByAddingHours:8] timeIntervalSince1970];
+            _MINUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
         }
-        
+        NSLog(@"_MAXUPTM%@  _MINUPTM%@",_MAXUPTM,_MINUPTM);
     }else{
         _MAXUPTM = @"";
         _MINUPTM = @"";

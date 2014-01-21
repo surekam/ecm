@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Paper.h"
 @interface SKTableViewCell : UITableViewCell
 {
     __weak IBOutlet UILabel *titleLabel;
@@ -22,8 +23,10 @@
 -(void)setDataDictionary:(NSDictionary*)dictionary;
 -(void)setRemindInfo:(NSDictionary*)remind;
 -(void)setCMSInfo:(NSDictionary*)info;
-
 -(void)setECMInfo:(NSDictionary*)info;
+-(void)setECMPaperInfo:(Paper*)paper;
 //用于测试
 -(void)setCMSTestInfo;
+
+
 @end

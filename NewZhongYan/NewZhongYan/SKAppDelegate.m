@@ -127,9 +127,6 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"---%@",[ASIHTTPRequest defaultUserAgentString]);
-    
-    
     ASIHTTPRequest* r = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:@"http://117.18.98.241/s/1"]];
     __weak ASIHTTPRequest* request = r;
     r.shouldAttemptPersistentConnection = 1;

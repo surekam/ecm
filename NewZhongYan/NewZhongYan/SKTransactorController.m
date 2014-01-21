@@ -29,6 +29,7 @@
         [pRequest clearDelegatesAndCancel];
     }
 }
+
 -(void)fitLabel:(UILabel*)label
 {
     label.font = [UIFont systemFontOfSize:17];

@@ -181,6 +181,8 @@
 		F25EC64718277F6700490F38 /* SKMailEmployeeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F25EC64618277F6700490F38 /* SKMailEmployeeCell.m */; };
 		F25EC64B18277FCA00490F38 /* SKMailEmployeeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F25EC64A18277FCA00490F38 /* SKMailEmployeeCell.xib */; };
 		F25EC64E1827C94600490F38 /* SKOutBoxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F25EC64D1827C94600490F38 /* SKOutBoxCell.m */; };
+		F2625F2B187CFFE9003F2295 /* SKECMSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = F2625F2A187CFFE9003F2295 /* SKECMSearchController.m */; };
+		F2625F2E187D4D3F003F2295 /* Paper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2625F2D187D4D3F003F2295 /* Paper.m */; };
 		F262BF82180C045800F590F8 /* MainStoryboard_ios6.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F262BF80180C045800F590F8 /* MainStoryboard_ios6.storyboard */; };
 		F2660E71187A476000EAC0C1 /* NSData+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = F2660E6C187A476000EAC0C1 /* NSData+GIF.m */; };
 		F2660E72187A476000EAC0C1 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F2660E6E187A476000EAC0C1 /* SDImageCache.m */; };
@@ -713,6 +715,10 @@
 		F25EC64A18277FCA00490F38 /* SKMailEmployeeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKMailEmployeeCell.xib; sourceTree = "<group>"; };
 		F25EC64C1827C94600490F38 /* SKOutBoxCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKOutBoxCell.h; sourceTree = "<group>"; };
 		F25EC64D1827C94600490F38 /* SKOutBoxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKOutBoxCell.m; sourceTree = "<group>"; };
+		F2625F29187CFFE9003F2295 /* SKECMSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKECMSearchController.h; sourceTree = "<group>"; };
+		F2625F2A187CFFE9003F2295 /* SKECMSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKECMSearchController.m; sourceTree = "<group>"; };
+		F2625F2C187D4D3F003F2295 /* Paper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Paper.h; sourceTree = "<group>"; };
+		F2625F2D187D4D3F003F2295 /* Paper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Paper.m; sourceTree = "<group>"; };
 		F262BF81180C045800F590F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_ios6.storyboard; sourceTree = "<group>"; };
 		F2660E6B187A476000EAC0C1 /* NSData+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+GIF.h"; sourceTree = "<group>"; };
 		F2660E6C187A476000EAC0C1 /* NSData+GIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+GIF.m"; sourceTree = "<group>"; };
@@ -1297,6 +1303,7 @@
 		F2296803181FB831006373CA /* utilView */ = {
 			isa = PBXGroup;
 			children = (
+				F2731967183B8C3F000FAF94 /* Model */,
 				F2F038EB1818FC4B00B9116C /* SKAttachManger.h */,
 				F2F038EC1818FC4B00B9116C /* SKAttachManger.m */,
 				F291E255180CDF6C0027F0C9 /* SKCMSRootController.h */,
@@ -1307,6 +1314,8 @@
 				F21B48811876528400842931 /* SKECMBrowseController.m */,
 				F24E7F74183DEF5500B7F23A /* SKECMAttahController.h */,
 				F24E7F75183DEF5500B7F23A /* SKECMAttahController.m */,
+				F2625F29187CFFE9003F2295 /* SKECMSearchController.h */,
+				F2625F2A187CFFE9003F2295 /* SKECMSearchController.m */,
 			);
 			name = utilView;
 			sourceTree = "<group>";
@@ -1682,7 +1691,6 @@
 				F2731971183B8E9E000FAF94 /* test1.xml */,
 				F273196E183B8C59000FAF94 /* SKECMContentViewController.h */,
 				F273196F183B8C59000FAF94 /* SKECMContentViewController.m */,
-				F2731967183B8C3F000FAF94 /* Model */,
 			);
 			name = ECM;
 			sourceTree = "<group>";
@@ -1690,6 +1698,8 @@
 		F2731967183B8C3F000FAF94 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F2625F2C187D4D3F003F2295 /* Paper.h */,
+				F2625F2D187D4D3F003F2295 /* Paper.m */,
 				F2731968183B8C51000FAF94 /* Content.h */,
 				F2731969183B8C51000FAF94 /* Content.m */,
 				F273196A183B8C51000FAF94 /* SKECMDetail.h */,
@@ -2616,7 +2626,7 @@
 				ORGANIZATIONNAME = surekam;
 				TargetAttributes = {
 					F2C89B8C17F6B73D0099A62D = {
-						DevelopmentTeam = W6B3D78E3C;
+						DevelopmentTeam = 37P99WKK25;
 					};
 				};
 			};
@@ -2960,6 +2970,7 @@
 				F2F038F7181908C300B9116C /* EGOImageLoader.m in Sources */,
 				F291E253180CDD660027F0C9 /* Reachability.m in Sources */,
 				F2705AF3182C7E1F003D0B6E /* SKAttachViewController.m in Sources */,
+				F2625F2E187D4D3F003F2295 /* Paper.m in Sources */,
 				F2B66EF518151DD600AD6286 /* GetNewVersion.m in Sources */,
 				F23AA24B184F1624004248DB /* SKSecretController.m in Sources */,
 				F2F038FD181908D400B9116C /* EGOImageView.m in Sources */,
@@ -3016,6 +3027,7 @@
 				F2F79EAE180D2FAF0004CAFC /* GTMNSString+HTML.m in Sources */,
 				F212E45718233BA3001A0A74 /* REMenu.m in Sources */,
 				F2D8146E1834D72700FE0839 /* SKConfigureCell.m in Sources */,
+				F2625F2B187CFFE9003F2295 /* SKECMSearchController.m in Sources */,
 				F212E45618233BA3001A0A74 /* RECommonFunctions.m in Sources */,
 				F286C19F1822893F00ADFF40 /* SKLToolBar.m in Sources */,
 				F2660E73187A476000EAC0C1 /* SDWebImageCompat.m in Sources */,

@@ -23,6 +23,7 @@
             NSParameterAssert([APPUtils authcode] != nil);
             [self addRequestHeader:@"iv-user" value:[APPUtils userUid]];
             [self addRequestHeader:@"authcode" value:[APPUtils authcode]];
+            [self setDefaultResponseEncoding:NSUTF8StringEncoding];//解决中文乱码问题
     }
     return self;
 }

@@ -95,6 +95,13 @@
     }
 }
 
+-(void)setECMPaperInfo:(Paper*)paper
+{
+    _titleLabel.text =  paper.title;
+    _crtmLabel.text =  paper.time;
+    [_attachView setHidden:NO];
+}
+
 -(void)dealloc
 {
 

@@ -79,8 +79,9 @@ typedef void (^resultsetBlock)(NSArray *resultset);
 
 #define Image(_pointer) [UIImage imageNamed:_pointer]
 
-#define ZZZobt @"http://tam.hngytobacco.com/ZZZobta/aaa-agents/avs"
+//#define ZZZobt @"http://tam.hngytobacco.com/ZZZobta/aaa-agents/avs"
 
+#define ZZZobt @"http://tam.hngytobacco.com/ZZZobtb/aaa-agents-test/avs"
 
 
 

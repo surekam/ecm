@@ -10,13 +10,13 @@
 #import "SKAttachManger.h"
 #import "UIImageView+Addition.h"
 #import "GTMNSString+HTML.h"
+#import "NSString+HTML.h"
+
 #import "DDXML.h"
 #import "Element.h"
 #import "Content.h"
 #import "SKECMDetail.h"
 #import "SKAttachButton.h"
-#import "NSString+HTML.h"
-#import "GTMNSString+HTML.h"
 
 @interface SKECMAttahController ()
 {
@@ -63,6 +63,8 @@
 -(void) analysisXml:(NSString *) contentPath
 {
     NSData *data=[NSData dataWithContentsOfFile:contentPath];
+    NSString* html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"%@",html);
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:0];
     _detail = [[SKECMDetail alloc] init];
 
@@ -87,6 +89,7 @@
  
     DDXMLElement  *addition= (DDXMLElement*)[[doc nodesForXPath:@"//addition" error:nil] objectAtIndex:0];
     _detail.addition = [self analysisXmlElement:addition];
+    
 }
 
 -(void)loadContent
@@ -162,19 +165,18 @@
     [_bgscrollview addSubview:DividingLines];
     _curHeight = CGRectGetMaxY(DividingLines.frame);
 
-    //正文
     for (Content *content in _detail.body) {
         [self showContent:content];
     }
-    //附件
+    
     for (Content *content in _detail.attachment) {
         [self showContent:content];
     }
-    //题献
+
     for (Content *content in _detail.inscribe) {
         [self showContent:content];
     }
-    //附属值
+    
     for (Content *content in _detail.addition) {
         [self showContent:content];
     }
@@ -237,9 +239,9 @@
 }
 
 -(void) addHtml:(Content *) content{
-    if ([content.value isEqualToString:@"null"]) {
-        return;
-    }
+//    if ([content.value isEqualToString:@"null"]) {
+//        return;
+//    }
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, _curHeight, 300,1)];
     webView.delegate = self;
     webView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -256,7 +258,7 @@
     //_curHeight = [self scrollViewContentHeight];
     NSString* btnTitle = content.name;
     SKAttachButton* attachmentButton = [[SKAttachButton alloc] initWithFrame:CGRectMake(10,_curHeight, 300, 48)];
-    attachmentButton.filePath = [[AM TIDPath]stringByAppendingPathComponent:content.name];
+    attachmentButton.filePath = [AM ecmAttachmentWithAttachName:content.name];
     attachmentButton.attachUrl = [NSURL URLWithString:content.value];
     attachmentButton.isAttachExisted = [AM fileExisted:attachmentButton.filePath];
     [attachmentButton setTitle:btnTitle forState:UIControlStateNormal];
@@ -310,6 +312,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor redColor]];
+
     [self initData];
     [self loadContent];
 }

@@ -9,13 +9,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "NewZhongYan/SKHTTPRequest.m"
-            timestampString = "410664892.203158"
+            filePath = "NewZhongYan/SKECMAttahController.m"
+            timestampString = "411377432.209294"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
-            landmarkName = "-requestReceivedResponseHeaders:"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "-addAttachement:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NewZhongYan/SKECMBrowseController.m"
+            timestampString = "411377514.217261"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
+            landmarkName = "-controllerAtIndex:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -218,6 +218,11 @@
     return [[SKAttachManger ecmDocPathWithpaperId:self.paperID] stringByAppendingPathComponent:@"CONTENT.xml"];
 }
 
+-(NSString*)ecmAttachmentWithAttachName:(NSString*)filename
+{
+    return [[SKAttachManger ecmDocPathWithpaperId:self.paperID] stringByAppendingPathComponent:filename];
+}
+
 +(NSString*)ecmDocPathWithpaperId:(NSString*)paperID
 {
     NSString* path = [[self ecmDocPath] stringByAppendingPathComponent:paperID];

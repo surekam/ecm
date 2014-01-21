@@ -301,11 +301,8 @@
     CGFloat pageWidth = CGRectGetWidth(bgScrollView.frame);
     NSUInteger page = floor((bgScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
     pageController.currentPage = page;
-    if (page == 0) {
-        titleLabel.text = @"吴忠主页";
-    }else{
-        titleLabel.text = @"公司主页";
-    }
+    SKGridController *controller = controllerArray[page];
+    titleLabel.text = controller.clientApp.NAME;
 }
 
 - (void)loadScrollViewWithPage:(NSUInteger)page

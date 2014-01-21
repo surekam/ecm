@@ -12,6 +12,7 @@
 #import "SKDaemonManager.h"
 #import "SKBrowseNewsController.h"
 #import "SKECMBrowseController.h"
+#import "SKSearchController.h"
 #define UP 1
 #define DOWN 0
 #define READ 1
@@ -29,6 +30,15 @@
 @end
 
 @implementation SKECMRootController
+-(void)onSearchClick
+{
+    NSLog(@"onSearchClick");
+    UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"ecmsearchnavcontroller"];
+    [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
+        
+    }];
+}
+
 -(void)onRefrshClick
 {
     [SKDaemonManager SynDocumentsWithChannel:self.channel complete:^{
