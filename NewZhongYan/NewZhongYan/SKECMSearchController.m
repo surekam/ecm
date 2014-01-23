@@ -17,7 +17,6 @@
 @end
 
 @implementation UIButton(network)
-
 - (void)startLoadData:(BOOL)show {
 	if(show) {
 		UIActivityIndicatorView *progress = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];

@@ -136,7 +136,6 @@
 -(void)createAttachView
 {
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 40)];
-    [_titleLabel setBackgroundColor:[UIColor redColor]];
     _titleLabel.font = [UIFont boldSystemFontOfSize:19];
     _titleLabel.numberOfLines = 0;
     _titleLabel.text = _detail.title;
@@ -312,7 +311,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor redColor]];
 
     [self initData];
     [self loadContent];

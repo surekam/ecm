@@ -388,7 +388,7 @@
 
 -(void)dealloc
 {
-    
+    NSLog(@"dealloc");
 }
 #pragma mark- 构件截面
 /**

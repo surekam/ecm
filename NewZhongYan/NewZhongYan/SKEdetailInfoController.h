@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface SKEdetailInfoController : UIViewController<UITableViewDataSource,UITableViewDelegate>
-
+#import <MessageUI/MessageUI.h>
+@interface SKEdetailInfoController : UIViewController<UITableViewDataSource,UITableViewDelegate,MFMessageComposeViewControllerDelegate>
+@property(nonatomic,weak)NSMutableDictionary  *employeeInfo;
 @end

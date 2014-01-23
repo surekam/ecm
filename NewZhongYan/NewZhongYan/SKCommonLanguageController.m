@@ -70,7 +70,7 @@ BOOL isEditing;
 #pragma mark - View lifecycle
 -(void)dealloc
 {
-
+    
 }
 
 - (void)roundTextView:(UIView *)txtView{
@@ -88,7 +88,7 @@ BOOL isEditing;
         [self setAutomaticallyAdjustsScrollViewInsets:NO];
     }
     [self.view setBackgroundColor:[UIColor whiteColor]];
-
+    
     
     //添加编辑确定按钮通知
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -97,9 +97,7 @@ BOOL isEditing;
                                                object:nil];
     
     self.title = @"常用语";
-
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, TopY, 320,SCREEN_HEIGHT - 64 - 49) style:UITableViewStylePlain];
-    [_tableView setBackgroundColor:[UIColor redColor]];
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
     [self.view addSubview:_tableView];
@@ -166,7 +164,10 @@ BOOL isEditing;
     return  1;
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{ return PhraseArray.count;}
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return PhraseArray.count;
+}
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -185,9 +186,9 @@ BOOL isEditing;
     CGRect rect=cell.CLLabel.frame;
     rect.size.height=lheight;
     cell.CLLabel.frame=rect;
-//    cell.imageView.image= [[UIImage imageNamed:@"oa_title_shrinkbg"] rescaleImageToSize:CGSizeMake(20, 20)];
     cell.CLTextView.text=[self.PhraseArray objectAtIndex:indexPath.row];
     cell.indexForCell=indexPath.row;
+    cell.superTableView = _tableView;
     if (!isEditing)
     {
         [cell.CLTextView setHidden:YES];

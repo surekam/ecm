@@ -33,10 +33,14 @@
     self = [super initWithFrame:frame];
     if (self) {
         previewController = [[SKQLPreviewController alloc] init];
+        [self setBackgroundImage:[UIImage imageNamed:@"btn_download_remainder.png"] forState:UIControlStateNormal];
+        [self setBackgroundImage:[UIImage imageNamed:@"btn_download_remainder.png"] forState:UIControlStateHighlighted];
+        [self setBackgroundImage:[UIImage imageNamed:@"btn_download_remainder.png"] forState:UIControlStateDisabled];
         [self setImageEdgeInsets:UIEdgeInsetsMake(5, 3, 5, frame.size.width - 3 - 38)];
-        [self setTitleEdgeInsets:UIEdgeInsetsMake(5, 0, 5, 40)];
+        [self setTitleEdgeInsets:UIEdgeInsetsMake(5, 40, 5, 40)];
         [self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [self.titleLabel setFont:[UIFont systemFontOfSize:14]];
+        [self setImage:[UIImage imageNamed:@"doc_downloading.png"] forState:UIControlStateNormal];
         
         _indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [self.indicator setFrame:CGRectMake(255, 5, 38, 38)];

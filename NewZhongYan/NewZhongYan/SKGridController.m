@@ -107,7 +107,6 @@
 
 -(void)reloadData
 {
-    NSLog(@"reloadData");
     [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
         for (UIView* v in self.view.subviews) {
             if (v.class == [UIDragButton class]) {

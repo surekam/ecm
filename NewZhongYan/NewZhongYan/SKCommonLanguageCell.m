@@ -114,7 +114,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 #pragma mark -growingTextViewDelegate
@@ -135,16 +135,15 @@
         self.frame=cellRect;
         //[(UITableView *)self.superview reloadData];
         //将当前cell下方的cell位置向下移动
-        UITableView *tableView=(UITableView *)self.superview;
-        int rowsNumber= [tableView numberOfRowsInSection:0];
+        int rowsNumber= [self.superTableView numberOfRowsInSection:0];
         for (int i=0; i<rowsNumber; i++)
         {
             if (i>indexForCell)
             {
                 NSIndexPath *indexPath=[NSIndexPath indexPathForRow:i inSection:0];
-                CGRect rect=[tableView cellForRowAtIndexPath:indexPath].frame;
+                CGRect rect=[self.superTableView cellForRowAtIndexPath:indexPath].frame;
                 rect.origin.y-=diff;
-                [tableView cellForRowAtIndexPath:indexPath].frame=rect;
+                [self.superTableView cellForRowAtIndexPath:indexPath].frame=rect;
             }
         }
     }

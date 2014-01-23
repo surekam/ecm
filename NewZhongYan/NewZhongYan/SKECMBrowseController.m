@@ -26,7 +26,6 @@
     });
 }
 
-
 -(NSInteger)currentPage
 {
     for (NSMutableDictionary* dict in self.contentList) {
@@ -79,8 +78,9 @@
             controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMAttahController"];
             controller.news = [self.contentList objectAtIndex:index];
             [viewControllerArray replaceObjectAtIndex:index withObject:controller];
+        }else{
+            [viewControllerArray replaceObjectAtIndex:index withObject:controller];
         }
-        [viewControllerArray replaceObjectAtIndex:index withObject:controller];
         return controller;
     }
     return res;

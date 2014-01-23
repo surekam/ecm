@@ -9,6 +9,7 @@
 #import "SKEdetailInfoController.h"
 #import "SKLToolBar.h"
 #import "UIColor+FlatUI.h"
+#import "SKNewMailController.h"
 @interface SKEdetailInfoController ()
 @property (weak, nonatomic) IBOutlet UIView *toolView;
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
@@ -26,6 +27,55 @@
     return self;
 }
 
+- (IBAction)email:(UIButton *)sender {
+    SKNewMailController* aEmail = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKNewMailController"];
+    NSString* name = [[DBQueue sharedbQueue] stringFromSQL:
+                      [NSString stringWithFormat:@"select CNAME from T_EMPLOYEE WHERE EMAIL = '%@';",[self.employeeInfo objectForKey:@"EMAIL"]]];
+    if (!name) name = sender.titleLabel.text;
+    SKToken* token = [[SKToken alloc] initWithTitle:name
+                                  representedObject:[self.employeeInfo objectForKey:@"EMAIL"]];
+    [aEmail.toTokenField addToken:token];
+    [aEmail setStatus:NewMailStatusWrite];
+    [[APPUtils visibleViewController].navigationController pushViewController:aEmail animated:YES];
+}
+
+-(void)phoneOnToolBar
+{
+    NSString* phone = [self.employeeInfo objectForKey:@"MOBILE"];
+    if (phone && phone.length > 2) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"telprompt:%@",phone]]];
+    }
+}
+
+- (void)sendSMS
+{
+	if ([MFMessageComposeViewController canSendText]) {
+		MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];
+		picker.messageComposeDelegate = self;
+		picker.recipients = [NSArray arrayWithObject:[self.employeeInfo objectForKey:@"MOBILE"]];
+		[self presentModalViewController:picker animated:YES];
+	}
+}
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    NSString* msg = [NSString string];
+    if(result==MessageComposeResultSent)
+    {
+        msg = @"发短信成功";
+    }
+    else if(result==MessageComposeResultCancelled)
+    {
+        msg = @"发短信取消";
+    }
+    else if(result==MessageComposeResultFailed)
+    {
+        msg = @"发短信失败";
+    }
+    [BWStatusBarOverlay showSuccessWithMessage:msg duration:1 animated:1];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -33,9 +83,9 @@
     [myToolBar setFirstItem:@"btn_call" Title:@"电话"];
     [myToolBar setSecondItem:@"btn_sms" Title:@"短信"];
     [myToolBar setThirdItem:@"btn_email" Title:@"邮件"];
-//    [myToolBar.firstButton  addTarget:self action:@selector(phoneOnToolBar)  forControlEvents:UIControlEventTouchUpInside];
-//    [myToolBar.secondButton addTarget:self action:@selector(sendSMS)   forControlEvents:UIControlEventTouchUpInside];
-//    [myToolBar.thirdButton  addTarget:self action:@selector(email:) forControlEvents:UIControlEventTouchUpInside];
+    [myToolBar.firstButton  addTarget:self action:@selector(phoneOnToolBar)  forControlEvents:UIControlEventTouchUpInside];
+    [myToolBar.secondButton addTarget:self action:@selector(sendSMS)   forControlEvents:UIControlEventTouchUpInside];
+    [myToolBar.thirdButton  addTarget:self action:@selector(email:) forControlEvents:UIControlEventTouchUpInside];
     [_toolView addSubview:myToolBar];
     
     if (System_Version_Small_Than_(7)) {
@@ -43,10 +93,28 @@
         _tableview.opaque = NO;
         _tableview.backgroundView = nil;
     }
-
 }
 
-
+- (IBAction)stored:(UIButton*)storeBtn {
+    DBQueue* queue = [DBQueue sharedbQueue];
+    NSString* idx = [self.employeeInfo objectForKey:@"id"];
+    if ([[self.employeeInfo objectForKey:@"STORED"] intValue]) {
+        [storeBtn setBackgroundImage:[UIImage imageNamed:@"star_off"] forState:UIControlStateNormal];
+        [storeBtn setBackgroundImage:[UIImage imageNamed:@"star_on"] forState:UIControlStateHighlighted];
+        NSString* updatesql =
+        [NSString stringWithFormat:@"UPDATE T_EMPLOYEE SET STORED = %d where id  = %@;",![[self.employeeInfo objectForKey:@"STORED"] intValue],idx];
+        [queue updateDataTotableWithSQL:updatesql];
+        [self.employeeInfo setObject:@"0" forKey:@"STORED"];
+    }else{
+        [storeBtn setBackgroundImage:[UIImage imageNamed:@"star_on"] forState:UIControlStateNormal];
+        [storeBtn setBackgroundImage:[UIImage imageNamed:@"star_off"] forState:UIControlStateHighlighted];
+        NSString* updatesql =
+        [NSString stringWithFormat:@"UPDATE T_EMPLOYEE SET STORED = %d where id  = %@;",![[self.employeeInfo objectForKey:@"STORED"] intValue],idx];
+        [queue updateDataTotableWithSQL:updatesql];
+        [self.employeeInfo setObject:@"1" forKey:@"STORED"];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"storeChanged" object:0];
+}
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -88,7 +156,7 @@
             CellIdentifier = @"officeplace";
         }
     }
-
+    
     UITableViewCell *cell;
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -111,6 +179,47 @@
             if (indexPath.row == 0) {
                 [cell.contentView addSubview:v];
             }
+        }
+    }
+    
+    if (indexPath.section == 0) {
+        [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"CNAME"]];
+        [(UILabel*)[cell.contentView viewWithTag:2] setText:_employeeInfo[@"TNAME"]];
+        [(UILabel*)[cell.contentView viewWithTag:3] setText:_employeeInfo[@"UCNAME"]];
+        UIButton* btn = (UIButton*)[cell.contentView viewWithTag:5];
+        btn.layer.masksToBounds = YES;
+        btn.layer.cornerRadius =  40;
+        btn.layer.borderColor = [UIColor whiteColor].CGColor;
+        btn.layer.borderWidth = 3.0f;
+        btn.layer.rasterizationScale = [UIScreen mainScreen].scale;
+        btn.layer.shouldRasterize = YES;
+        btn.clipsToBounds = YES;
+        
+        UIButton* btn1 = (UIButton*)[cell.contentView viewWithTag:4];
+        [btn1 addTarget:self action:@selector(stored:) forControlEvents:UIControlEventTouchUpInside];
+        if ([[self.employeeInfo objectForKey:@"STORED"] intValue] == 1) {
+            [btn1  setBackgroundImage:[UIImage imageNamed:@"star_on"] forState:UIControlStateNormal];
+        }else{
+            [btn1  setBackgroundImage:[UIImage imageNamed:@"star_off"] forState:UIControlStateNormal];
+        }
+        
+    }else if (indexPath.section == 1){
+        NSArray* email = [_employeeInfo[@"EMAIL"] componentsSeparatedByString:@"@"];
+        [(UILabel*)[cell.contentView viewWithTag:1] setText:email[0]];
+        [(UILabel*)[cell.contentView viewWithTag:2] setText:[@"@" stringByAppendingString:email[1]]];
+    }else if (indexPath.section == 2){
+        if (indexPath.row == 0) {
+            [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"MOBILE"]];
+        }else if (indexPath.row == 1){
+            [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"SHORTPHONE"]];
+        }else if (indexPath.row == 2){
+            [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"TELEPHONE"]];
+        }
+    }else if(indexPath.section == 3){
+        if (indexPath.row == 0) {
+            [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"PNAME"]];
+        }else if (indexPath.row == 1){
+            [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"OFFICEADDRESS"]];
         }
     }
     return cell;
@@ -138,7 +247,7 @@
 -(CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
 {
     if(section == 0)
-        return 1;// 这里不能填0 填0的话是默认高度
+        return 15;
     return 10.0;
 }
 

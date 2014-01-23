@@ -11,13 +11,13 @@
 @interface SKECMBrowseController : UIViewController<DMLazyScrollViewDelegate,UIScrollViewDelegate>
 {
     NSMutableArray      *viewControllers;   //详细内容  存储所有的内容
-    NSArray             *contentList;       //存储新闻的内容
+    NSMutableArray             *contentList;       //存储新闻的内容
     NSInteger           kNumberOfPages;
     NSInteger           KinitialPage;       //初始页面
     NSMutableArray*     viewControllerArray;
 }
 
-@property (nonatomic, strong) NSArray *contentList;
+@property (nonatomic, strong) NSMutableArray *contentList;
 @property (nonatomic, strong) NSMutableArray *viewControllers;
 @property (nonatomic, assign) NSMutableDictionary    *currentDictionary;
 @property (strong, nonatomic) IBOutlet  DMLazyScrollView *lazyScrollView;

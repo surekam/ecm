@@ -11,6 +11,7 @@
 #import "SKUnitCell.h"
 #import "NSString+hnzy.h"
 #import "SKViewController.h"
+#import "SKEdetailInfoController.h"
 #define USE_ACTIVITY    1	// use a xib file defining the cell
 #define USE_REMENU      0
 
@@ -758,6 +759,8 @@
         EDetail.employeeInfo = _dataEItems[[dataTable indexPathForSelectedRow].row];
         [dataTable deselectRowAtIndexPath:[dataTable indexPathForSelectedRow] animated:YES];
 	}else{
+        SKEdetailInfoController *EDetail = segue.destinationViewController;
+        EDetail.employeeInfo = _dataEItems[[dataTable indexPathForSelectedRow].row];
         [dataTable deselectRowAtIndexPath:[dataTable indexPathForSelectedRow] animated:YES];
     }
 }

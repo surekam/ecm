@@ -22,13 +22,16 @@ enum {
     BOOL            isManualAnimating;
     BOOL            circularScrollEnabled;
 }
-
+@property (nonatomic, strong) NSTimer* timer_autoPlay;
 @end
 
 @implementation DMLazyScrollView
 
 @synthesize numberOfPages,currentPage;
 @synthesize dataSource,controlDelegate;
+@synthesize autoPlay = _autoPlay;
+@synthesize timer_autoPlay = _timer_autoPlay;
+@synthesize autoPlayTime = _autoPlayTime;
 
 - (void)dealloc
 {
@@ -60,11 +63,91 @@ enum {
     self = [super initWithFrame:frame];
     if (self) {
         _direction = direction;
-        //circularScrollEnabled = circularScrollEnabled;
+        circularScrollEnabled = circularScrolling;
+        _autoPlayTime = 3;
         [self initializeControl];
     }
     return self;
 }
+
+- (void)setAutoPlay:(BOOL)autoPlay
+{
+    _autoPlay = autoPlay;
+    if(self.numberOfPages)
+    {
+        [self reloadData];
+    }
+}
+
+- (BOOL)hasMultiplePages
+{
+        return numberOfPages > 1;
+}
+
+- (void)resetAutoPlay
+{
+    if(_autoPlay)
+    {
+        if(_timer_autoPlay)
+        {
+            [_timer_autoPlay invalidate];
+            _timer_autoPlay = nil;
+        }
+        _timer_autoPlay = [NSTimer scheduledTimerWithTimeInterval:_autoPlayTime target:self selector:@selector(autoPlayHanlde:) userInfo:nil repeats:YES];
+    }
+    else
+    {
+        if(_timer_autoPlay)
+        {
+            [_timer_autoPlay invalidate];
+            _timer_autoPlay = nil;
+        }
+    }
+}
+
+- (void)autoPlayHanlde:(id)timer
+{
+    if ([self hasMultiplePages])
+    {
+        [self autoPlayGoToNextPage];
+    }
+}
+
+- (void)autoPlayGoToNextPage
+{
+    NSInteger nextPage = self.currentPage+1;
+    if(nextPage >= self.numberOfPages)
+    {
+        nextPage = 0;
+    }
+    [self setPage:nextPage animated:YES];
+}
+
+- (void)autoPlayPause
+{
+    if(_timer_autoPlay)
+    {
+        [_timer_autoPlay invalidate];
+        _timer_autoPlay = nil;
+    }
+}
+
+- (void)autoPlayResume
+{
+    [self resetAutoPlay];
+}
+
+- (void)setEnableCircularScroll:(BOOL)circularScrolling
+{
+    circularScrollEnabled = circularScrolling;
+}
+
+- (BOOL)circularScrollEnabled
+{
+    return circularScrollEnabled;
+}
+
+
 - (void) awakeFromNib {
     [self initializeControl];
 }
@@ -74,14 +157,7 @@ enum {
     self.showsVerticalScrollIndicator = NO;
     self.pagingEnabled = YES;
     self.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-
-    
-    if (_direction == DMLazyScrollViewDirectionHorizontal) {
-        self.contentSize = CGSizeMake(self.frame.size.width*5.0f, self.frame.size.height);
-    } else {
-        self.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height*5.0f);
-        
-    }
+    self.contentSize = CGSizeMake(self.frame.size.width, self.contentSize.height);
     self.delegate = self;
     numberOfPages = 1;
     currentPage = NSNotFound;
@@ -90,7 +166,13 @@ enum {
 - (void) setNumberOfPages:(NSUInteger)pages {
     if (pages != numberOfPages) {
         numberOfPages = pages;
-        //[self reloadData];
+        int offset = [self hasMultiplePages] ? numberOfPages + 2 : 1;
+        if (_direction == DMLazyScrollViewDirectionHorizontal) {
+            self.contentSize = CGSizeMake(self.frame.size.width * offset, self.contentSize.height);
+        } else {
+            self.contentSize = CGSizeMake(self.frame.size.width,self.frame.size.height * offset);
+        }
+        //[self reloadData];//注意这里去掉的原因没有写
     }
 }
 
@@ -121,13 +203,19 @@ enum {
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     self.bounces = YES;
     if (nil != controlDelegate && [controlDelegate respondsToSelector:@selector(lazyScrollViewDidEndDragging:)])
+    {
         [controlDelegate lazyScrollViewDidEndDragging:self];
+    }
+    [self autoPlayResume];
 }
 
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self autoPlayPause];
     if (nil != controlDelegate && [controlDelegate respondsToSelector:@selector(lazyScrollViewWillBeginDragging:)])
+    {
         [controlDelegate lazyScrollViewWillBeginDragging:self];
+    }
 }
 
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -187,13 +275,16 @@ enum {
     NSInteger prevPage = [self pageIndexByAdding:-1 from:currentPage];
     NSInteger nextPage = [self pageIndexByAdding:+1 from:currentPage];
         
-    [self loadControllerAtIndex:prevPage andPlaceAtIndex:-1];   // load previous page
-    [self loadControllerAtIndex:index andPlaceAtIndex:0];       // load current page
-    [self loadControllerAtIndex:nextPage andPlaceAtIndex:1];   // load next page
+    [self loadControllerAtIndex:index andPlaceAtIndex:0];
+    // Pre-load the content for the adjacent pages if multiple pages are to be displayed
+    if ([self hasMultiplePages]) {
+        [self loadControllerAtIndex:prevPage andPlaceAtIndex:-1];   // load previous page
+        [self loadControllerAtIndex:nextPage andPlaceAtIndex:1];   // load next page
+    }
     
     CGFloat size =(_direction==DMLazyScrollViewDirectionHorizontal) ? self.frame.size.width : self.frame.size.height;
     
-    self.contentOffset = [self createPoint:size*2.]; // recenter
+    self.contentOffset = [self createPoint:size * ([self hasMultiplePages] ? 2 : 0)]; // recenter  这里重点注意 当只有一项时这里会出现问题
     
     if ([self.controlDelegate respondsToSelector:@selector(lazyScrollView:currentPageChanged:)])
         [self.controlDelegate lazyScrollView:self currentPageChanged:self.currentPage];
@@ -250,7 +341,7 @@ enum {
     if (newIndex == currentPage) return;
     
     if (animated) {
-        BOOL isOnePageMove = (abs(self.currentPage-newIndex) == 1);
+        //BOOL isOnePageMove = (abs(self.currentPage-newIndex) == 1);
         CGPoint finalOffset;
         
         if (transition == DMLazyScrollViewTransitionAuto) {
@@ -261,16 +352,19 @@ enum {
         CGFloat size =(_direction==DMLazyScrollViewDirectionHorizontal) ? self.frame.size.width : self.frame.size.height;
         
         if (transition == DMLazyScrollViewTransitionForward) {
-            if (!isOnePageMove)
-                [self loadControllerAtIndex:newIndex andPlaceAtIndex:2];
+            //if (!isOnePageMove)
+            //[self loadControllerAtIndex:newIndex andPlaceAtIndex:2];
+            [self loadControllerAtIndex:newIndex andPlaceAtIndex:1];
             
-            
-            finalOffset = [self createPoint:(size*(isOnePageMove ? 3 : 4))];
+            //finalOffset = [self createPoint:(size*(isOnePageMove ? 3 : 4))];
+            finalOffset = [self createPoint:(size*3)];
         } else {
-            if (!isOnePageMove)
-                [self loadControllerAtIndex:newIndex andPlaceAtIndex:-2];
+            //if (!isOnePageMove)
+            //[self loadControllerAtIndex:newIndex andPlaceAtIndex:-2];
+            [self loadControllerAtIndex:newIndex andPlaceAtIndex:-1];
             
-            finalOffset = [self createPoint:(size*(isOnePageMove ? 1 : 0))];
+            //finalOffset = [self createPoint:(size*(isOnePageMove ? 1 : 0))];
+            finalOffset = [self createPoint:(size*1)];
         }
         isManualAnimating = YES;
         
@@ -289,6 +383,7 @@ enum {
     }
 }
 
+
 - (void) setCurrentPage:(NSUInteger)newCurrentPage
 {
     [self setCurrentViewController:newCurrentPage];
@@ -299,18 +394,14 @@ enum {
         UIViewController *viewController = dataSource(index);
         viewController.view.tag = 0;
         
+        CGRect viewFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        int offset = [self hasMultiplePages] ? 2 : 0;
         if (_direction == DMLazyScrollViewDirectionHorizontal) {
-            viewController.view.frame = CGRectMake(self.frame.size.width*(destIndex+2),
-                                                   0,
-                                                   self.frame.size.width,
-                                                   self.frame.size.height);
+            viewFrame = CGRectOffset(viewFrame, self.frame.size.width * (destIndex + offset), 0);
         } else {
-            viewController.view.frame = CGRectMake(0,
-                                                   self.frame.size.height*(destIndex+2),
-                                                   self.frame.size.width,
-                                                   self.frame.size.height);
-            
+            viewFrame = CGRectOffset(viewFrame, 0, self.frame.size.height * (destIndex + offset));
         }
+        viewController.view.frame = viewFrame;
         [self addSubview:viewController.view];
         return viewController;
         
