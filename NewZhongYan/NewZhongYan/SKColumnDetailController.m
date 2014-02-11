@@ -10,6 +10,7 @@
 #import "APPUtils.h"
 #import "utils.h"
 #import "BWStatusBarOverlay.h"
+#import "MBProgressHUD.h"
 @interface SKColumnDetailController ()
 
 @end
@@ -42,12 +43,12 @@
 
 -(void)handleTap:(UITapGestureRecognizer*)tap
 {
-
+    
 }
 
 -(void)getSignature:(id)sender
 {
-
+    
 }
 
 //竖线
@@ -81,7 +82,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     //self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:[utils backBarButtonItem]] autorelease];
     [self setTitle:isHistory ? @"历史数据" : @"明细数据" ];
-   
+    
     if (IS_IOS7) {
         [self setAutomaticallyAdjustsScrollViewInsets:NO];
     }
@@ -107,24 +108,21 @@
 -(void)getColumnDetailFromServer
 {
     SKHTTPRequest *request;
-    if (!isHistory)
-    {
+    if (!isHistory){
         NSURL* columnDetailUrl = [DataServiceURLs getColumnDetails:[APPUtils userUid]
                                                  andFlowinstanceid:flowInstanceID
                                                        andUniqueid:uniqueID
                                                            andFrom:from];
-         request= [SKHTTPRequest requestWithURL:columnDetailUrl];
-    }
-    else
-    {
+        request= [SKHTTPRequest requestWithURL:columnDetailUrl];
+    }else{
         NSURL*historyUrl = [DataServiceURLs getHistoryRecords:[APPUtils userUid]
-                                            TFRM:self.tfrm
-                                    FLOWINSTANCEID:self.flowInstanceID];
+                                                         TFRM:self.tfrm
+                                               FLOWINSTANCEID:self.flowInstanceID];
         request= [SKHTTPRequest requestWithURL:historyUrl];
     }
-   
-    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    
     [request setCompletionBlock:^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (request.responseStatusCode != 200) {
             [BWStatusBarOverlay showMessage:@"服务器网络故障!" duration:1 animated:1];
             return;
@@ -144,14 +142,16 @@
                                        return ;
                                    }
                                });
-         }];
+                           }];
         [queue addOperation:parser];
         
     }];
     [request setFailedBlock:^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [BWStatusBarOverlay showMessage:@"获取历史数据失败!" duration:1 animated:1];
     }];
     [request startAsynchronous];
+    [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"加载中..."];
 }
 
 -(void)createBusinessDetailViewWithData:(business*)b
@@ -398,7 +398,7 @@
             [signatureImageView setUserInteractionEnabled:YES];
             NSString *imageSignatureID;
             imageSignatureID=[[NSString alloc] initWithString:[e.elementDict objectForKey:@"id"]];
-
+            
             [cv addSubview:signatureImageView];
             [imageSignatureID release];
             [signatureImageView release];
@@ -512,7 +512,7 @@
     [cv addSubview:horLine];
     
     contentTotalHeight+=valueLabelHeight+CONTENT_TOPEDGE+CONTENT_BUTTOMEDGE+1;
-
+    
 }
 
 -(void)addTextToCvWithElement:(element *)e andColumn:(column *)c andCv:(UIView *)cv

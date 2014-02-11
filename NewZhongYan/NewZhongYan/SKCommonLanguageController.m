@@ -68,10 +68,7 @@ BOOL isEditing;
     
 }
 #pragma mark - View lifecycle
--(void)dealloc
-{
-    
-}
+
 
 - (void)roundTextView:(UIView *)txtView{
     txtView.layer.borderColor = UIColor.grayColor.CGColor;
@@ -318,7 +315,6 @@ BOOL isEditing;
 {
     if (!isEditing)
     {
-        NSLog(@"%f",changeDiff);
         NSNumber *duration = [note.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
         NSNumber *curve = [note.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
         CGRect mainFrame = self.view.frame;
@@ -458,7 +454,6 @@ BOOL isEditing;
                     }
                 }
             }
-            NSLog(@"%f",cell.CLTextView.frame.size.height);
             
             cell.isEditing=YES;
             [cell.CLLabel setHidden:YES];

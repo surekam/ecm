@@ -252,6 +252,16 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
     return nil;
 }
 
++ (id)cdataWithStringValue:(NSString *)value {
+    xmlChar     *cdataValue = GDataGetXMLString(value);
+    xmlNodePtr  theNewCData = xmlNewCDataBlock(NULL, cdataValue, xmlStrlen(cdataValue));
+    if (theNewCData) {
+        // succeeded
+        return [self nodeConsumingXMLNode: theNewCData];
+    }
+    return nil;
+}
+
 + (id)namespaceWithName:(NSString *)name stringValue:(NSString *)value {
     
     xmlChar *href = GDataGetXMLString(value);
@@ -651,6 +661,15 @@ static xmlChar *SplitQNameReverse(const xmlChar *qname, xmlChar **prefix) {
         return [children objectAtIndex:index];
     }
     return nil;
+}
+
+-(GDataXMLNode *)parent
+{
+    if (xmlNode_ != NULL && xmlNode_->parent != NULL) {
+        return [GDataXMLNode nodeBorrowingXMLNode:xmlNode_->parent];
+    } else {
+        return nil;
+    }
 }
 
 - (GDataXMLNodeKind)kind {

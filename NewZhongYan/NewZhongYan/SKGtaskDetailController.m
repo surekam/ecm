@@ -22,6 +22,7 @@
 #import "SKViewController.h"
 #import "SKNextBranchesController.h"
 #import "SKCommonLanguageController.h"
+#import "MBProgressHUD.h"
 #pragma mark- 相关界面参数的宏定义
 #define CONTENT_WIDTH 300
 #define CONTENT_TITLEHEIGHT 44
@@ -172,24 +173,15 @@
  */
 -(void)businessDataFromServer
 {
-    //    NSData* data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
-    //    [self praserBusinessWithServerData:data];
-    //    NSString* step = (self.aBusiness.step && ![self.aBusiness.step isEqualToString:@""])
-    //    ?[NSString stringWithFormat:@"当前环节: %@",self.aBusiness.step]:@"";
-    //    [stepLabel setText:step];
-    //    [self createBusinessDetailViewWithData:self.aBusiness];
-    //    [myToolBar.secondButton setEnabled:YES];
-    //    [myToolBar.thirdButton setEnabled:YES];
-    //    return;
     NSURL* workItemUrl = [DataServiceURLs getWorkItemDetails:[APPUtils userUid]
                                                         TFRM:[GTaskDetailInfo objectForKey:@"TFRM"]
                                                          AID:[GTaskDetailInfo objectForKey:@"AID"]];
     SKHTTPRequest *request = [SKHTTPRequest requestWithURL:workItemUrl];
     __weak SKHTTPRequest *req = request;
     [request setCompletionBlock:^{
-        NSLog(@"%@",req.responseString);
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         NSData* data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
-        data = req.responseData;
+        //data = req.responseData;
         [self praserBusinessWithServerData:data];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![self.aBusiness.returncode isEqualToString:@"OK"])
@@ -218,12 +210,14 @@
     }];
     
     [request setFailedBlock:^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [BWStatusBarOverlay showMessage:req.errorinfo duration:1 animated:1];
         isErrorHappened=YES;
     }];
     [request startAsynchronous];
+    [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"加载中..."];
+    
 }
-
 
 /**
  *  获取已办数据
@@ -234,6 +228,7 @@
     SKHTTPRequest *request = [SKHTTPRequest requestWithURL:workItemUrl];
     __weak SKHTTPRequest *req = request;
     [request setCompletionBlock:^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (req.responseStatusCode != 200)
         {
             [BWStatusBarOverlay showMessage:@"服务器网络故障" duration:1.5 animated:YES];
@@ -266,10 +261,12 @@
         
     }];
     [request setFailedBlock:^{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [BWStatusBarOverlay showMessage:@"获取待办数据失败" duration:1 animated:1];
         isErrorHappened=YES;
     }];
     [request startAsynchronous];
+    [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"加载中..."];
 }
 
 /**
@@ -388,7 +385,7 @@
 
 -(void)dealloc
 {
-    NSLog(@"dealloc");
+    
 }
 #pragma mark- 构件截面
 /**
@@ -1242,13 +1239,7 @@
     CGRect rect = [textView.superview convertRect:textView.frame toView:mainScrollview];
     rect.origin.y += 2;
     
-    //[textToolBar setHidden:NO];
     CGRect toolbarFrame=textToolBar.frame;
-    //    if (IS_IOS7) {
-    //        toolbarFrame.origin.y = [UIScreen mainScreen].bounds.size.height - 44 - keyboardHeight;
-    //    }else{
-    //        toolbarFrame.origin.y = BottomY - keyboardHeight - 44;
-    //    }
     toolbarFrame.origin.y = BottomY - keyboardHeight - 44;
     [self setToolBarItemEnable];
     
@@ -1258,7 +1249,7 @@
     [UIView setAnimationCurve:[curve intValue]];
     [textToolBar setFrame:toolbarFrame];
     [mainScrollview setFrame:scrollViewFrame];
-    //[mainScrollview scrollRectToVisible:rect animated:YES];
+    [mainScrollview scrollRectToVisible:rect animated:YES];
     [UIView commitAnimations];
 }
 
@@ -1671,6 +1662,7 @@
     lc.textViewKey=[NSString stringWithFormat:@"%d",((UIButton *)sender).tag/10000];
     HPGrowingTextView *textV=(HPGrowingTextView *)[self.view viewWithTag:((UIButton *)sender).tag/10000];
     lc.textViewText=textV.text;
+    currentTextViewindex = [saveTextViewArray indexOfObject:textV];
     [self.navigationController pushViewController:lc animated:YES];
 }
 

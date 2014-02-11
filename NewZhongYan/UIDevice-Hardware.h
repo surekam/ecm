@@ -10,10 +10,11 @@
 
 #define IPHONE_1G_NAMESTRING            @"iPhone 1G"
 #define IPHONE_3G_NAMESTRING            @"iPhone 3G"
-#define IPHONE_3GS_NAMESTRING           @"iPhone 3GS" 
-#define IPHONE_4_NAMESTRING             @"iPhone 4" 
+#define IPHONE_3GS_NAMESTRING           @"iPhone 3GS"
+#define IPHONE_4_NAMESTRING             @"iPhone 4"
 #define IPHONE_4S_NAMESTRING            @"iPhone 4S"
 #define IPHONE_5_NAMESTRING             @"iPhone 5"
+#define IPHONE_5S_NAMESTRING            @"iPhone 5S"
 #define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -54,6 +55,7 @@ typedef enum {
     UIDevice4iPhone,
     UIDevice4SiPhone,
     UIDevice5iPhone,
+    UIDevice5SiPhone,
     
     UIDevice1GiPod,
     UIDevice2GiPod,
@@ -74,7 +76,7 @@ typedef enum {
     UIDeviceUnknowniPad,
     UIDeviceUnknownAppleTV,
     UIDeviceIFPGA,
-
+    
 } UIDevicePlatform;
 
 typedef enum {
@@ -90,6 +92,8 @@ typedef enum {
 - (NSString *) platform;
 - (NSString *) hwmodel;
 - (NSUInteger) platformType;
+
+//ipad 还未测试
 - (NSString *) platformString;
 
 - (NSUInteger) cpuFrequency;

@@ -18,7 +18,7 @@
  Platforms
  
  iFPGA ->        ??
-
+ 
  iPhone1,1 ->    iPhone 1G, M68
  iPhone1,2 ->    iPhone 3G, N82
  iPhone2,1 ->    iPhone 3GS, N88
@@ -31,7 +31,7 @@
  iPhone5,1 ->    iPhone Next Gen, TBD
  iPhone5,1 ->    iPhone Next Gen, TBD
  iPhone5,1 ->    iPhone Next Gen, TBD
-
+ 
  iPod1,1   ->    iPod touch 1G, N45
  iPod2,1   ->    iPod touch 2G, N72
  iPod2,2   ->    Unknown, ??
@@ -49,12 +49,12 @@
  iPad4,1   ->    (iPad 4G, WiFi)
  iPad4,2   ->    (iPad 4G, GSM)
  iPad4,3   ->    (iPad 4G, CDMA)
-
+ 
  AppleTV2,1 ->   AppleTV 2, K66
  AppleTV3,1 ->   AppleTV 3, ??
-
+ 
  i386, x86_64 -> iPhone Simulator
-*/
+ */
 
 
 #pragma mark sysctlbyname utils
@@ -67,7 +67,7 @@
     sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
     
     NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
-
+    
     free(answer);
     return results;
 }
@@ -132,7 +132,7 @@
  extern NSString *NSFileSystemNodes;
  extern NSString *NSFileSystemFreeNodes;
  extern NSString *NSFileSystemNumber;
-*/
+ */
 
 - (NSNumber *) totalDiskSpace
 {
@@ -150,10 +150,10 @@
 - (NSUInteger) platformType
 {
     NSString *platform = [self platform];
-
+    
     // The ever mysterious iFPGA
     if ([platform isEqualToString:@"iFPGA"])        return UIDeviceIFPGA;
-
+    
     // iPhone
     if ([platform isEqualToString:@"iPhone1,1"])    return UIDevice1GiPhone;
     if ([platform isEqualToString:@"iPhone1,2"])    return UIDevice3GiPhone;
@@ -161,13 +161,14 @@
     if ([platform hasPrefix:@"iPhone3"])            return UIDevice4iPhone;
     if ([platform hasPrefix:@"iPhone4"])            return UIDevice4SiPhone;
     if ([platform hasPrefix:@"iPhone5"])            return UIDevice5iPhone;
+    if ([platform hasPrefix:@"iPhone6,2"])          return UIDevice5SiPhone;
     
     // iPod
     if ([platform hasPrefix:@"iPod1"])              return UIDevice1GiPod;
     if ([platform hasPrefix:@"iPod2"])              return UIDevice2GiPod;
     if ([platform hasPrefix:@"iPod3"])              return UIDevice3GiPod;
     if ([platform hasPrefix:@"iPod4"])              return UIDevice4GiPod;
-
+    
     // iPad
     if ([platform hasPrefix:@"iPad1"])              return UIDevice1GiPad;
     if ([platform hasPrefix:@"iPad2"])              return UIDevice2GiPad;
@@ -177,7 +178,7 @@
     // Apple TV
     if ([platform hasPrefix:@"AppleTV2"])           return UIDeviceAppleTV2;
     if ([platform hasPrefix:@"AppleTV3"])           return UIDeviceAppleTV3;
-
+    
     if ([platform hasPrefix:@"iPhone"])             return UIDeviceUnknowniPhone;
     if ([platform hasPrefix:@"iPod"])               return UIDeviceUnknowniPod;
     if ([platform hasPrefix:@"iPad"])               return UIDeviceUnknowniPad;
@@ -189,7 +190,7 @@
         BOOL smallerScreen = [[UIScreen mainScreen] bounds].size.width < 768;
         return smallerScreen ? UIDeviceSimulatoriPhone : UIDeviceSimulatoriPad;
     }
-
+    
     return UIDeviceUnknown;
 }
 
@@ -203,8 +204,9 @@
         case UIDevice4iPhone: return IPHONE_4_NAMESTRING;
         case UIDevice4SiPhone: return IPHONE_4S_NAMESTRING;
         case UIDevice5iPhone: return IPHONE_5_NAMESTRING;
+        case UIDevice5SiPhone: return IPHONE_5S_NAMESTRING;
         case UIDeviceUnknowniPhone: return IPHONE_UNKNOWN_NAMESTRING;
-        
+            
         case UIDevice1GiPod: return IPOD_1G_NAMESTRING;
         case UIDevice2GiPod: return IPOD_2G_NAMESTRING;
         case UIDevice3GiPod: return IPOD_3G_NAMESTRING;
@@ -293,7 +295,7 @@
     sdl = (struct sockaddr_dl *)(ifm + 1);
     ptr = (unsigned char *)LLADDR(sdl);
     NSString *outstring = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X", *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5)];
-
+    
     free(buf);
     return outstring;
 }
@@ -330,13 +332,13 @@
     }
 }
 // Illicit Bluetooth check -- cannot be used in App Store
-/* 
-Class  btclass = NSClassFromString(@"GKBluetoothSupport");
-if ([btclass respondsToSelector:@selector(bluetoothStatus)])
-{
-    printf("BTStatus %d\n", ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0);
-    bluetooth = ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0;
-    printf("Bluetooth %s enabled\n", bluetooth ? "is" : "isn't");
-}
-*/
+/*
+ Class  btclass = NSClassFromString(@"GKBluetoothSupport");
+ if ([btclass respondsToSelector:@selector(bluetoothStatus)])
+ {
+ printf("BTStatus %d\n", ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0);
+ bluetooth = ((int)[btclass performSelector:@selector(bluetoothStatus)] & 1) != 0;
+ printf("Bluetooth %s enabled\n", bluetooth ? "is" : "isn't");
+ }
+ */
 @end

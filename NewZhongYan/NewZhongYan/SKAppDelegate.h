@@ -21,7 +21,6 @@
 @property (strong, nonatomic) NSOperationQueue    *queue;
 @property (strong, nonatomic) LocalMetaDataManager* metaDataManager;
 @property (strong, nonatomic) SKAgentLogonManager   * logonManager;
-
 @property  NetworkStatus networkstatus;
 
 /**

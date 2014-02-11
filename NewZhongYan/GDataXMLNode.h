@@ -131,6 +131,9 @@ typedef NSUInteger GDataXMLNodeKind;
 + (id)namespaceWithName:(NSString *)name stringValue:(NSString *)value;
 
 + (id)textWithStringValue:(NSString *)value;
+// 从字符串构建CDATA节点 add by yayowd 20111201
++ (id)cdataWithStringValue:(NSString *)value;
+
 
 - (NSString *)stringValue;
 - (void)setStringValue:(NSString *)str;
@@ -138,6 +141,8 @@ typedef NSUInteger GDataXMLNodeKind;
 - (NSUInteger)childCount;
 - (NSArray *)children;
 - (GDataXMLNode *)childAtIndex:(unsigned)index;
+-(GDataXMLNode *)parent;
+
 
 - (NSString *)localName;
 - (NSString *)name;
