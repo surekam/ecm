@@ -181,7 +181,7 @@
     [request setCompletionBlock:^{
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         NSData* data = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"]];
-        //data = req.responseData;
+        data = req.responseData;
         [self praserBusinessWithServerData:data];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (![self.aBusiness.returncode isEqualToString:@"OK"])
