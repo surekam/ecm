@@ -28,10 +28,6 @@
 {
     NSString* sql = [NSString stringWithFormat:@"select VERSION from T_CLIENTVERSION where CODE = '%@';",self.CODE];
     self.version = [[DBQueue sharedbQueue] intValueFromSQL:sql];
-//    NSLog(@"%d",self.version);
-//    if (self.version) {
-//        [self initChanels];
-//    }
 }
 
 -(id)initWithDictionary:(NSDictionary*)appinfo

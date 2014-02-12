@@ -1049,6 +1049,13 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
 */
 
 
+/**
+ *  FIDLIST     :
+ *  CURRENTID   :当前的TID
+ *  PARENDID    :父级的TID
+ *  LEVL        :级别  一般client会是0级 频道是第一级 子频道是第二级
+ */
+
 +(BOOL)createChannel
 {
     NSString* t_channel_sql = [NSString stringWithFormat:@"create table  if not exists %@\
@@ -1080,6 +1087,11 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
     return YES;
 }
 
+/**
+ *  CODE        client的code
+ *  VERSION     clint的版本号
+ *  注: 当一个client中的频道同步完成后 会把这个client的版本号存下来  暂时还没有用到这个版本号
+ */
 +(BOOL)createCilentVersion
 {
     NSString* t_client_sql = [NSString stringWithFormat:@"create table  if not exists %@\

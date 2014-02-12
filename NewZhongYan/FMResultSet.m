@@ -117,7 +117,7 @@
 - (NSDictionary*)resultDictionary {
     
     NSUInteger num_cols = (NSUInteger)sqlite3_data_count([_statement statement]);
-    
+
     if (num_cols > 0) {
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:num_cols];
         
@@ -136,7 +136,6 @@
     else {
         NSLog(@"Warning: There seem to be no columns in this set.");
     }
-    
     return nil;
 }
 

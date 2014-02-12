@@ -32,7 +32,6 @@
 @implementation SKECMRootController
 -(void)onSearchClick
 {
-    NSLog(@"onSearchClick");
     UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"ecmsearchnavcontroller"];
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
@@ -55,7 +54,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView tableViewDidFinishedLoading];
         });
-        NSLog(@"SKDaemonManager = %@",[error userInfo][@"reason"]);
     } Type:UP];
 }
 
@@ -63,8 +61,9 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL, ATTRLABLE,PMS,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL,READED,ATTRLABLE,PMS,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
         NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
+        NSLog(@"%@",dataArray);
         for (NSMutableDictionary* d in dataArray)
         {
             if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
@@ -132,14 +131,10 @@
 -(void)initData
 {
     self.title = self.channel.NAME;
+    //这里做了一个FIDLIST的拼接
     if (self.channel.HASSUBTYPE) {
         NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE PARENTID  = %@",self.channel.CURRENTID];
-        subChannels = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];  NSString* fidlist = [NSString string];
-        for (NSDictionary* dict in subChannels) {
-            fidlist = [fidlist stringByAppendingFormat:@",%@",dict[@"FIDLIST"]];
-        }
-        fidlist = [fidlist substringFromIndex:1];
-        self.channel.FIDLIST = fidlist;
+        subChannels = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
     }else{
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 40, 21)];
         label.text = self.channel.NAME;
@@ -271,7 +266,8 @@
         browser.currentDictionary = dict;
         if (![[dict objectForKey:@"READED"] intValue])
         {
-            NSString* sql =[NSString stringWithFormat:@"update T_NEWS set READED = 1 where TID  = '%@'",[_dataItems[selectedIndexPath.row] objectForKey:@"TID"]];
+            NSLog(@"%@",_dataItems[selectedIndexPath.row]);
+            NSString* sql =[NSString stringWithFormat:@"update T_DOCUMENTS set READED = 1 where AID  = '%@'",[_dataItems[selectedIndexPath.row] objectForKey:@"AID"]];
             [dict setObject:@"1" forKey:@"READED"];
             [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

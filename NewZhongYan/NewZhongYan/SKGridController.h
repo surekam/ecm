@@ -13,5 +13,9 @@
 @property BOOL isCompanyPage;
 @property SKClientApp* clientApp;
 @property(nonatomic,weak)SKViewController* rootController;
+
+/**
+ *  更新本Client里面所有的App
+ */
 -(void)reloadData;
 @end

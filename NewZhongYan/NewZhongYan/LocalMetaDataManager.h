@@ -42,4 +42,5 @@
  **/
 +(NSString*)newDataItemCount:(LocalDataMeta*)metaData;
 
++(NSString*)newECMDataItemCount:(NSString*)currentFid;
 @end

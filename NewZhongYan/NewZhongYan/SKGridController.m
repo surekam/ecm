@@ -37,9 +37,9 @@
     [_rootController performSegueWithIdentifier:@"SKECMRootController" sender:btn.channel];
     
     
-//    SKECMRootController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMRootController"];
-//    controller.channel = btn.channel;
-//    [self.navigationController pushViewController:controller animated:YES];
+    //    SKECMRootController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMRootController"];
+    //    controller.channel = btn.channel;
+    //    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)jumoController:(id)sender
@@ -68,11 +68,10 @@
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
             if (dict[@"LOGO"] == [NSNull null]) {
-                   [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobta/public/icon/copublicnotice.png"]];
+                [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobta/public/icon/copublicnotice.png"]];
             }else{
                 [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
             }
-            //[dragbtn setNormalImage:dict[@"NAME"]];
             [dragbtn setControllerName:dict[@"CODE"]];
             [dragbtn setDelegate:self];
             [dragbtn setTag:i];
@@ -103,38 +102,6 @@
         [upButtons addObject:dragbtn];
     }
     [self setUpButtonsFrameWithAnimate:NO withoutShakingButton:nil];
-}
-
--(void)reloadData
-{
-    [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
-        for (UIView* v in self.view.subviews) {
-            if (v.class == [UIDragButton class]) {
-                [v removeFromSuperview];
-            }
-        }
-//        [self initSelfFactoryView];
-        if (self.isCompanyPage) {
-            [self initCompanyPageView];
-        }else{
-            [self initSelfFactoryView];
-        }
-    } faliure:^(NSError* error){
-        NSLog(@"%@",[error userInfo][@"reason"]);
-    }];
-    if ([[self.clientApp NAME] isEqualToString:@"长烟主页"]) {
-        [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
-                                           complete:^(NSMutableArray* array){
-                                               NSString* timestr = array[1][@"v"][@"LATESTTIME"];
-                                               NSTimeInterval time = [[[DateUtils stringToDate:timestr DateFormat:dateTimeFormat] dateByAddingHours:8] timeIntervalSince1970];
-                                               NSLog(@"server %@ :: date =%@  time == %.0f",array[1][@"v"][@"CHANNELCODE"],timestr,time*1000);
-                                               [self reloadBageNumber];
-                                           }
-                                            faliure:^(NSError* error){
-                                                
-                                            }];
-    }
-
 }
 
 //取出xml中的app节点  并按照app节点中的location节点的值升序排序
@@ -251,26 +218,67 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if ([[self.clientApp NAME] isEqualToString:@"长烟主页"]) {
+    if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
         [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
                                            complete:^(NSMutableArray* array){
-                                               NSLog(@"%@",array);
-                                           }
-                                            faliure:^(NSError* error){
-                                            }];
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   [self reloadBageNumberWithServerInfo:array];
+                                               });
+                                           } faliure:^(NSError* error){
+                                               
+                                           }];
     }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     //[self initSelfFactoryView];
     if (self.isCompanyPage) {
         [self initCompanyPageView];
     }else{
         [self initSelfFactoryView];
     }
     [self reloadBageNumber];
+}
+
+-(void)reloadData
+{
+    [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
+        for (UIView* v in self.view.subviews) {
+            if (v.class == [UIDragButton class]) {
+                [v removeFromSuperview];
+            }
+        }
+        if (self.isCompanyPage) {
+            [self initCompanyPageView];
+        }else{
+            [self initSelfFactoryView];
+        }
+        //获取每个频道更新信息
+        if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
+            [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                               complete:^(NSMutableArray* array){
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       [self reloadBageNumberWithServerInfo:array];
+                                                   });
+                                               } faliure:^(NSError* error){
+                                                   
+                                               }];
+        }
+    } faliure:^(NSError* error){
+        if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
+            [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                               complete:^(NSMutableArray* array){
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       [self reloadBageNumberWithServerInfo:array];
+                                                   });
+                                               } faliure:^(NSError* error){
+                                                   
+                                               }];
+        }
+    }];
+    
+
 }
 
 -(void)reloadBageNumber{
@@ -281,12 +289,46 @@
     }
 }
 
+-(long long)maxuptmFromServer:(NSArray*)array ChannelCode:(NSString*)code
+{
+    for (NSDictionary* dict in array) {
+        NSDictionary* vinfo = dict[@"v"];
+        if ([vinfo[@"CHANNELCODE"] isEqualToString:code]) {
+            NSString* timestr = vinfo[@"LATESTTIME"];
+            NSTimeInterval time = [[[DateUtils stringToDate:timestr DateFormat:dateTimeFormat] dateByAddingHours:0] timeIntervalSince1970];
+            return time*1000;
+        }
+    }
+    return 0;
+}
+
+-(void)reloadBageNumberWithServerInfo:(NSArray*)array{
+    if (self.isCompanyPage) {
+        [self setBadgeNumber];
+    }else{
+        if(array){
+            for (UIDragButton*btn in upButtons) {
+                long long lmaxuptm = [btn.channel.MAXUPTM longLongValue];
+                long long smaxuptm = [self maxuptmFromServer:array ChannelCode:btn.channel.CODE];
+                //NSLog(@"%@  %lld  %lld",btn.channel.NAME,lmaxuptm,smaxuptm);
+                if (smaxuptm > lmaxuptm) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [btn setBadgeNumber:@"new"];
+                    });
+                }else{
+                    [self setECMBadgeNumber];
+                }
+            }
+        }
+    }
+}
+
 -(void)setECMBadgeNumber
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         for (UIDragButton *btn in upButtons)
         {
-            //NSLog(@"%@ ----- %@",btn.channel.NAME,btn.channel.MAXUPTM);
+            [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLIST]];
         }
     });
 }

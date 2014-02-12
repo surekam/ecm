@@ -36,9 +36,13 @@
     if (!strDate) {
         return nil;
     }
+    NSTimeZone* localzone = [NSTimeZone localTimeZone];
+    NSTimeZone* GTMzone = [NSTimeZone timeZoneForSecondsFromGMT:0];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:format];
+    [dateFormatter setTimeZone:GTMzone];
     NSDate *dateFromString = [dateFormatter dateFromString:strDate];
+    [dateFormatter setTimeZone:localzone];
     return dateFromString;
 }
 

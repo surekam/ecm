@@ -97,6 +97,14 @@
     return metaData.version < [[dataItems objectForKey:@"VERSION"] intValue];
 }
 
++(NSString*)newECMDataItemCount:(NSString*)currentFid
+{
+    NSString* sql = [NSString stringWithFormat:
+                     @"select AID from T_DOCUMENTS where strftime('%%s','now','start of day','-8 hour','-1 day') <= strftime('%%s',crtm) AND CHANNELID in (%@) and ENABLED = 1 AND READED = 0;",currentFid];
+    int count = [[DBQueue sharedbQueue] CountOfQueryWithSQL:sql];
+    return count ? [NSString stringWithFormat:@"%d",count] : nil;
+}
+
 +(NSString*)newDataItemCount:(LocalDataMeta*)metaData;
 {
     NSString *sql;
