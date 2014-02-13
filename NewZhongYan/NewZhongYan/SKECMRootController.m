@@ -36,6 +36,7 @@
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
     }];
+    //[self performSegueWithIdentifier:@"ecmsearch" sender:self];
 }
 
 -(void)onRefrshClick
@@ -61,9 +62,9 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL,READED,ATTRLABLE,PMS,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL,READED,ATTRLABLE,PMS,URL,PAPERID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
         NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
-        NSLog(@"%@",dataArray);
+        //NSLog(@"%@",dataArray);
         for (NSMutableDictionary* d in dataArray)
         {
             if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
@@ -252,21 +253,14 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    if ([[segue identifier] isEqualToString:@"news"]) {
-//        SKNewsAttachController *attachController = (SKNewsAttachController *)[segue destinationViewController];
-//        NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-//        attachController.news = _dataItems[selectedIndexPath.row];
-    }
     if ([[segue identifier] isEqualToString:@"browse"]) {
-        SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
-        browser.channel = self.channel;
         NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
         NSMutableDictionary* dict = _dataItems[selectedIndexPath.row];
+        SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
+        browser.channel = self.channel;
         browser.currentDictionary = dict;
         if (![[dict objectForKey:@"READED"] intValue])
         {
-            NSLog(@"%@",_dataItems[selectedIndexPath.row]);
             NSString* sql =[NSString stringWithFormat:@"update T_DOCUMENTS set READED = 1 where AID  = '%@'",[_dataItems[selectedIndexPath.row] objectForKey:@"AID"]];
             [dict setObject:@"1" forKey:@"READED"];
             [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -278,13 +272,10 @@
     }
 }
 
-
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self performSegueWithIdentifier:@"browse" sender:self];
 }
-
-
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -292,5 +283,4 @@
     CGSize size = [_dataItems[indexPath.row][@"TITL"]  sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
     return size.height + 30;
 }
-
 @end

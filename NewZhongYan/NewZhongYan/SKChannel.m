@@ -50,14 +50,14 @@
             NSTimeInterval time = [[[DateUtils stringToDate:_MAXUPTM DateFormat:dateTimeFormat] dateByAddingHours:0] timeIntervalSince1970];
             _MAXUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
         }else{
-            NSLog(@"本地还没有%@的数据",self.CODE);
+            //NSLog(@"本地还没有%@的数据",self.CODE);
         }
         
         if (![dict[@"MINUPTM"] isEqual:[NSNull null]]) {
             _MINUPTM = dict[@"MINUPTM"];
             NSTimeInterval time = [[[DateUtils stringToDate:_MINUPTM DateFormat:dateTimeFormat] dateByAddingHours:0] timeIntervalSince1970];
             _MINUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
-            NSLog(@"本地%@的数据最大时间和最小时间为:  %@  %@",self.CODE,_MAXUPTM,_MINUPTM);
+            //NSLog(@"本地%@的数据最大时间和最小时间为:  %@  %@",self.CODE,_MAXUPTM,_MINUPTM);
         }else{
         
         }

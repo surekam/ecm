@@ -10,6 +10,7 @@
 #import "DataServiceURLs.h"
 @implementation SKAttachManger
 @synthesize tid = _tid;
+@synthesize aid = _aid;
 @synthesize doctype = _doctype;
 @synthesize paperID;
 
@@ -19,9 +20,20 @@
     if (self) {
         self.CMSInfo = [NSMutableDictionary dictionaryWithDictionary:cmsInfo];
         self.tid = [cmsInfo objectForKey:@"TID"];
-        self.paperID = cmsInfo[@"PAPERID"];
         self.doctype = SKNews;//默认值
-        //[self praseAttachmentItem];
+        [self praseAttachmentItem];
+    }
+    return self;
+}
+
+-(id)initWithECMInfo:(NSMutableDictionary*)ecmInfo
+{
+    self = [super init];
+    if (self) {
+        self.ECMInfo = [NSMutableDictionary dictionaryWithDictionary:ecmInfo];
+        self.tid = [ecmInfo objectForKey:@"AID"];
+        self.paperID = ecmInfo[@"PAPERID"];
+        self.doctype = SKECMInfo;//默认值
     }
     return self;
 }
@@ -208,29 +220,51 @@
     return path;
 }
 
--(BOOL)ecmContentExisted
+-(BOOL)ecmContentExistedWithOwnerApp:(NSString*)app
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self ecmContentPath] isDirectory:0];
-}
-
--(NSString*)ecmContentPath
-{
-    return [[SKAttachManger ecmDocPathWithpaperId:self.paperID] stringByAppendingPathComponent:@"CONTENT.xml"];
-}
-
--(NSString*)ecmAttachmentWithAttachName:(NSString*)filename
-{
-    return [[SKAttachManger ecmDocPathWithpaperId:self.paperID] stringByAppendingPathComponent:filename];
-}
-
-+(NSString*)ecmDocPathWithpaperId:(NSString*)paperID
-{
-    NSString* path = [[self ecmDocPath] stringByAppendingPathComponent:paperID];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:0])
+    NSString* apppath = [[SKAttachManger ecmDocPath] stringByAppendingPathComponent:app];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:apppath isDirectory:0])
     {
-        [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:0];
+        [[NSFileManager defaultManager] createDirectoryAtPath:apppath withIntermediateDirectories:YES attributes:nil error:0];
     }
-    return path;
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self ecmContentPathWithOwnerApp:app] isDirectory:0];
+}
+
+-(NSString*)ecmContentPathWithOwnerApp:(NSString*)app
+{
+    NSString* apppath = [[SKAttachManger ecmDocPath] stringByAppendingPathComponent:app];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:apppath isDirectory:0])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:apppath withIntermediateDirectories:YES attributes:nil error:0];
+    }
+    return [[SKAttachManger ecmDocPathWithOwnerApp:app paperId:self.paperID] stringByAppendingPathComponent:@"CONTENT.xml"];
+}
+
+-(NSString*)ecmAttachmentPathWithOwnerApp:(NSString*)app AttachName:(NSString*)filename
+{
+    NSString* apppath = [[SKAttachManger ecmDocPath] stringByAppendingPathComponent:app];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:apppath isDirectory:0])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:apppath withIntermediateDirectories:YES attributes:nil error:0];
+    }
+    return [[SKAttachManger ecmDocPathWithOwnerApp:app paperId:self.paperID] stringByAppendingPathComponent:filename];
+}
+
++(NSString*)ecmDocPathWithOwnerApp:(NSString*)app paperId:(NSString*)paperID
+{
+    NSString* appPath = [[self ecmDocPath] stringByAppendingPathComponent:app];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:appPath isDirectory:0])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:appPath withIntermediateDirectories:YES attributes:nil error:0];
+    }
+    
+    NSString* paperIDPath = [appPath stringByAppendingPathComponent:paperID];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:paperIDPath isDirectory:0])
+    {
+        [[NSFileManager defaultManager] createDirectoryAtPath:paperIDPath withIntermediateDirectories:YES attributes:nil error:0];
+    }
+    
+    return paperIDPath;
 }
 
 +(NSString *)aIDPathWithoutCreate:(NSString*)aID
@@ -466,11 +500,11 @@
 +(NSString*)ecmDocPath
 {
     NSError* error = nil;
-    NSString* codocsPath = [[FileUtils documentPath] stringByAppendingPathComponent:@"ecm"];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:codocsPath isDirectory:0]){
-        [[NSFileManager defaultManager] createDirectoryAtPath:codocsPath  withIntermediateDirectories:YES attributes:nil error:&error];
+    NSString* ecmPath = [[FileUtils documentPath] stringByAppendingPathComponent:@"ecm"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:ecmPath isDirectory:0]){
+        [[NSFileManager defaultManager] createDirectoryAtPath:ecmPath  withIntermediateDirectories:YES attributes:nil error:&error];
     }
-    return codocsPath;
+    return ecmPath;
 }
 
 +(NSString*)codocsPath

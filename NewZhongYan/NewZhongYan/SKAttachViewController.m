@@ -29,7 +29,6 @@
 {
     AM = [[SKAttachManger alloc] initWithCMSInfo:_cmsInfo];
     AM.doctype = _doctype;
-    NSLog(@"%d",_doctype);
     if (_doctype == SKNotify)
     {
         dataMeta = [LocalDataMeta sharedNotify];

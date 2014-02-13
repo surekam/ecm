@@ -15,6 +15,7 @@ typedef enum
     SKWorkNews,
     SKMeet,
     SKAnnounce,
+    SKECMInfo,
     SKMail
 } SKDocType;    //列的类型 决定 列如何显示
 @interface SKAttachManger : NSObject
@@ -30,9 +31,11 @@ typedef enum
 
 @property SKDocType  doctype;
 @property(nonatomic,strong)NSString *tid;
+@property(nonatomic,strong)NSString *aid;
 @property(nonatomic,strong)NSString *paperID;
 @property(nonatomic,strong)NSMutableArray *attachItems;
 @property(nonatomic,strong)NSMutableDictionary *CMSInfo;
+@property(nonatomic,strong)NSMutableDictionary *ECMInfo;
 
 /**
  *  构造函数
@@ -139,11 +142,18 @@ typedef enum
  */
 -(NSString*)contentPath;
 
--(NSString*)ecmContentPath;
 
--(BOOL)ecmContentExisted;
+#pragma mark -
+#pragma mark ===========  ECM处理  =========
+#pragma mark -
+-(id)initWithECMInfo:(NSMutableDictionary*)ecmInfo;
 
--(NSString*)ecmAttachmentWithAttachName:(NSString*)filename;
+-(BOOL)ecmContentExistedWithOwnerApp:(NSString*)app;
+
+-(NSString*)ecmContentPathWithOwnerApp:(NSString*)app;
+
+-(NSString*)ecmAttachmentPathWithOwnerApp:(NSString*)app AttachName:(NSString*)filename;
+
 //附件工具函数
 /**
  *  该函数在搜索界面会用到 他会作为一个参数传给服务器
@@ -225,7 +235,16 @@ typedef enum
  *
  *  @return 0
  */
-+(NSString*)ecmDocPathWithpaperId:(NSString*)paperID;
+
+/**
+ *  <#Description#>
+ *
+ *  @param app     <#app description#>
+ *  @param paperID <#paperID description#>
+ *
+ *  @return <#return value description#>
+ */
++(NSString*)ecmDocPathWithOwnerApp:(NSString*)app paperId:(NSString*)paperID;
 
 /**
  *  不能保证获取路径的同事对应的文件一定被存在 因为如果不存在代码也不会自动创建

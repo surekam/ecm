@@ -63,8 +63,8 @@
 -(void) analysisXml:(NSString *) contentPath
 {
     NSData *data=[NSData dataWithContentsOfFile:contentPath];
-    NSString* html = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(@"%@",html);
+//    NSString* xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//    NSLog(@"%@",html);
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:0];
     _detail = [[SKECMDetail alloc] init];
 
@@ -89,16 +89,15 @@
  
     DDXMLElement  *addition= (DDXMLElement*)[[doc nodesForXPath:@"//addition" error:nil] objectAtIndex:0];
     _detail.addition = [self analysisXmlElement:addition];
-    
 }
 
 -(void)loadContent
 
 {
-    NSString* contentPath = [AM ecmContentPath];
+    NSString* contentPath = [AM ecmContentPathWithOwnerApp:self.channel.OWNERAPP];
     NSURL*    contentUrl =  [NSURL URLWithString:@"http://10.159.30.88/aaa-agents/xml/ECMDetail.xml"];
     contentUrl = [NSURL URLWithString:_news[@"URL"]];
-    if ([AM ecmContentExisted])
+    if ([AM ecmContentExistedWithOwnerApp:self.channel.OWNERAPP])
     {
         [self analysisXml:contentPath];
         [self createAttachView];
@@ -107,6 +106,7 @@
     
     SKHTTPRequest* Request = [[SKHTTPRequest alloc] initWithURL:contentUrl];
     __weak SKHTTPRequest* contentRequest = Request;
+    NSLog(@"%@ ",contentRequest.url);
     [contentRequest setDownloadDestinationPath:contentPath];
     [contentRequest setCompletionBlock:^{
         if ([contentRequest responseStatusCode] != 200) {
@@ -117,6 +117,7 @@
         }
     }];
     [contentRequest setFailedBlock:^{
+        NSLog(@"%@  responseStatusCode %d",contentRequest.url,contentRequest.responseStatusCode);
         [ASIHTTPRequest removeFileAtPath:contentPath error:0];
         dispatch_async(dispatch_get_main_queue(), ^{
             [BWStatusBarOverlay showMessage:[NetUtils userInfoWhenRequestOccurError:contentRequest.error] duration:1 animated:1];
@@ -124,10 +125,11 @@
     }];
     [Request startAsynchronous];
 }
+
 -(void)initData
 
 {
-    AM = [[SKAttachManger alloc] initWithCMSInfo:_news];
+    AM = [[SKAttachManger alloc] initWithECMInfo:_news];
     AM.doctype = SKNews;
     height = 100;
     h = [NSMutableArray array];
@@ -238,9 +240,6 @@
 }
 
 -(void) addHtml:(Content *) content{
-//    if ([content.value isEqualToString:@"null"]) {
-//        return;
-//    }
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, _curHeight, 300,1)];
     webView.delegate = self;
     webView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -254,10 +253,9 @@
 };
 
 -(void) addAttachement:(Content *) content{
-    //_curHeight = [self scrollViewContentHeight];
     NSString* btnTitle = content.name;
     SKAttachButton* attachmentButton = [[SKAttachButton alloc] initWithFrame:CGRectMake(10,_curHeight, 300, 48)];
-    attachmentButton.filePath = [AM ecmAttachmentWithAttachName:content.name];
+    attachmentButton.filePath = [AM ecmAttachmentPathWithOwnerApp:self.channel.OWNERAPP AttachName:content.name];
     attachmentButton.attachUrl = [NSURL URLWithString:content.value];
     attachmentButton.isAttachExisted = [AM fileExisted:attachmentButton.filePath];
     [attachmentButton setTitle:btnTitle forState:UIControlStateNormal];
@@ -280,7 +278,7 @@
 }
 
 -(void) showContent:(Content *) content{
-    [content show];
+    //[content show];
     if (content.type == nil) {
         [self addText:content];
     }
@@ -311,7 +309,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     [self initData];
     [self loadContent];
 }

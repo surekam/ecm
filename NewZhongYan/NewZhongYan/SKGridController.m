@@ -218,6 +218,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self reloadBageNumber];
     if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
         [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
                                            complete:^(NSMutableArray* array){
@@ -281,14 +282,6 @@
 
 }
 
--(void)reloadBageNumber{
-    if (self.isCompanyPage) {
-        [self setBadgeNumber];
-    }else{
-        [self setECMBadgeNumber];
-    }
-}
-
 -(long long)maxuptmFromServer:(NSArray*)array ChannelCode:(NSString*)code
 {
     for (NSDictionary* dict in array) {
@@ -320,6 +313,14 @@
                 }
             }
         }
+    }
+}
+
+-(void)reloadBageNumber{
+    if (self.isCompanyPage) {
+        [self setBadgeNumber];
+    }else{
+        [self setECMBadgeNumber];
     }
 }
 

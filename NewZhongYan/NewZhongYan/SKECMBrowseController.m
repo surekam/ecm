@@ -40,7 +40,7 @@
 
 -(void)dataFromDB
 {
-    NSString* sql = [NSString stringWithFormat:@"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,PAPERID,TITL,READED,ATTRLABLE,PMS,URL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
+    NSString* sql = [NSString stringWithFormat:@"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,PAPERID,TITL,READED,ATTRLABLE,PMS,URL,PAPERID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
     self.contentList = [NSMutableArray arrayWithArray:[[DBQueue sharedbQueue] recordFromTableBySQL:sql]];
     self.kNumberOfPages = [self.contentList count];
 }
@@ -77,6 +77,7 @@
         {
             controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMAttahController"];
             controller.news = [self.contentList objectAtIndex:index];
+            controller.channel = self.channel;
             [viewControllerArray replaceObjectAtIndex:index withObject:controller];
         }else{
             [viewControllerArray replaceObjectAtIndex:index withObject:controller];

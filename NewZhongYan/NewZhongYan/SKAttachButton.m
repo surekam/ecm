@@ -170,7 +170,6 @@
 
 - (void)requestFinished:(SKHTTPRequest *)req
 {
-    NSLog(@"%@",req.responseString);
     [self.indicator stopAnimating];
     [self.progresser setHidden:YES];
     

@@ -161,11 +161,10 @@
     }];
     
     [request setFailedBlock:^{
-        NSLog(@"%@",req.error);
         [_moreBtn setHidden:YES];
         [_moreBtn startLoadData:NO];
     }];
-    [request startAsynchronous];
+    [request startSynchronous];
     [_moreBtn startLoadData:YES];
 }
 
@@ -183,7 +182,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     static NSString* identify = @"newscell";
     SKTableViewCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
     if (!cell)

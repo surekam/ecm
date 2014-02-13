@@ -19,6 +19,7 @@
 @property (strong,nonatomic)  UILabel *authorLabel;
 @property (strong,nonatomic)  UILabel *crtmLabel;
 @property (weak,nonatomic) IBOutlet UIScrollView *bgscrollview;
+@property (weak,nonatomic)SKChannel* channel;
 @property (nonatomic,strong)NSMutableDictionary *news;
 @property (nonatomic,strong)SKECMDetail *detail;
 @property int curHeight;
