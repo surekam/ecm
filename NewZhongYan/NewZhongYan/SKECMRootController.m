@@ -13,6 +13,8 @@
 #import "SKBrowseNewsController.h"
 #import "SKECMBrowseController.h"
 #import "SKSearchController.h"
+#import "SKECMSearchController.h"
+#import "SKCMeetCell.h"
 #define UP 1
 #define DOWN 0
 #define READ 1
@@ -25,7 +27,7 @@
     NSMutableArray              *_dataItems;
     NSArray* subChannels;
     NSInteger                   currentIndex;
-    __weak IBOutlet UIButton *titleButton;
+    UIButton *titleButton;
 }
 @end
 
@@ -33,6 +35,9 @@
 -(void)onSearchClick
 {
     UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"ecmsearchnavcontroller"];
+    SKECMSearchController* searcher = (SKECMSearchController*)[nav topViewController];
+    searcher.fidlist = self.channel.FIDLIST;
+    searcher.isMeeting = isMeeting;
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
     }];
@@ -62,15 +67,31 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,TITL,READED,ATTRLABLE,PMS,URL,PAPERID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,(case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as az,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,ADDITION,BGTM,EDTM,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",currentFid];
         NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
         //NSLog(@"%@",dataArray);
-        for (NSMutableDictionary* d in dataArray)
-        {
-            if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
-                [d setObject:@"0" forKey:@"READED"];
-            }else{
-                [d setObject:@"1" forKey:@"READED"];
+        if (isMeeting) {
+            NSDictionary *sectionDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                               [NSMutableArray array],@"即将召开&正在召开",
+                                               [NSMutableArray array],@"已召开", nil];
+            
+            for (NSDictionary *dict in [NSArray arrayWithArray:dataArray]){
+                NSString* bz = [dict objectForKey:@"az"];
+                if (bz.intValue) {
+                    [(NSMutableArray*)[sectionDictionary objectForKey:@"即将召开&正在召开"] addObject:dict];
+                }else{
+                    [(NSMutableArray*)[sectionDictionary objectForKey:@"已召开"]  addObject:dict];
+                }
+            }
+            _sectionDictionary = [NSMutableDictionary dictionaryWithDictionary:sectionDictionary];
+        }else{
+            for (NSMutableDictionary* d in dataArray)
+            {
+                if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
+                    [d setObject:@"0" forKey:@"READED"];
+                }else{
+                    [d setObject:@"1" forKey:@"READED"];
+                }
             }
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -129,11 +150,32 @@
     return self;
 }
 
+-(NSDictionary*)praseMeetingArray:(NSArray*)meetings{
+    NSDictionary *sectionDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                       [NSMutableArray array],@"即将召开&正在召开",
+                                       [NSMutableArray array],@"已召开", nil];
+    
+    for (NSDictionary *dict in [NSArray arrayWithArray:meetings]){
+        NSString* bz = [dict objectForKey:@"az"];
+        if (bz.intValue) {
+            [(NSMutableArray*)[sectionDictionary objectForKey:@"即将召开&正在召开"] addObject:dict];
+        }else{
+            [(NSMutableArray*)[sectionDictionary objectForKey:@"已召开"]  addObject:dict];
+        }
+    }
+    return sectionDictionary;
+}
+
 -(void)initData
 {
     self.title = self.channel.NAME;
+    isMeeting = [self.channel.TYPELABLE isEqualToString:@"meeting,"];
+    [titleButton setHidden:!self.channel.HASSUBTYPE];
+    
     //这里做了一个FIDLIST的拼接
     if (self.channel.HASSUBTYPE) {
+        //documentId = self.channel.FIDLISTS;
+        [titleButton setHidden:NO];
         NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE PARENTID  = %@",self.channel.CURRENTID];
         subChannels = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
     }else{
@@ -142,13 +184,24 @@
         label.font = [UIFont boldSystemFontOfSize:18];
         label.textColor = [UIColor whiteColor];
         self.navigationItem.titleView = label;
+        
+        [titleButton setHidden:YES];
+        //documentId = self.channel.FIDLIST;
     }
-  
-    [titleButton setHidden:!self.channel.HASSUBTYPE];
-    [self dataFromDataBaseWithFid:self.channel.FIDLIST ComleteBlock:^(NSArray* array){
-        [_dataItems setArray:array];
+
+    
+    if (isMeeting) {
+        _sectionArray = [[NSArray alloc] initWithObjects:@"即将召开&正在召开",@"已召开", nil];
+        _sectionDictionary = [[NSMutableDictionary alloc] init];
+    }
+    
+    [self dataFromDataBaseWithFid:self.channel.FIDLISTS ComleteBlock:^(NSArray* array){
+        if (isMeeting) {
+            [_sectionDictionary addEntriesFromDictionary:[self praseMeetingArray:array]];
+        } else {
+            [_dataItems setArray:array];
+        }
         [self.tableView tableViewDidFinishedLoading];
-        //[self.tableView setReachedTheEnd:array.count < 20];
         [self.tableView reloadData];
         [self onRefrshClick];
     }];
@@ -166,7 +219,7 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,(case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as az,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,ADDITION,BGTM,EDTM,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLISTS];
         NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
         for (NSMutableDictionary* d in dataArray)
         {
@@ -211,64 +264,92 @@
 }
 
 #pragma mark - Table view data source/Users/lilin/Desktop/基于 ios7 的新工程/NewZhongYan/NewZhongYan/SKNewsAttachController.m
-
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if (isMeeting) {
+        return [_sectionDictionary count];
+    }else{
+        return 1;
+    }
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _dataItems.count;
+    if (isMeeting) {
+        return [[_sectionDictionary objectForKey:[_sectionArray objectAtIndex:section]] count];
+    } else {
+        return _dataItems.count;
+    }
 }
 
-//-(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-//{
-//    if ([self.channel.CODE isEqualToString:@"conews"]) {
-//        return @"新闻列表";
-//    }else if([self.channel.CODE isEqualToString:@"conotification"]){
-//        return @"通知列表";
-//    }
-//    return @"新闻列表";
-//}
+-(NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (isMeeting) {
+        if ([[_sectionDictionary objectForKey:[_sectionArray objectAtIndex:section]] count] > 0) {
+            return [_sectionArray objectAtIndex:section];
+        }else{
+            return 0;
+        }
+    }
+    return 0;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    static NSString *CellIdentifier = @"CMSCell";
-    //    SKTableViewCell *cell;
-    //    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
-    //        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    //    }else {
-    //        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    //    }
-    //    [cell setDataDictionary:[_dataItems objectAtIndex:indexPath.row]];
-    //    return cell;
-    
-    static NSString* identify = @"newscell";
-    SKTableViewCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
-    if (!cell)
-    {
-        cell = [[SKTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+    if (isMeeting) {
+        static NSString* identify = @"meetcell";
+        SKCMeetCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
+        if (!cell) {
+            cell = [[SKCMeetCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+        }
+        NSString* sectionName  = [_sectionArray objectAtIndex:indexPath.section];//获取section 的名字
+        NSArray * sectionArray = [_sectionDictionary objectForKey:sectionName];  //获取本section 的数据
+        NSDictionary*dataDictionary = [sectionArray objectAtIndex:indexPath.row];
+        
+        [cell setCMSInfo:dataDictionary Section:indexPath.section];
+        [cell resizeCellHeight];
+        return cell;
+
+    }else{
+        static NSString* identify = @"newscell";
+        SKTableViewCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
+        if (!cell)
+        {
+            cell = [[SKTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+        }
+        
+        [cell setECMInfo:_dataItems[indexPath.row]];
+        [cell resizeCellHeight];
+        return cell;
     }
-    
-    [cell setECMInfo:_dataItems[indexPath.row]];
-    [cell resizeCellHeight];
-    return cell;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"browse"]) {
-        NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-        NSMutableDictionary* dict = _dataItems[selectedIndexPath.row];
-        SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
-        browser.channel = self.channel;
-        browser.currentDictionary = dict;
-        if (![[dict objectForKey:@"READED"] intValue])
-        {
-            NSString* sql =[NSString stringWithFormat:@"update T_DOCUMENTS set READED = 1 where AID  = '%@'",[_dataItems[selectedIndexPath.row] objectForKey:@"AID"]];
-            [dict setObject:@"1" forKey:@"READED"];
-            [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
-            });
+        if (isMeeting) {
+            NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+            NSString* sectionName  = [_sectionArray objectAtIndex:selectedIndexPath.section];//获取section 的名字
+            NSArray * sectionArray = [_sectionDictionary objectForKey:sectionName];  //获取本section 的数据
+            SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
+            browser.channel = self.channel;
+            browser.currentDictionary = sectionArray[selectedIndexPath.row];;
+        }else{
+            NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+            NSMutableDictionary* dict = _dataItems[selectedIndexPath.row];
+            SKECMBrowseController *browser = (SKECMBrowseController *)[segue destinationViewController];
+            browser.channel = self.channel;
+            browser.currentDictionary = dict;
+            if (![[dict objectForKey:@"READED"] intValue])
+            {
+                NSString* sql =[NSString stringWithFormat:@"update T_DOCUMENTS set READED = 1 where AID  = '%@'",[_dataItems[selectedIndexPath.row] objectForKey:@"AID"]];
+                [dict setObject:@"1" forKey:@"READED"];
+                [self.tableView reloadRowsAtIndexPaths:@[selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
+                });
+            }
+            [_tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
         }
-        [_tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
     }
 }
 
@@ -279,8 +360,20 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [_dataItems[indexPath.row][@"TITL"]  sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
-    return size.height + 30;
+    if (isMeeting) {
+        NSDictionary* dataDictionary;
+        NSString* sectionName  = [_sectionArray objectAtIndex:indexPath.section];//获取section 的名字
+        NSArray * sectionArray = [_sectionDictionary objectForKey:sectionName];  //获取本section 的数据
+        dataDictionary = [sectionArray objectAtIndex:indexPath.row];
+        CGFloat contentWidth = 280;
+        UIFont *font =  [UIFont fontWithName:@"Helvetica" size:16.];
+        CGSize size = [dataDictionary[@"TITL"] sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, 220) lineBreakMode:NSLineBreakByCharWrapping];
+        CGFloat height = size.height+55;
+        return height;
+    }else{
+        UIFont *font = [UIFont systemFontOfSize:16];
+        CGSize size = [_dataItems[indexPath.row][@"TITL"]  sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
+        return size.height + 30;
+    }
 }
 @end

@@ -234,11 +234,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (self.isCompanyPage) {
-        [self initCompanyPageView];
-    }else{
-        [self initSelfFactoryView];
-    }
+//    if (self.isCompanyPage) {
+//        [self initCompanyPageView];
+//    }else{
+//        [self initSelfFactoryView];
+//    }
+    [self initSelfFactoryView];
     [self reloadBageNumber];
 }
 
@@ -250,11 +251,12 @@
                 [v removeFromSuperview];
             }
         }
-        if (self.isCompanyPage) {
-            [self initCompanyPageView];
-        }else{
-            [self initSelfFactoryView];
-        }
+//        if (self.isCompanyPage) {
+//            [self initCompanyPageView];
+//        }else{
+//            [self initSelfFactoryView];
+//        }
+         [self initSelfFactoryView];
         //获取每个频道更新信息
         if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
             [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp

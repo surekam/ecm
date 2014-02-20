@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+typedef enum{
+	SKSearchTitle = 0,
+	SKSearchContent
+}SKSearchMode;
 @interface SKECMSearchController : UITableViewController<UISearchBarDelegate>
 {
     NSMutableArray      *_dataArray;
@@ -17,4 +20,6 @@
 }
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong,nonatomic)UIButton *moreBtn;
+@property (strong,nonatomic)NSString* fidlist;
+@property BOOL isMeeting;
 @end

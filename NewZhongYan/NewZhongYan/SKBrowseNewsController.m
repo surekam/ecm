@@ -120,19 +120,7 @@
         }
         [viewControllerArray replaceObjectAtIndex:index withObject:controller];
         return controller;
-        
-//        SKECMAttahController *controller = [viewControllerArray objectAtIndex:index];
-//        if ((NSNull *)controller == [NSNull null])
-//        {
-//            controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMAttahController"];
-//            controller.news = [self.contentList objectAtIndex:index];
-//            [viewControllerArray replaceObjectAtIndex:index withObject:controller];
-//        }
-//        [viewControllerArray replaceObjectAtIndex:index withObject:controller];
-//        return controller;
     }
     return res;
 }
-
-
 @end

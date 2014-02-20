@@ -138,7 +138,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIFont *font = [UIFont systemFontOfSize:16];
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
     CGSize size = [_dataItems[indexPath.row][@"TITL"] sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
     return size.height + 30;
 }

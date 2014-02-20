@@ -10,6 +10,7 @@
 #import "NSString+hnzy.h"
 #import "SKSearchCell.h"
 #import "SKNewsAttachController.h"
+#import "SKAttachViewController.h"
 @interface UIButton(network)
 - (void)startLoadData:(BOOL)show;
 @end
@@ -122,7 +123,6 @@
     return[NSString stringWithFormat:@"array('author'=>'%@','title'=>'%@','starttime' => '%@','endtime'=>'%@');",self.AUID,self.TITL,self.BGTM,self.EDTM];
 }
 
-
 //搜索健康
 -(void)remotequery
 {
@@ -145,7 +145,7 @@
     [Request setCompletionBlock:^{
         isRemote = NO;
         [moreBtn startLoadData:NO];
-        NSLog(@"%@",request.responseString);
+        //NSLog(@"%@",request.responseString);
         NSDictionary *dic=[[request responseData] objectFromJSONData];
         if ([[dic allKeys] containsObject:@"s"])
         {
@@ -203,7 +203,6 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -260,8 +259,6 @@
     insiderView.delegate = self;
     insiderView.target = self;
     //[self.view addSubview:insiderView];
-
-
 }
 
 
@@ -275,13 +272,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
     return _dataArray.count;
 }
 
@@ -292,24 +287,33 @@
     if (!cell) {
         cell = [[SKSearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
     }
-
+    
     NSDictionary* dataDictionary = [[[_dataArray objectAtIndex:indexPath.row] allKeys] containsObject:@"v"]
     ? [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"v"]
     : [_dataArray objectAtIndex:indexPath.row];
-    [cell setCMSInfo:dataDictionary];
+    if (doctype == SKMeet) {
+        [cell setMeetInfo:dataDictionary];
+        [cell resizeMeetCellHeight];
+    }else{
+        [cell setCMSInfo:dataDictionary];
+        [cell resizeCellHeight];
+    }
     [cell setKeyWordArray:self.keyArray];
-    [cell resizeCellHeight];
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIFont *font = [UIFont systemFontOfSize:16];
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
     NSDictionary* dataDictionary = [[[_dataArray objectAtIndex:indexPath.row] allKeys] containsObject:@"v"]
     ? [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"v"]
     : [_dataArray objectAtIndex:indexPath.row];
     CGSize size = [dataDictionary[@"TITL"] sizeWithFont:font constrainedToSize:CGSizeMake(280, 220) lineBreakMode:NSLineBreakByCharWrapping];
-    return size.height + 30;
+    if (doctype == SKMeet) {
+        return size.height + 50;
+    }else{
+        return size.height + 30;
+    }
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -317,11 +321,15 @@
     NSMutableDictionary* dataDictionary = [[[_dataArray objectAtIndex:indexPath.row] allKeys] containsObject:@"v"]
     ? [[_dataArray objectAtIndex:indexPath.row] objectForKey:@"v"]
     : [_dataArray objectAtIndex:indexPath.row];
-    
     if (doctype == SKNews) {
         SKNewsAttachController *attachController =[[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKNewsAttachController"];
         attachController.news = dataDictionary;
         attachController.isSearch = YES;
+        [self.navigationController pushViewController:attachController animated:YES];
+    }else{
+        SKAttachViewController* attachController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKAttachViewController"];
+        attachController.cmsInfo = dataDictionary;
+        attachController.doctype = doctype;
         [self.navigationController pushViewController:attachController animated:YES];
     }
 }
@@ -354,14 +362,8 @@
     [self.searchBar resignFirstResponder];
 }
 #pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    
 }
-
-
-
 @end

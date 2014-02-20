@@ -63,8 +63,8 @@
 -(void) analysisXml:(NSString *) contentPath
 {
     NSData *data=[NSData dataWithContentsOfFile:contentPath];
-//    NSString* xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//    NSLog(@"%@",html);
+    NSString* xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"%@",xml);
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:0];
     _detail = [[SKECMDetail alloc] init];
 
@@ -92,7 +92,6 @@
 }
 
 -(void)loadContent
-
 {
     NSString* contentPath = [AM ecmContentPathWithOwnerApp:self.channel.OWNERAPP];
     NSURL*    contentUrl =  [NSURL URLWithString:@"http://10.159.30.88/aaa-agents/xml/ECMDetail.xml"];
@@ -103,10 +102,8 @@
         [self createAttachView];
         return;
     }
-    
     SKHTTPRequest* Request = [[SKHTTPRequest alloc] initWithURL:contentUrl];
     __weak SKHTTPRequest* contentRequest = Request;
-    NSLog(@"%@ ",contentRequest.url);
     [contentRequest setDownloadDestinationPath:contentPath];
     [contentRequest setCompletionBlock:^{
         if ([contentRequest responseStatusCode] != 200) {
@@ -117,7 +114,6 @@
         }
     }];
     [contentRequest setFailedBlock:^{
-        NSLog(@"%@  responseStatusCode %d",contentRequest.url,contentRequest.responseStatusCode);
         [ASIHTTPRequest removeFileAtPath:contentPath error:0];
         dispatch_async(dispatch_get_main_queue(), ^{
             [BWStatusBarOverlay showMessage:[NetUtils userInfoWhenRequestOccurError:contentRequest.error] duration:1 animated:1];
@@ -127,10 +123,9 @@
 }
 
 -(void)initData
-
 {
     AM = [[SKAttachManger alloc] initWithECMInfo:_news];
-    AM.doctype = SKNews;
+    AM.doctype = SKECMInfo;
     height = 100;
     h = [NSMutableArray array];
 }

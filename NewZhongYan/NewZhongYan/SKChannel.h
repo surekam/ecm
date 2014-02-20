@@ -20,12 +20,10 @@
 @property(nonatomic,strong)NSString* LEVL;     //因为LEVEL 是数据库关键字 所以不叫LEVL 叫LEVEL
 @property(nonatomic,strong)NSString* MAXUPTM;
 @property(nonatomic,strong)NSString* MINUPTM;
+@property(nonatomic,strong)NSString* FIDLISTS;
 @property BOOL HASSUBTYPE;
-
 @property(nonatomic,strong)NSMutableArray* channeltypes;
-
 -(id)initWithDictionary:(NSDictionary*)channelInfo;
-
 /**
  *  从数据库将最大和最小的时间的数据获取到model 中
  */

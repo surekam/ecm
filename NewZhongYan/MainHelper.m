@@ -7,21 +7,23 @@
 //
 
 #import "MainHelper.h"
-
 @implementation MainHelper
 +(void)cleanLocalData
 {
     NSLog(@"Start clean Local Data!");
 }
+
 +(NSString*)getSize
 {
     return nil;
 }
+
 +(NSString *)getAllSize
 {
     NSString *str=[FileUtils formattedFileSize:[FileUtils folderSizeAtPath:[FileUtils documentPath]]];
     return str;
 }
+
 +(BOOL)needClean//是否需要清理内存
 {
     return NO;

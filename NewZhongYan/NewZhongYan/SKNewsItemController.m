@@ -152,16 +152,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    static NSString *CellIdentifier = @"CMSCell";
-//    SKTableViewCell *cell;
-//    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
-//        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-//    }else {
-//        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    }
-//    [cell setDataDictionary:[_dataItems objectAtIndex:indexPath.row]];
-//    return cell;
-    
     static NSString* identify = @"newscell";
     SKTableViewCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
     if (!cell)
@@ -209,8 +199,8 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [_dataItems[indexPath.row][@"TITL"] sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
+    CGSize size = [_dataItems[indexPath.row][@"TITL"] sizeWithFont:font constrainedToSize:CGSizeMake(280, 220) lineBreakMode:NSLineBreakByTruncatingTail];
     return size.height + 30;
 }
 @end

@@ -25,7 +25,7 @@
         NSTimeInterval time = [[[NSDate dateWithTimeIntervalSince1970:0] dateByAddingHours:8] timeIntervalSince1970];
         _MAXUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
         _MINUPTM = [NSString stringWithFormat:@"%.0f",time*1000];;
-        
+        self.FIDLISTS = _FIDLIST;
         if (self.HASSUBTYPE) {
             NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE PARENTID  = %@",self.CURRENTID];
             NSArray* subChannels = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
@@ -34,7 +34,7 @@
                 fidlist = [fidlist stringByAppendingFormat:@",%@",dict[@"FIDLIST"]];
             }
             fidlist = [fidlist substringFromIndex:1];
-            self.FIDLIST = fidlist;
+            self.FIDLISTS = fidlist;
         }
     }
     return self;

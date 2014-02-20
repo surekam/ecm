@@ -57,7 +57,7 @@
 {
     UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"searchnavcontroller"];
     SKSearchController* searcher = (SKSearchController*)[nav topViewController];
-    searcher.doctype = SKNotify;
+    searcher.doctype = SKCodocs;
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
     }];
@@ -253,7 +253,7 @@
 {
     CGFloat contentWidth = 280;
     // 设置字体
-    UIFont *font = [UIFont systemFontOfSize:16];
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
     // 计算出长宽
     CGSize size = [cellTitle sizeWithFont:font constrainedToSize:CGSizeMake(contentWidth, 220) lineBreakMode:NSLineBreakByTruncatingTail];
     CGFloat height = size.height+35;

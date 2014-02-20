@@ -27,7 +27,7 @@
 {
     UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"searchnavcontroller"];
     SKSearchController* searcher = (SKSearchController*)[nav topViewController];
-    searcher.doctype = SKNotify;
+    searcher.doctype = SKMeet;
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
     }];
@@ -149,8 +149,6 @@
     NSString* sectionName  = [_sectionArray objectAtIndex:indexPath.section];//获取section 的名字
     NSArray * sectionArray = [_sectionDictionary objectForKey:sectionName];  //获取本section 的数据
     dataDictionary = [sectionArray objectAtIndex:indexPath.row];
-    
-    
     return [self meetCellHeight:[dataDictionary objectForKey:@"TITL"]];
 }
 

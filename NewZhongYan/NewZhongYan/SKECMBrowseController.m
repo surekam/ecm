@@ -15,15 +15,18 @@
 #pragma mark -DMLazyScrollView delegate
 - (void)lazyScrollViewDidEndDecelerating:(DMLazyScrollView *)pagingView atPageIndex:(NSInteger)pageIndex
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[DBQueue sharedbQueue] updateDataTotableWithSQL:[NSString stringWithFormat:
-                                                          @"update T_DOCUMENTS set READED = 1 where AID  = '%@'",
-                                                          [[self.contentList objectAtIndex:pageIndex] objectForKey:@"AID"]]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"newsStateChanged"
-                                                            object:0
-                                                          userInfo:
-         [NSDictionary dictionaryWithObjectsAndKeys:[[self.contentList objectAtIndex:pageIndex] objectForKey:@"AID"],@"AID", nil]];
-    });
+    if (![self.channel.TYPELABLE isEqualToString:@"meeting,"]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[DBQueue sharedbQueue] updateDataTotableWithSQL:[NSString stringWithFormat:
+                                                              @"update T_DOCUMENTS set READED = 1 where AID  = '%@'",
+                                                              [[self.contentList objectAtIndex:pageIndex] objectForKey:@"AID"]]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"newsStateChanged"
+                                                                object:0
+                                                              userInfo:
+             [NSDictionary dictionaryWithObjectsAndKeys:[[self.contentList objectAtIndex:pageIndex] objectForKey:@"AID"],@"AID", nil]];
+        });
+        
+    }
 }
 
 -(NSInteger)currentPage
@@ -40,7 +43,7 @@
 
 -(void)dataFromDB
 {
-    NSString* sql = [NSString stringWithFormat:@"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,AID,PAPERID,TITL,READED,ATTRLABLE,PMS,URL,PAPERID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLIST];
+    NSString* sql = [NSString stringWithFormat:@"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,(case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as az,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,ADDITION,BGTM,EDTM,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM  from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLISTS];
     self.contentList = [NSMutableArray arrayWithArray:[[DBQueue sharedbQueue] recordFromTableBySQL:sql]];
     self.kNumberOfPages = [self.contentList count];
 }

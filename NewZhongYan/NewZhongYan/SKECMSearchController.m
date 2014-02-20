@@ -12,6 +12,8 @@
 #import "DDXMLElementAdditions.h"
 #import "Paper.h"
 #import "SKTableViewCell.h"
+#import "SKCMeetCell.h"
+#import "SKSearchCell.h"
 @interface UIButton(network)
 - (void)startLoadData:(BOOL)show;
 @end
@@ -38,6 +40,11 @@
 @end
 
 @implementation SKECMSearchController
+{
+    UIButton                    *titleButton1;
+    UIButton                    *titleButton2;
+    SKSearchMode                 searchmode;
+}
 @synthesize moreBtn = _moreBtn;
 -(void)initNavBar
 {
@@ -58,9 +65,24 @@
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
 }
 
+-(void)selectType:(UIButton*)button
+{
+    if (button.tag==101)
+    {
+        [titleButton1 setBackgroundImage:[UIImage imageNamed:@"segLeft_press.png"] forState:UIControlStateNormal];
+        [titleButton2 setBackgroundImage:[UIImage imageNamed:@"segRight.png"] forState:UIControlStateNormal];
+        searchmode = SKSearchTitle;
+    }
+    else
+    {
+        [titleButton1 setBackgroundImage:[UIImage imageNamed:@"segLeft.png"] forState:UIControlStateNormal];
+        [titleButton2 setBackgroundImage:[UIImage imageNamed:@"segRight_press.png"] forState:UIControlStateNormal];
+        searchmode = SKSearchContent;
+    }
+}
+
 -(void)initData
 {
-    
     _dataArray = [[NSMutableArray alloc] init];
     pageindex = 1;
     UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
@@ -75,6 +97,28 @@
     [_moreBtn addTarget:self action:@selector(nextPage) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:_moreBtn];
     [self.tableView setTableFooterView:view];
+    
+    titleButton1=[UIButton buttonWithType:UIButtonTypeCustom];
+    [titleButton1 setFrame:CGRectMake(0, 0, 74, 32)];
+    [titleButton1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [titleButton1 setBackgroundImage:[UIImage imageNamed:@"segLeft_press.png"] forState:UIControlStateNormal];
+    [titleButton1 setTitle:@"标题" forState:UIControlStateNormal];
+    [titleButton1.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
+    [titleButton1 setTag:101];
+    [titleButton1 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
+    
+    titleButton2=[UIButton buttonWithType:UIButtonTypeCustom];
+    [titleButton2 setFrame:CGRectMake(74, 0, 74, 32)];
+    [titleButton2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [titleButton2 setBackgroundImage:[UIImage imageNamed:@"segRight.png"] forState:UIControlStateNormal];
+    [titleButton2 setTitle:@"全文" forState:UIControlStateNormal];
+    [titleButton2.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
+    [titleButton2 setTag:102];
+    [titleButton2 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
+    UIView *tView=[[UIView alloc] initWithFrame:CGRectMake(86, 6, 148, 32)];
+    [tView addSubview:titleButton1];
+    [tView addSubview:titleButton2];
+    self.navigationItem.titleView = tView;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
@@ -92,10 +136,12 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:@"中烟" ChannelID:@""];
+    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:searchBar.text ChannelID:self.fidlist];
+     NSLog(@"%@ %@",queryurl,self.fidlist);
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:queryurl];
     __weak SKHTTPRequest* req = request;
     [request setCompletionBlock:^{
+        [_dataArray removeAllObjects];
         DDXMLDocument* mainDoc = [[DDXMLDocument alloc] initWithData:req.responseData options:0 error:0];
         NSArray* array = [mainDoc nodesForXPath:@"//paper" error:nil];
         for (DDXMLElement* e in array) {
@@ -130,8 +176,7 @@
 
 -(void)nextPage
 {
-    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:@"中烟" ChannelID:@""];
-    NSLog(@"%@",queryurl);
+    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:_searchBar.text ChannelID:self.fidlist];
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:queryurl];
     __weak SKHTTPRequest* req = request;
     [request setCompletionBlock:^{
@@ -182,22 +227,35 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* identify = @"newscell";
-    SKTableViewCell*  cell = [tableView dequeueReusableCellWithIdentifier:identify];
-    if (!cell)
-    {
-        cell = [[SKTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+    SKSearchCell*  cell;
+    if (self.isMeeting) {
+        static NSString* identify = @"meetscell";
+        cell = [tableView dequeueReusableCellWithIdentifier:identify];
+        if (!cell)
+        {
+            cell = [[SKSearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+        }
+        [cell setECMPaperInfo:_dataArray[indexPath.row]];
+        [cell resizeMeetCellHeight];
+    }else{
+        static NSString* identify = @"newscell";
+         cell = [tableView dequeueReusableCellWithIdentifier:identify];
+        if (!cell)
+        {
+            cell = [[SKSearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
+        }
+        [cell setECMPaperInfo:_dataArray[indexPath.row]];
+        [cell resizeCellHeight];
     }
-    [cell setECMPaperInfo:_dataArray[indexPath.row]];
-    [cell resizeCellHeight];
+    [cell setKeyWord:_searchBar.text];
     return cell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Paper* paper = _dataArray[indexPath.row];
-    UIFont *font = [UIFont systemFontOfSize:16];
+    UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
     CGSize size = [paper.title sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
-    return size.height + 30;
+    return size.height + 32;
 }
 @end

@@ -10,23 +10,12 @@
 #import "Paper.h"
 @interface SKTableViewCell : UITableViewCell
 {
-    __weak IBOutlet UILabel *titleLabel;
-    __weak IBOutlet UILabel *crtmLabel;
-    __weak IBOutlet UIImageView *stateView;
-    __weak IBOutlet UIImageView *attachView;
-}
 
-//当实例化这个cell 时 重新调整子视图的位置
--(void)resizeTheHeight;
+}
 -(void)resizeCellHeight;
-//渲染本cell
 -(void)setDataDictionary:(NSDictionary*)dictionary;
 -(void)setRemindInfo:(NSDictionary*)remind;
 -(void)setCMSInfo:(NSDictionary*)info;
 -(void)setECMInfo:(NSDictionary*)info;
 -(void)setECMPaperInfo:(Paper*)paper;
-//用于测试
--(void)setCMSTestInfo;
-
-
 @end

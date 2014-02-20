@@ -8,18 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "SKLabel.h"
-
+#import "Paper.h"
 @interface SKSearchCell : UITableViewCell
 {
-    __weak IBOutlet SKLabel *titleLabel;
-    __weak IBOutlet UIImageView *stateView;
-    __weak IBOutlet UIImageView *attachView;
-    __weak IBOutlet UILabel *crtmLabel;
+    
 }
 
--(void)setDataDictionary:(NSDictionary*)dictionary;
 -(void)setKeyWord:(NSString*)key;
 -(void)setKeyWordArray:(NSMutableArray*)keyArray;
--(void)setCMSInfo:(NSDictionary*)info;
+
 -(void)resizeCellHeight;
+-(void)resizeMeetCellHeight;
+
+-(void)setCMSInfo:(NSDictionary*)info;
+-(void)setRemindInfo:(NSDictionary*)info;
+-(void)setMeetInfo:(NSDictionary*)info;
+-(void)setECMPaperInfo:(Paper*)paper;
+-(void)setDataDictionary:(NSDictionary*)dictionary;
+
 @end

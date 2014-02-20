@@ -10,16 +10,9 @@
 
 @interface SKCMeetCell : UITableViewCell
 {
-    __weak IBOutlet UILabel* TITLLabel;
-    __weak IBOutlet UILabel* STIMELabel;//start
-    __weak IBOutlet UILabel* ETIMELabel;//end
-    __weak IBOutlet UIImageView *RStateView;
-    __weak IBOutlet UIImageView *ATTACHView;
+
 }
 
-
--(void)resizeTheHeight;
--(void)setDataDictionary:(NSDictionary*)dictionary Section:(NSInteger)section;
 -(void)resizeCellHeight;
 -(void)setCMSInfo:(NSDictionary*)info Section:(NSInteger)section;
 @end

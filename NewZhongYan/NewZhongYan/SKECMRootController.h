@@ -13,6 +13,9 @@
 <PullingRefreshTableViewDelegate,UITableViewDelegate,UITableViewDataSource,UIActionSheetDelegate>
 {
     __weak IBOutlet UIView *toolView;
+    NSMutableDictionary         *_sectionDictionary;   //存储section的数据
+    NSArray                     *_sectionArray;        //存储section的标题
+    BOOL isMeeting;
 }
 
 @property (nonatomic,weak)IBOutlet PullingRefreshTableView *tableView;

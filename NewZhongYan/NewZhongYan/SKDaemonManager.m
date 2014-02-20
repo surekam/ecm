@@ -165,15 +165,14 @@ static NSOperationQueue* sharedQueue = nil;
     }
 }
 
-
 -(void)getAllChannelInfoWithserverVersion:(int)sv serverCount:(int)sc
 {
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[SKECMURLManager getAllChannelWithAppCode:_client.CODE]];
     [request startSynchronous];
+    //NSLog(@"%@  %@",request.url,request.responseString);
     if (!request.error) {
         SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
         if (!entity.praserError) {
-            //先要删除本地的频道数据
             [[DBQueue sharedbQueue] insertDataToTableWithDataArray:entity TableName:@"T_CHANNEL"];
             _client.version = sv;
             NSString* sql = [NSString stringWithFormat:@"INSERT OR REPLACE INTO T_CLIENTVERSION (CODE,VERSION) VALUES ('%@','%d');",_client.CODE,_client.version];
@@ -198,6 +197,7 @@ static NSOperationQueue* sharedQueue = nil;
     int sv = 0 ,sc = 0;
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[SKECMURLManager getChannelVmetaInfoWithAppCode:_client.CODE ChannelVersion:_client.version]];
     [request startSynchronous];
+    //NSLog(@"%@  %@",request.url,request.responseString);
     if (!request.error) {
         SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
         NSDictionary* dict = [entity dataItem:0];
@@ -209,6 +209,8 @@ static NSOperationQueue* sharedQueue = nil;
                     if (_faliureBlock) {
                         _faliureBlock([NSError errorWithDomain:ERRORDOMAIN code:RequestNoUpdateError userInfo:@{@"reason": @"服务器数据和本地数据相同"}]);
                     }
+                }else{
+                    [self getAllChannelInfoWithserverVersion:sv serverCount:sc];
                 }
             }else{
                 if (sc) {
@@ -228,6 +230,7 @@ static NSOperationQueue* sharedQueue = nil;
     NSURL* url = [SKECMURLManager getDocunmentWithChannelCode:_channel.CODE QueryDate:_channel.MAXUPTM isUP:_isUp];
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:url];
     [request startSynchronous];
+   // NSLog(@"%@  %@",request.url,request.responseString);
     if (!request.error) {
         SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
         if (!entity.praserError) {

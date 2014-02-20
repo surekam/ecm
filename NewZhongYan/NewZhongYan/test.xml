@@ -106,3 +106,7 @@
         <function type="commitWorkItem">true</function>
     </functions>
 </root>
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+    <head><title><![CDATA[测试会议通知]]></title><author uid="czadmin">门户管理员</author><time>2014-01-23 22:50</time></head><body><content id="part" type="text/html"><![CDATA[null]]></content></body><attachment></attachment><inscribe><content id="signorg" type="text/plain">  </content><content id="signtime" type="text/plain"></content></inscribe><addition><element id="starttime" name="会议开始" type="meeting">2014-01-23 22:50</element><element id="endtime" name="会议结束" type="meeting">2014-01-24 22:50</element><element id="receipt" name="回执" type="mark">1</element></addition></root>

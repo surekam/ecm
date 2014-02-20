@@ -381,32 +381,32 @@
         case SKNews:
         {
             return [NSString stringWithFormat:
-                    @"select TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED from T_NEWS where (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
+                    @"select ( case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED from T_NEWS where (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
         }
         case SKNotify:
         {
             return [NSString stringWithFormat:
-                    @"SELECT TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED FROM T_NOTIFY WHERE (%@) AND TPID = '9'  AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
+                    @"SELECT (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED FROM T_NOTIFY WHERE (%@) AND TPID = '9'  AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
         }
         case SKAnnounce:
         {
             return [NSString stringWithFormat:
-                    @"SELECT TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED FROM T_NOTIFY WHERE (%@) AND TPID = '4' AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
+                    @"SELECT (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,READED FROM T_NOTIFY WHERE (%@) AND TPID = '4' AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
         }
         case SKMeet:
         {
             return [NSString stringWithFormat:
-                    @"SELECT TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,BGTM,EDTM FROM T_NOTIFY WHERE (%@) AND TPID = '31' AND ENABLED = 1  ORDER BY CRTM DESC  ;",key];
+                    @"SELECT (case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as bz,TID,ATTS,TITL,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,AUNAME,BGTM,EDTM FROM T_NOTIFY WHERE (%@) AND TPID = '31' AND ENABLED = 1  ORDER BY CRTM DESC  ;",key];
         }
         case SKCodocs:
         {
             return [NSString stringWithFormat:
-                    @"select TID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,ATTS,READED,AUNAME,TITL FROM T_CODOCS WHERE (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
+                    @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,TID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,ATTS,READED,AUNAME,TITL FROM T_CODOCS WHERE (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
         }
         case SKWorkNews:
         {
             return [NSString stringWithFormat:
-                    @"select TID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,FID,ATTS,READ,AUNAME,TITL FROM T_WORKNEWS WHERE (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
+                    @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,TID,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,FID,ATTS,READ,AUNAME,TITL FROM T_WORKNEWS WHERE (%@) AND ENABLED = 1 ORDER BY CRTM DESC ;",key];
         }
         default:
             return nil;

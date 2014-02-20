@@ -84,7 +84,7 @@
 {
 
     return
-    [NSURL URLWithString:[[NSString stringWithFormat:@"http://tam.hngytobacco.com/ecmapp/tecmeai/search?type=%d&channelid=%@&pagesize=%d&page=%d&starttime=%@&endtime=%@&content=%@",type,channelid,pagesize,pagenum,bgtm,edtm,content] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [NSURL URLWithString:[[NSString stringWithFormat:@"http://tam.hngytobacco.com/ecmapp/tecmeai/search?type=%d&channelId=%@&pagesize=%d&page=%d&starttime=%@&endtime=%@&content=%@",type,channelid,pagesize,pagenum,bgtm,edtm,content] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 }
 
 +(NSURL*)queryTitleWith:(int)pagenum ECMContent:(NSString*)content ChannelID:(NSString*)channelid

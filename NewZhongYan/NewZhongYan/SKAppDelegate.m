@@ -110,7 +110,6 @@ NSUInteger DeviceSystemMajorVersion() {
 
 - (void) reachabilityChanged:(NSNotification *)note
 {
-    NSLog(@"网络状态已经改变");
 	Reachability* curReach = [note object];
 	NSParameterAssert([curReach isKindOfClass:[Reachability class]]);
 	[self updateInterfaceWithReachability:curReach];

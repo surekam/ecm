@@ -15,7 +15,7 @@
       UIImageView *_stateView;
       UIImageView *_attachView;
 }
-//生命周期函数
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -41,18 +41,6 @@
         [self addSubview:_stateView];
     }
     return self;
-}
-
--(void)setCMSTestInfo
-{
-    _titleLabel.text =  @"公司开展兼职讲师集中备课 卢平对调查问卷进行点评思";
-    
-    [_crtmLabel setText:@"2013-11-20 16:50"];
-    
-    [_attachView setHidden:NO];
-    [_stateView  setImage:
-     [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
-    
 }
 
 -(void)setECMInfo:(NSDictionary*)info
@@ -136,29 +124,6 @@
     _crtmLabel.text =  [[[remind objectForKey:@"CRTM"] stringByReplacingOccurrencesOfString:@"T" withString:@" "] substringToIndex:16];
 }
 
-//- (void)layoutSubviews
-//{
-////    [titleLabel setFrame:CGRectMake(25, 6, 275, 40)];
-////    [titleLabel sizeToFit];
-////    [stateView setFrame:CGRectMake(5, CGRectGetMidY(titleLabel.frame)-7.5, 15, 15)];
-////    [attachView setFrame:CGRectMake(25,CGRectGetMaxY(titleLabel.frame)+5, 30, 15)];
-////    [crtmLabel setFrame:CGRectMake(131, CGRectGetMaxY(titleLabel.frame)+2, 169, 21)];
-//}
-
--(void)awakeFromNib
-{
-}
-
--(void)resizeTheHeight
-{
-    [titleLabel setFrame:CGRectMake(25, 6, 275, 40)];
-    [titleLabel setBackgroundColor:[UIColor purpleColor]];
-    [titleLabel sizeToFit];
-    [stateView setFrame:CGRectMake(5, CGRectGetMidY(titleLabel.frame)-7.5, 15, 15)];
-    [attachView setFrame:CGRectMake(25,CGRectGetMaxY(titleLabel.frame)+5, 30, 15)];
-    [crtmLabel setFrame:CGRectMake(131, CGRectGetMaxY(titleLabel.frame)+2, 169, 21)];
-}
-
 -(void)resizeCellHeight
 {
     CGFloat contentWidth = 280;
@@ -176,19 +141,19 @@
 -(void)setDataDictionary:(NSDictionary*)dictionary
 {
     if ([dictionary.allKeys containsObject:@"TITL"]) {
-        titleLabel.text =  [dictionary objectForKey:@"TITL"];
+        _titleLabel.text =  [dictionary objectForKey:@"TITL"];
     }
     
     if ([dictionary.allKeys containsObject:@"CRTM"]) {
-        [crtmLabel setText:[dictionary objectForKey:@"CRTM"]];
+        [_crtmLabel setText:[dictionary objectForKey:@"CRTM"]];
     }
-
-    [attachView setHidden:![self containAttachement:dictionary]];
+    
+    [_attachView setHidden:![self containAttachement:dictionary]];
     if (![[dictionary objectForKey:@"READED"] intValue]) {
-        [stateView  setImage:
+        [_stateView  setImage:
          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
     }else{
-        [stateView setImage:
+        [_stateView setImage:
          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_read" ofType:@"png"]]];
     }
 }
