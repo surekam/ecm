@@ -407,6 +407,7 @@
 		F2BD53861828C7C500CBEA30 /* browser_left@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F2BD53841828C7C500CBEA30 /* browser_left@2x.png */; };
 		F2BD53891828D50B00CBEA30 /* SKTrashboxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BD53881828D50B00CBEA30 /* SKTrashboxCell.m */; };
 		F2C2C10B18222D12006ACB3F /* SKUnitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C2C10A18222D12006ACB3F /* SKUnitCell.m */; };
+		F2C47D9B18BAEDCA00358645 /* GBPathImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C47D9918BAEDCA00358645 /* GBPathImageView.m */; };
 		F2C89B9117F6B73D0099A62D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9017F6B73D0099A62D /* UIKit.framework */; };
 		F2C89B9317F6B73D0099A62D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9217F6B73D0099A62D /* Foundation.framework */; };
 		F2C89B9517F6B73D0099A62D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9417F6B73D0099A62D /* CoreGraphics.framework */; };
@@ -1056,6 +1057,8 @@
 		F2BD53881828D50B00CBEA30 /* SKTrashboxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTrashboxCell.m; sourceTree = "<group>"; };
 		F2C2C10918222D12006ACB3F /* SKUnitCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKUnitCell.h; sourceTree = "<group>"; };
 		F2C2C10A18222D12006ACB3F /* SKUnitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKUnitCell.m; sourceTree = "<group>"; };
+		F2C47D9918BAEDCA00358645 /* GBPathImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBPathImageView.m; sourceTree = "<group>"; };
+		F2C47D9A18BAEDCA00358645 /* GBPathImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBPathImageView.h; sourceTree = "<group>"; };
 		F2C89B8D17F6B73D0099A62D /* NewZhongYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewZhongYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C89B9017F6B73D0099A62D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F2C89B9217F6B73D0099A62D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1758,6 +1761,7 @@
 		F28846C21803FA8F006A5D62 /* opensource */ = {
 			isa = PBXGroup;
 			children = (
+				F2C47D9818BAED5900358645 /* GPPathImage */,
 				F23AA24C184F232E004248DB /* aes */,
 				F23F3E0D18461B1E0034C811 /* flatuikit */,
 				F2E803471830D43000670B7D /* FTAnimation */,
@@ -2282,6 +2286,15 @@
 				F25EC64A18277FCA00490F38 /* SKMailEmployeeCell.xib */,
 			);
 			name = cell;
+			sourceTree = "<group>";
+		};
+		F2C47D9818BAED5900358645 /* GPPathImage */ = {
+			isa = PBXGroup;
+			children = (
+				F2C47D9918BAEDCA00358645 /* GBPathImageView.m */,
+				F2C47D9A18BAEDCA00358645 /* GBPathImageView.h */,
+			);
+			name = GPPathImage;
 			sourceTree = "<group>";
 		};
 		F2C89B8417F6B73D0099A62D = {
@@ -2995,6 +3008,7 @@
 				F2AA9575181A4BCF001DD53B /* SKBrowseNewsController.m in Sources */,
 				F23AA258184F2338004248DB /* PBKDF2.m in Sources */,
 				F286C1991822517C00ADFF40 /* SKEDetailController.m in Sources */,
+				F2C47D9B18BAEDCA00358645 /* GBPathImageView.m in Sources */,
 				F23AA255184F2338004248DB /* AESCrypt.m in Sources */,
 				F2C89BA117F6B73D0099A62D /* SKAppDelegate.m in Sources */,
 				F23CE467182B806D0066F214 /* SKCMeetCell.m in Sources */,
