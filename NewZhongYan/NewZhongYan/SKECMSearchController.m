@@ -14,6 +14,7 @@
 #import "SKTableViewCell.h"
 #import "SKCMeetCell.h"
 #import "SKSearchCell.h"
+#import "SKECMAttahController.h"
 @interface UIButton(network)
 - (void)startLoadData:(BOOL)show;
 @end
@@ -136,8 +137,14 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:searchBar.text ChannelID:self.fidlist];
-     NSLog(@"%@ %@",queryurl,self.fidlist);
+ 
+    NSURL* queryurl;
+    if (searchmode) {
+        queryurl = [SKECMURLManager queryContentWith:pageindex ECMContent:searchBar.text ChannelID:self.fidlist];
+    } else {
+        queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:searchBar.text ChannelID:self.fidlist];
+    }
+    
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:queryurl];
     __weak SKHTTPRequest* req = request;
     [request setCompletionBlock:^{
@@ -176,7 +183,12 @@
 
 -(void)nextPage
 {
-    NSURL* queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:_searchBar.text ChannelID:self.fidlist];
+    NSURL* queryurl;
+    if (searchmode) {
+        queryurl= [SKECMURLManager queryContentWith:pageindex ECMContent:_searchBar.text ChannelID:self.fidlist];
+    }else{
+        queryurl= [SKECMURLManager queryTitleWith:pageindex ECMContent:_searchBar.text ChannelID:self.fidlist];
+    }
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:queryurl];
     __weak SKHTTPRequest* req = request;
     [request setCompletionBlock:^{
@@ -209,7 +221,7 @@
         [_moreBtn setHidden:YES];
         [_moreBtn startLoadData:NO];
     }];
-    [request startSynchronous];
+    [request startAsynchronous];
     [_moreBtn startLoadData:YES];
 }
 
@@ -257,5 +269,15 @@
     UIFont *font = [UIFont fontWithName:@"Helvetica" size:16.];
     CGSize size = [paper.title sizeWithFont:font constrainedToSize:CGSizeMake(270, 220) lineBreakMode:NSLineBreakByTruncatingTail];
     return size.height + 32;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Paper* paper = _dataArray[indexPath.row];
+    SKECMAttahController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMAttahController"];
+    controller.news = @{@"PAPERID":paper.paperid,@"URL":paper.url};
+    controller.channel = self.channel;
+    controller.isSearch = YES;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 @end

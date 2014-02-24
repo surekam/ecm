@@ -35,7 +35,7 @@ typedef enum
 @property(nonatomic,strong)NSString *paperID;
 @property(nonatomic,strong)NSMutableArray *attachItems;
 @property(nonatomic,strong)NSMutableDictionary *CMSInfo;
-@property(nonatomic,strong)NSMutableDictionary *ECMInfo;
+@property(nonatomic,strong)NSDictionary *ECMInfo;
 
 /**
  *  构造函数
@@ -146,7 +146,7 @@ typedef enum
 #pragma mark -
 #pragma mark ===========  ECM处理  =========
 #pragma mark -
--(id)initWithECMInfo:(NSMutableDictionary*)ecmInfo;
+-(id)initWithECMInfo:(NSDictionary*)ecmInfo;
 
 -(BOOL)ecmContentExistedWithOwnerApp:(NSString*)app;
 

@@ -37,6 +37,7 @@
     UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"ecmsearchnavcontroller"];
     SKECMSearchController* searcher = (SKECMSearchController*)[nav topViewController];
     searcher.fidlist = self.channel.FIDLIST;
+    searcher.channel = self.channel;
     searcher.isMeeting = isMeeting;
     [[APPUtils visibleViewController] presentViewController:nav animated:YES completion:^{
         
@@ -62,6 +63,29 @@
         });
     } Type:UP];
 }
+
+-(void)dataFromDataBaseWithComleteBlock:(resultsetBlock)block
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString* sql = [NSString stringWithFormat:
+                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,(case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as az,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,ADDITION,BGTM,EDTM,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLISTS];
+        NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
+        for (NSMutableDictionary* d in dataArray)
+        {
+            if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
+                [d setObject:@"0" forKey:@"READED"];
+            }else{
+                [d setObject:@"1" forKey:@"READED"];
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (block) {
+                block(dataArray);
+            }
+        });
+    });
+}
+
 
 -(void)dataFromDataBaseWithFid:(NSString*)currentFid  ComleteBlock:(resultsetBlock)block
 {
@@ -212,29 +236,6 @@
     [super viewDidLoad];
     [self initData];
     [self initToolView];
-}
-
-
--(void)dataFromDataBaseWithComleteBlock:(resultsetBlock)block
-{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString* sql = [NSString stringWithFormat:
-                         @"select (case when(strftime('%%s','now','start of day','-8 hour','-1 day') >= strftime('%%s',crtm)) then 1 else 0 end ) as bz,(case when(DATETIME(EDTM) > DATETIME('now','localtime')) then 1 else 0 end ) as az,AID,PAPERID,TITL,ATTRLABLE,PMS,URL,ADDITION,BGTM,EDTM,strftime('%%Y-%%m-%%d %%H:%%M',CRTM) CRTM,strftime('%%s000',UPTM) UPTM from T_DOCUMENTS where CHANNELID in (%@) and ENABLED = 1  ORDER BY CRTM DESC;",self.channel.FIDLISTS];
-        NSArray* dataArray = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
-        for (NSMutableDictionary* d in dataArray)
-        {
-            if ([[d objectForKey:@"bz"] intValue] == INNERTWODAY && [[d objectForKey:@"READED"] intValue] == UNREAD) {
-                [d setObject:@"0" forKey:@"READED"];
-            }else{
-                [d setObject:@"1" forKey:@"READED"];
-            }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (block) {
-                block(dataArray);
-            }
-        });
-    });
 }
 
 #pragma mark - PullingRefreshTableViewDelegate

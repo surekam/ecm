@@ -4023,11 +4023,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="查询资源" id="w6J-At-fab">
-                        <barButtonItem key="leftBarButtonItem" title="多条件" id="GhB-Od-yqn">
-                            <connections>
-                                <action selector="moreConditionBtnClick:" destination="sjj-05-CqI" id="WVx-9V-HyA"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="取消" id="p5S-cO-9SA">
                             <connections>
                                 <action selector="cancel:" destination="sjj-05-CqI" id="tlU-qc-mi3"/>

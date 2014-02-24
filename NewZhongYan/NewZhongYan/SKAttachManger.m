@@ -26,12 +26,11 @@
     return self;
 }
 
--(id)initWithECMInfo:(NSMutableDictionary*)ecmInfo
+-(id)initWithECMInfo:(NSDictionary*)ecmInfo
 {
     self = [super init];
     if (self) {
-        self.ECMInfo = [NSMutableDictionary dictionaryWithDictionary:ecmInfo];
-        self.tid = [ecmInfo objectForKey:@"AID"];
+        self.ECMInfo = [NSDictionary dictionaryWithDictionary:ecmInfo];
         self.paperID = ecmInfo[@"PAPERID"];
         self.doctype = SKECMInfo;//默认值
     }

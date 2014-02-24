@@ -1028,6 +1028,7 @@ id getColValue(sqlite3_stmt *stmt,int iCol)
                                DEPARTMENT       VARCHAR(24),\
                                DEFAULTED 		SMALLINT,\
                                APPTYPE          VARCHAR(8),\
+                               HASPMS           SMALLINT,\
                                ENABLED 			SMALLINT,\
                                constraint P_CLIENTAPP_KEY primary key (CODE)\
                                );",@"T_CLIENTAPP"];

@@ -347,7 +347,7 @@
 -(void)initClientApp
 {
     clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP ORDER BY DEFAULTED;"];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 ORDER BY DEFAULTED;"];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];
@@ -449,7 +449,7 @@
 -(void)firstInitClientApp
 {
     clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP;"];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 ORDER BY DEFAULTED;"];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];

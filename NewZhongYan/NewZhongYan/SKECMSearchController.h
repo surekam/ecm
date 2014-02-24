@@ -21,5 +21,6 @@ typedef enum{
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (strong,nonatomic)UIButton *moreBtn;
 @property (strong,nonatomic)NSString* fidlist;
+@property (weak,nonatomic)SKChannel* channel;
 @property BOOL isMeeting;
 @end

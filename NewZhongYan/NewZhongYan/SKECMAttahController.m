@@ -23,7 +23,6 @@
     NSMutableArray* attachmentItem;
     SKAttachManger *AM;//附件管理
     CGFloat height;
-    NSMutableArray* h;
 }
 @end
 
@@ -127,7 +126,6 @@
     AM = [[SKAttachManger alloc] initWithECMInfo:_news];
     AM.doctype = SKECMInfo;
     height = 100;
-    h = [NSMutableArray array];
 }
 
 -(void)createAttachView
@@ -139,7 +137,6 @@
     [_titleLabel sizeToFit];
     [_titleLabel setBackgroundColor:[UIColor clearColor]];
     [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    
     [_bgscrollview addSubview:_titleLabel];
 
     _authorLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(_titleLabel.frame), 150, 20)];
@@ -157,69 +154,93 @@
     [_bgscrollview addSubview:_crtmLabel];
     
     UIImageView* DividingLines = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_line.png"]];
+    DividingLines.tag = 1;
     [DividingLines setFrame:CGRectMake(10, CGRectGetMaxY(_crtmLabel.frame), 300, 2)];
     [_bgscrollview addSubview:DividingLines];
     _curHeight = CGRectGetMaxY(DividingLines.frame);
 
-    for (Content *content in _detail.body) {
-        [self showContent:content];
+    if (_detail.body.count) {
+//        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_crtmLabel.frame), 320, 25)];
+//        [view setBackgroundColor:[UIColor lightGrayColor]];
+//        [_bgscrollview addSubview:view];
+//        
+//        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
+//        label.text = @"正文";
+//        label.font = [UIFont systemFontOfSize:16];
+//        label.textColor = [UIColor blackColor];
+//        [view addSubview:label];
+//        _curHeight = CGRectGetMaxY(view.frame);
+        
+        for (Content *content in _detail.body) {
+            [self showContent:content];
+        }
     }
     
-    for (Content *content in _detail.attachment) {
-        [self showContent:content];
-    }
-
     for (Content *content in _detail.inscribe) {
         [self showContent:content];
     }
     
-    for (Content *content in _detail.addition) {
-        [self showContent:content];
+    if (_detail.attachment.count) {
+        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, _curHeight, 320, 25)];
+        [view setBackgroundColor:[UIColor lightGrayColor]];
+        [_bgscrollview addSubview:view];
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
+        label.text = @"附件";
+        label.font = [UIFont systemFontOfSize:16];
+        label.textColor = [UIColor blackColor];
+        [view addSubview:label];
+        _curHeight = CGRectGetMaxY(view.frame);
+        for (Content *content in _detail.attachment) {
+            [self showContent:content];
+        }
     }
-    
+
+    if (_detail.inscribe.count) {
+        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, _curHeight, 320, 25)];
+        [view setBackgroundColor:[UIColor lightGrayColor]];
+        [_bgscrollview addSubview:view];
+        
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
+        label.text = @"附属值";
+        label.font = [UIFont systemFontOfSize:16];
+        label.textColor = [UIColor blackColor];
+        [view addSubview:label];
+        _curHeight = CGRectGetMaxY(view.frame);
+        for (Content *content in _detail.addition) {
+            [self showContent:content];
+        }
+    }
     [_bgscrollview setContentSize:CGSizeMake(320, [self scrollViewContentHeight])];
 }
 
 
 
 -(CGFloat)scrollViewContentHeight
-
 {
     CGFloat maxheight = 0;
     for (UIView* view in _bgscrollview.subviews) {
-        maxheight = MAX(maxheight, CGRectGetMaxY(view.frame));
+        if (view.tag == 1) {
+            maxheight = MAX(maxheight, CGRectGetMaxY(view.frame));
+        }
     }
     return maxheight;
 }
 
 -(void) addText:(Content *) content{
-    
-    //    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, _curHeight, 300, 1)];
-    
-    //    webView.delegate = self;
-    
-    //    webView.dataDetectorTypes = UIDataDetectorTypeNone;
-    
-    //    UIScrollView* webScrollView =  (UIScrollView*)[[webView subviews] objectAtIndex:0];
-    
-    //    [webScrollView setScrollEnabled:NO];
-    
-    //    [_bgscrollview addSubview:webView];
-    
-    //    [webView loadHTMLString:content.value baseURL:0];
-    
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, _curHeight, 300, 1)];
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(20, _curHeight, 280, 1)];
     [label setText:content.value];
     [label setNumberOfLines:0];
+    //[label setBackgroundColor:COLOR(17, 168, 171)];
     [label setTextColor:[UIColor lightGrayColor]];
     [label setFont:[UIFont systemFontOfSize:14]];
     [label setTextAlignment:NSTextAlignmentRight];
-    [label setTextAlignment:NSTextAlignmentRight];
+    [label setTag:1];//1 表示该view是自己添加的，而不是系统自带的
     [label sizeToFit];
-    [_bgscrollview addSubview:label];
     CGRect rect = label.frame;
-    rect.size.width = 300;
-    [label setFrame:rect];
+    rect.origin.x = 320 - 20 - label.frame.size.width;
+    label.frame = rect;
+    [_bgscrollview addSubview:label];
     _curHeight = CGRectGetMaxY(label.frame);
 }
 
@@ -230,19 +251,23 @@
     [imageView setImageURL:[NSURL URLWithString:urlstring]];
     [imageView setCaption:_detail.title];
     [imageView addDetailShow];
+    [imageView setTag:1];//1 表示该view是自己添加的，而不是系统自带的
     [_bgscrollview addSubview:imageView];
     _curHeight += 202;
 }
 
+//http://unmi.cc/uiwebview-replace-uitextview-line-height/
 -(void) addHtml:(Content *) content{
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(10, _curHeight, 300,1)];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(15, _curHeight, 300,1)];
     webView.delegate = self;
     webView.dataDetectorTypes = UIDataDetectorTypeNone;
     [(UIScrollView*)[[webView subviews] objectAtIndex:0] setScrollEnabled:NO];
-    [_bgscrollview addSubview:webView];
-    NSString *webviewText = @"<style>body{margin:0;background-color:#clear;font:16px/24px Custom-Font-Name}</style>";
+    NSString *webviewText = @"<style>body{margin:0;background-color:#clear;font:16px/24px}</style>";
     NSString *htmlString = [webviewText stringByAppendingFormat:@"%@",content.value];
     [webView loadHTMLString:htmlString baseURL:Nil];
+    [webView setTag:1];//1 表示该view是自己添加的，而不是系统自带的
+    [_bgscrollview addSubview:webView];
+    _curHeight = CGRectGetMaxY(webView.frame);
     UIPinchGestureRecognizer* pinchRecognizer= [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch:)];
     [webView addGestureRecognizer:pinchRecognizer];
 };
@@ -254,6 +279,7 @@
     attachmentButton.attachUrl = [NSURL URLWithString:content.value];
     attachmentButton.isAttachExisted = [AM fileExisted:attachmentButton.filePath];
     [attachmentButton setTitle:btnTitle forState:UIControlStateNormal];
+    [attachmentButton setTag:1];//1 表示该view是自己添加的，而不是系统自带的
     [_bgscrollview addSubview:attachmentButton];
     _curHeight =  CGRectGetMaxY(attachmentButton.frame);//48 button 的高度
 }
@@ -269,11 +295,12 @@
     [label setText:content.name];
     [view addSubview:label];
     [_bgscrollview addSubview:view];
+    [view setTag:1];//1 表示该view是自己添加的，而不是系统自带的
     _curHeight = CGRectGetMaxY(label.frame);
 }
 
 -(void) showContent:(Content *) content{
-    //[content show];
+    [content show];
     if (content.type == nil) {
         [self addText:content];
     }
@@ -311,12 +338,13 @@
 - (void)webViewDidFinishLoad:(UIWebView *) webView
 {
     CGSize actualSize = [webView sizeThatFits:CGSizeZero];
+     NSLog(@"actualSize.height %f",actualSize.height);
     CGRect newFrame = webView.frame;
     CGFloat diff = actualSize.height - newFrame.size.height;
     newFrame.size.height = actualSize.height;
     webView.frame = newFrame;
     for (UIView* view in _bgscrollview.subviews) {
-        if (view.frame.origin.y > webView.frame.origin.y) {
+        if (view.frame.origin.y >= webView.frame.origin.y) {
             CGRect rect = view.frame;
             if (rect.origin.y > webView.frame.origin.y) {
                 rect.origin.y += diff;
@@ -324,7 +352,9 @@
             }
         }
     }
+    
     [_bgscrollview setContentSize:CGSizeMake(320, [self scrollViewContentHeight])];
+    NSLog(@"scrollViewContentHeight %f  %f",[self scrollViewContentHeight],_bgscrollview.contentSize.height);
 }
 
 -(void)handlePinch:(UIPinchGestureRecognizer*)pinchRecognizer
@@ -356,7 +386,7 @@
                 }
             }
         }
-        _bgscrollview.contentSize = CGSizeMake(320,[self scrollViewContentHeight]);
+        //_bgscrollview.contentSize = CGSizeMake(320,[self scrollViewContentHeight]);
     }
 }
 
