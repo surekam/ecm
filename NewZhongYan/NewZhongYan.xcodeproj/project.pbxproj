@@ -408,6 +408,8 @@
 		F2BD53891828D50B00CBEA30 /* SKTrashboxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2BD53881828D50B00CBEA30 /* SKTrashboxCell.m */; };
 		F2C2C10B18222D12006ACB3F /* SKUnitCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C2C10A18222D12006ACB3F /* SKUnitCell.m */; };
 		F2C47D9B18BAEDCA00358645 /* GBPathImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C47D9918BAEDCA00358645 /* GBPathImageView.m */; };
+		F2C47D9D18BB32CB00358645 /* bgView.png in Resources */ = {isa = PBXBuildFile; fileRef = F2C47D9C18BB32CB00358645 /* bgView.png */; };
+		F2C47D9F18BB32D500358645 /* bgView@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F2C47D9E18BB32D500358645 /* bgView@2x.png */; };
 		F2C89B9117F6B73D0099A62D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9017F6B73D0099A62D /* UIKit.framework */; };
 		F2C89B9317F6B73D0099A62D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9217F6B73D0099A62D /* Foundation.framework */; };
 		F2C89B9517F6B73D0099A62D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2C89B9417F6B73D0099A62D /* CoreGraphics.framework */; };
@@ -1059,6 +1061,8 @@
 		F2C2C10A18222D12006ACB3F /* SKUnitCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKUnitCell.m; sourceTree = "<group>"; };
 		F2C47D9918BAEDCA00358645 /* GBPathImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBPathImageView.m; sourceTree = "<group>"; };
 		F2C47D9A18BAEDCA00358645 /* GBPathImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBPathImageView.h; sourceTree = "<group>"; };
+		F2C47D9C18BB32CB00358645 /* bgView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgView.png; sourceTree = "<group>"; };
+		F2C47D9E18BB32D500358645 /* bgView@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgView@2x.png"; sourceTree = "<group>"; };
 		F2C89B8D17F6B73D0099A62D /* NewZhongYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewZhongYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2C89B9017F6B73D0099A62D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F2C89B9217F6B73D0099A62D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -2375,6 +2379,8 @@
 		F2C89B9717F6B73D0099A62D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F2C47D9C18BB32CB00358645 /* bgView.png */,
+				F2C47D9E18BB32D500358645 /* bgView@2x.png */,
 				F28846BD1803F96F006A5D62 /* main_config.xml */,
 				F2C89BA817F6B73D0099A62D /* MainStoryboard.storyboard */,
 				F262BF80180C045800F590F8 /* MainStoryboard_ios6.storyboard */,
@@ -2854,6 +2860,7 @@
 				F24BD5DB182A2645009AE159 /* btn_location_enabled.png in Resources */,
 				F23487841831CD6D00E649AA /* iphone4_mainpage.png in Resources */,
 				F23487941831CD6D00E649AA /* iphone5_help_addressbook_detailed.png in Resources */,
+				F2C47D9F18BB32D500358645 /* bgView@2x.png in Resources */,
 				F23487A51831CD6D00E649AA /* help5_4.png in Resources */,
 				F23487A31831CD6D00E649AA /* help5_2.png in Resources */,
 				F23487971831CD6D00E649AA /* iphone5_help_oadetailed.png in Resources */,
@@ -2924,6 +2931,7 @@
 				F2B67F8017F7C0990007CB91 /* btn_help_pressed@2x.png in Resources */,
 				F24B0F531859AFCC00E9CE6B /* main.jpg in Resources */,
 				F24BD5DE182A2645009AE159 /* btn_no_history.png in Resources */,
+				F2C47D9D18BB32CB00358645 /* bgView.png in Resources */,
 				F28846B01803E06C006A5D62 /* icon.png in Resources */,
 				F2D814641834B7A900FE0839 /* btn_save_pressed.png in Resources */,
 				F259A8DF18237131000D95C2 /* btn_add_address.png in Resources */,

@@ -227,10 +227,10 @@ static NSOperationQueue* sharedQueue = nil;
 }
 
 -(void)synDocumentInfo{
-    NSURL* url = [SKECMURLManager getDocunmentWithChannelCode:_channel.CODE QueryDate:_channel.MAXUPTM isUP:_isUp];
+    NSURL* url = [SKECMURLManager getDocunmentWithChannelCode:_channel.CODE QueryDate:(_isUp ? _channel.MAXUPTM :_channel.MINUPTM) isUP:_isUp];
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:url];
     [request startSynchronous];
-   // NSLog(@"%@  %@",request.url,request.responseString);
+    //NSLog(@"%@ %@ ",request.url,request.responseString);
     if (!request.error) {
         SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
         if (!entity.praserError) {
@@ -270,7 +270,7 @@ static NSOperationQueue* sharedQueue = nil;
         }
     }else{
         if (_faliureBlock) {
-            _faliureBlock([NSError errorWithDomain:ERRORDOMAIN code:RequestMetaError userInfo:@{@"reason": @"获取文档列表错误"}]);
+            _faliureBlock([NSError errorWithDomain:ERRORDOMAIN code:RequestMetaError userInfo:@{@"reason": [NSString stringWithFormat:@"获取平道更新信息错误 %@",request.errorinfo]}]);
         }
         return;
     }

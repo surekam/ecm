@@ -118,17 +118,17 @@
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
     
     
-    CGRect rect = self.navigationController.navigationBar.bounds;
-    rect.size.height += 25;
-    topView = [[UIView alloc] initWithFrame:rect];
-    topView.backgroundColor =COLOR(0, 97, 194);
-    topView.backgroundColor =[UIColor clearColor];
-    [self.navigationController.navigationBar addSubview:topView];
-    
-    UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [btn setFrame:CGRectMake(10, 8, 60, 60)];
-    [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];
-    [topView addSubview:btn];
+//    CGRect rect = self.navigationController.navigationBar.bounds;
+//    rect.size.height += 25;
+//    topView = [[UIView alloc] initWithFrame:rect];
+//    topView.backgroundColor =COLOR(0, 97, 194);
+//    topView.backgroundColor =[UIColor clearColor];
+//    [self.navigationController.navigationBar addSubview:topView];
+//    
+//    UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [btn setFrame:CGRectMake(10, 8, 60, 60)];
+//    [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];
+//    [topView addSubview:btn];
 }
 
 -(void)initSetting
@@ -152,6 +152,16 @@
         SKECMRootController *ecmRoot = segue.destinationViewController;
         ecmRoot.channel = sender;
 	}
+}
+
+- (IBAction)jumpToEmailController:(id)sender {
+    [self performSegueWithIdentifier:@"SKEmailController"sender:self];
+}
+- (IBAction)jumpToRemindController:(id)sender {
+    [self performSegueWithIdentifier:@"SKGTaskViewController"sender:self];
+}
+- (IBAction)jumpAddressBookController:(id)sender {
+    [self performSegueWithIdentifier:@"SKAddressController"sender:self];
 }
 
 -(void)jumpToController:(id)sender
@@ -309,7 +319,7 @@
 {
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
     SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
-    controller.isCompanyPage = !page;
+    //controller.isCompanyPage = !page;
     controller.rootController = self;
     [controllerArray addObject:controller];
     if (controller.view.superview == nil)
@@ -328,7 +338,7 @@
 {
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
     SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
-    controller.isCompanyPage = [app.DEFAULTED intValue];
+    //controller.isCompanyPage = [app.DEFAULTED intValue];
     controller.rootController = self;
     controller.clientApp = app;
     [controllerArray addObject:controller];
@@ -575,14 +585,12 @@
     if ([metaData.dataCode isEqualToString:@"versioninfo"]) {
         [self setBadgeNumber];
     }
-    
     if ([metaData.dataCode isEqualToString:@"employee"] && ![metaData isUserOwner])
     {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ECONTACTSYNED"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         dispatch_async(dispatch_get_main_queue(), ^{
             [BWStatusBar showSuccessWithMessage:@"通讯录同步完成" duration:2 animated:YES];
-            //这里需要完善用户信息
         });
     }
 }

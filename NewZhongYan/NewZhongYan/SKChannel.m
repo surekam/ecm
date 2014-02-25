@@ -42,7 +42,7 @@
 
 -(void)restoreVersionInfo
 {
-    NSString* sql = [NSString stringWithFormat:@"select max(uptm) MAXUPTM,min(uptm) MINUPTM from T_DOCUMENTS where channelid in (%@);",_FIDLIST];
+    NSString* sql = [NSString stringWithFormat:@"select max(uptm) MAXUPTM,min(uptm) MINUPTM from T_DOCUMENTS where channelid in (%@);",self.FIDLISTS];
     NSDictionary* dict = [[DBQueue  sharedbQueue] getSingleRowBySQL:sql];
     if (dict) {
         if (![dict[@"MAXUPTM"] isEqual:[NSNull null]]) {

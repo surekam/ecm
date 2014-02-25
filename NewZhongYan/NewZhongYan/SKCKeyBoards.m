@@ -63,12 +63,10 @@
         numeberLabel.text = [NSString stringWithFormat:@"%@8",numeberLabel.text];
     }
     if (sender == NineButton) {
-        numeberLabel.text = [NSString stringWithFormat:@"%@9",numeberLabel.text];
-    }
+        numeberLabel.text = [NSString stringWithFormat:@"%@9",numeberLabel.text];     }
     if (sender == ZeroButton) {
         numeberLabel.text = [NSString stringWithFormat:@"%@0",numeberLabel.text];
     }
-    NSLog(@"%@",numeberLabel.text);
     if (_delegate) {
         [_delegate textDidChanged:numeberLabel.text];
     }
@@ -99,7 +97,5 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
 @end

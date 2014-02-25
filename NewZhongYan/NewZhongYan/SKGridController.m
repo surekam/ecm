@@ -218,7 +218,6 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self reloadBageNumber];
     if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
         [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
                                            complete:^(NSMutableArray* array){
@@ -226,7 +225,8 @@
                                                    [self reloadBageNumberWithServerInfo:array];
                                                });
                                            } faliure:^(NSError* error){
-                                               
+                                               NSLog(@"SynMaxUpdateDateWithClient %@",error);
+                                               [self reloadBageNumber];
                                            }];
     }
 }
@@ -234,13 +234,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    if (self.isCompanyPage) {
-//        [self initCompanyPageView];
-//    }else{
-//        [self initSelfFactoryView];
-//    }
     [self initSelfFactoryView];
-    [self reloadBageNumber];
 }
 
 -(void)reloadData
@@ -251,11 +245,6 @@
                 [v removeFromSuperview];
             }
         }
-//        if (self.isCompanyPage) {
-//            [self initCompanyPageView];
-//        }else{
-//            [self initSelfFactoryView];
-//        }
          [self initSelfFactoryView];
         //获取每个频道更新信息
         if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
@@ -311,7 +300,7 @@
                         [btn setBadgeNumber:@"new"];
                     });
                 }else{
-                    [self setECMBadgeNumber];
+                    [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
                 }
             }
         }
@@ -331,7 +320,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         for (UIDragButton *btn in upButtons)
         {
-            [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLIST]];
+            [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
         }
     });
 }

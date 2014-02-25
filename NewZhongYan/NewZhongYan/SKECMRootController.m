@@ -53,7 +53,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView tableViewDidFinishedLoading];
                 [self.tableView reloadData];
-                [BWStatusBarOverlay showSuccessWithMessage:@"同步新闻完成" duration:1 animated:1];
+                [BWStatusBarOverlay showSuccessWithMessage:[NSString stringWithFormat:@"同步%@完成",self.channel.NAME] duration:1 animated:1];
             });
 
         }];
@@ -64,6 +64,11 @@
     } Type:UP];
 }
 
+/**
+ *  用于从数据库中获取该频道下说有的数据
+ *
+ *  @param block
+ */
 -(void)dataFromDataBaseWithComleteBlock:(resultsetBlock)block
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -86,7 +91,12 @@
     });
 }
 
-
+/**
+ *  用于从数据库中获取该频道下的指定的子频道的数据集合
+ *
+ *  @param currentFid 指定的子频道id
+ *  @param block
+ */
 -(void)dataFromDataBaseWithFid:(NSString*)currentFid  ComleteBlock:(resultsetBlock)block
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -255,13 +265,25 @@
 }
 
 - (void)pullingTableViewDidStartLoading:(PullingRefreshTableView *)tableView{
-    [self.tableView tableViewDidFinishedLoading];
-//    [self dataFromDataBaseWithComleteBlock:^(NSArray* array){
-//        [_dataItems addObjectsFromArray:array];
-//        [self.tableView tableViewDidFinishedLoading];
-//        [self.tableView setReachedTheEnd:array.count < 20];
-//        [self.tableView reloadData];
-//    }];
+    [SKDaemonManager SynDocumentsWithChannel:self.channel complete:^{
+        [self dataFromDataBaseWithComleteBlock:^(NSArray* array){
+            if (array.count) {
+                NSLog(@"%@",array);
+                [_dataItems setArray:array];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView tableViewDidFinishedLoading];
+                    [self.tableView reloadData];
+                });
+            }else{
+                [self.tableView setReachedTheEnd:YES];
+            }
+        }];
+    } faliure:^(NSError* error){
+        NSLog(@"%@",error);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView tableViewDidFinishedLoading];
+        });
+    } Type:DOWN];
 }
 
 #pragma mark - Table view data source/Users/lilin/Desktop/基于 ios7 的新工程/NewZhongYan/NewZhongYan/SKNewsAttachController.m
