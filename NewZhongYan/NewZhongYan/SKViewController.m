@@ -118,13 +118,22 @@
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor: [UIColor whiteColor]};
     
     
-//    CGRect rect = self.navigationController.navigationBar.bounds;
-//    rect.size.height += 25;
-//    topView = [[UIView alloc] initWithFrame:rect];
-//    topView.backgroundColor =COLOR(0, 97, 194);
-//    topView.backgroundColor =[UIColor clearColor];
-//    [self.navigationController.navigationBar addSubview:topView];
-//    
+    CGRect rect = self.navigationController.navigationBar.bounds;
+    //rect.size.height += 25;
+    topView = [[UIView alloc] initWithFrame:rect];
+    topView.backgroundColor =COLOR(0, 97, 194);
+    topView.backgroundColor =COLOR(17, 168, 171);
+    topView.backgroundColor =[UIColor clearColor];
+    
+    UIButton* settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [settingButton setBackgroundImage:Image(@"main_btn_right_set") forState:UIControlStateNormal];
+    [settingButton setFrame:CGRectMake(280, 10, 25, 25)];
+    [topView addSubview:settingButton];
+    
+    [self.navigationController.navigationBar addSubview:topView];
+    
+    
+    
 //    UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
 //    [btn setFrame:CGRectMake(10, 8, 60, 60)];
 //    [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];

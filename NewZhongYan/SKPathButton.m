@@ -1,29 +1,28 @@
 //
-//  GBPathImageView.m
-//  GBControls
+//  SKPathButton.m
+//  NewZhongYan
 //
-//  Created by Matteo Gobbi on 15/08/13.
-//  Copyright (c) 2013 Matteo Gobbi. All rights reserved.
+//  Created by lilin on 14-2-26.
+//  Copyright (c) 2014年 surekam. All rights reserved.
 //
 
+#import "SKPathButton.h"
 #define LINE_BORDER_WIDTH 1.0
-
-#import "GBPathImageView.h"
-
-@interface GBPathImageView () {
+@interface SKPathButton ()
+{
     UIImage *originalImage;
 }
 
 @end
 
 
-@implementation GBPathImageView
-
+@implementation SKPathButton
 - (id)initWithFrame:(CGRect)frame
               image:(UIImage *)image
 {
     self = [super initWithFrame:frame];
     if (self) {
+        // Initialization code
         originalImage = image;
         
         [self setDefaultParam];
@@ -35,19 +34,19 @@
 
 - (id)initWithFrame:(CGRect)frame
               image:(UIImage *)image
-           pathType:(GBPathImageViewType)pathType
+           pathType:(GBPathButtonType)pathType
           pathColor:(UIColor *)pathColor
         borderColor:(UIColor *)borderColor
           pathWidth:(float)pathWidth
 {
     self = [super initWithFrame:frame];
     if (self) {
+        // Initialization code
         originalImage = image;
         _pathType = pathType;
         _pathColor = pathColor;
         _borderColor = borderColor;
         _pathWidth = pathWidth;
-         
         [self draw];
     }
     return self;
@@ -55,11 +54,17 @@
 
 -(void)awakeFromNib {
     [super awakeFromNib];
-    originalImage = self.image;
+    originalImage = [self backgroundImageForState:UIControlStateNormal];
     [self setDefaultParam];
     [self draw];
 }
 
+-(void)setDefaultParam {
+    _pathType = GBPathButtonTypeCircle;
+    _pathColor = [UIColor whiteColor];
+    _borderColor = [UIColor darkGrayColor];
+    _pathWidth = 5.0;
+}
 
 -(void)draw {
     
@@ -78,10 +83,10 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     switch (_pathType) {
-        case GBPathImageViewTypeCircle:
+        case GBPathButtonTypeCircle:
             CGContextAddEllipseInRect(ctx, rect);
             break;
-        case GBPathImageViewTypeSquare:
+        case GBPathButtonTypeSquare:
             CGContextAddRect(ctx, rect);
             break;
         default:
@@ -108,11 +113,11 @@
     CGContextSetLineWidth(ctx, LINE_BORDER_WIDTH);
     
     switch (_pathType) {
-        case GBPathImageViewTypeCircle:
+        case GBPathButtonTypeCircle:
             CGContextStrokeEllipseInRect(ctx, rectImage);
             CGContextStrokeEllipseInRect(ctx, rect);
             break;
-        case GBPathImageViewTypeSquare:
+        case GBPathButtonTypeSquare:
             CGContextStrokeRect(ctx, rectImage);
             CGContextStrokeRect(ctx, rect);
             break;
@@ -133,28 +138,17 @@
     CGContextSetLineWidth(ctx, centerLineWidth);
     
     switch (_pathType) {
-        case GBPathImageViewTypeCircle:
+        case GBPathButtonTypeCircle:
             CGContextStrokeEllipseInRect(ctx, rectImage);
             break;
-        case GBPathImageViewTypeSquare:
+        case GBPathButtonTypeSquare:
             CGContextStrokeRect(ctx, rectImage);
             break;
         default:
             break;
     }
     
-    
-    self.image = UIGraphicsGetImageFromCurrentImageContext();
-    
+    [self setBackgroundImage:UIGraphicsGetImageFromCurrentImageContext() forState:UIControlStateNormal];
     UIGraphicsEndImageContext();
 }
-
--(void)setDefaultParam {
-    _pathType = GBPathImageViewTypeCircle;
-    _pathColor = [UIColor whiteColor];
-    _borderColor = [UIColor darkGrayColor];
-    _pathWidth = 5.0;
-}
-
-
 @end

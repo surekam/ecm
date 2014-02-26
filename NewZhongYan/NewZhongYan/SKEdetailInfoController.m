@@ -10,6 +10,7 @@
 #import "SKLToolBar.h"
 #import "UIColor+FlatUI.h"
 #import "SKNewMailController.h"
+#import "SKPathButton.h"
 @interface SKEdetailInfoController ()
 @property (weak, nonatomic) IBOutlet UIView *toolView;
 @property (weak, nonatomic) IBOutlet UITableView *tableview;
@@ -186,14 +187,10 @@
         [(UILabel*)[cell.contentView viewWithTag:1] setText:_employeeInfo[@"CNAME"]];
         [(UILabel*)[cell.contentView viewWithTag:2] setText:_employeeInfo[@"TNAME"]];
         [(UILabel*)[cell.contentView viewWithTag:3] setText:_employeeInfo[@"UCNAME"]];
-        UIButton* btn = (UIButton*)[cell.contentView viewWithTag:5];
-        btn.layer.masksToBounds = YES;
-        btn.layer.cornerRadius =  40;
-        btn.layer.borderColor = [UIColor whiteColor].CGColor;
-        btn.layer.borderWidth = 3.0f;
-        btn.layer.rasterizationScale = [UIScreen mainScreen].scale;
-        btn.layer.shouldRasterize = YES;
-        btn.clipsToBounds = YES;
+        SKPathButton* btn = (SKPathButton*)[cell.contentView viewWithTag:5];
+        [btn setPathColor:[UIColor whiteColor]];
+        [btn setBorderColor:[UIColor darkGrayColor]];
+        [btn setPathWidth:5];
         
         UIButton* btn1 = (UIButton*)[cell.contentView viewWithTag:4];
         [btn1 addTarget:self action:@selector(stored:) forControlEvents:UIControlEventTouchUpInside];
@@ -202,7 +199,6 @@
         }else{
             [btn1  setBackgroundImage:[UIImage imageNamed:@"star_off"] forState:UIControlStateNormal];
         }
-        
     }else if (indexPath.section == 1){
         NSArray* email = [_employeeInfo[@"EMAIL"] componentsSeparatedByString:@"@"];
         [(UILabel*)[cell.contentView viewWithTag:1] setText:email[0]];

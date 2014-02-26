@@ -1,22 +1,20 @@
 //
-//  GBPathImageView.h
-//  GBControls
+//  SKPathButton.h
+//  NewZhongYan
 //
-//  Created by Matteo Gobbi on 15/08/13.
-//  Copyright (c) 2013 Matteo Gobbi. All rights reserved.
+//  Created by lilin on 14-2-26.
+//  Copyright (c) 2014年 surekam. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-
 typedef enum {
-    GBPathImageViewTypeCircle,
-    GBPathImageViewTypeSquare
-} GBPathImageViewType;
+    GBPathButtonTypeCircle,
+    GBPathButtonTypeSquare
+} GBPathButtonType;
 
 
-@interface GBPathImageView : UIImageView
-
-@property (nonatomic) GBPathImageViewType pathType;
+@interface SKPathButton : UIButton
+@property (nonatomic) GBPathButtonType pathType;
 @property (nonatomic, strong) UIColor *borderColor;
 @property (nonatomic, strong) UIColor *pathColor;
 @property float pathWidth;
@@ -27,9 +25,10 @@ typedef enum {
 
 - (id)initWithFrame:(CGRect)frame
               image:(UIImage *)image
-           pathType:(GBPathImageViewType)pathType
+           pathType:(GBPathButtonType)pathType
           pathColor:(UIColor *)pathColor
         borderColor:(UIColor *)borderColor
           pathWidth:(float)pathWidth;
+
 - (void)draw;
 @end

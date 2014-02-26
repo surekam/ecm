@@ -10,11 +10,16 @@
 #import "DDXMLDocument.h"
 #import "DDXMLElementAdditions.h"
 #import "DDXMLElement.h"
-//#import "UIButton+WebCache.h"
 #import "SKViewController.h"
 #import "SKDaemonManager.h"
 #import "SKECMRootController.h"
 #import "LocalMetaDataManager.h"
+
+#define InitIconX 38
+#define InitIconY 30
+//(320 - 180 ) - 2x/2 = (140 - 2x)/2 = 70 - x
+#define InitIconinterval （70 - InitIconX）
+
 @interface SKGridController ()
 {
     NSMutableArray *upButtons;
@@ -35,8 +40,6 @@
 {
     UIDragButton *btn=(UIDragButton *)[(UIDragButton *)sender superview];
     [_rootController performSegueWithIdentifier:@"SKECMRootController" sender:btn.channel];
-    
-    
     //    SKECMRootController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKECMRootController"];
     //    controller.channel = btn.channel;
     //    [self.navigationController pushViewController:controller animated:YES];
@@ -143,10 +146,9 @@
                     if (i < count) {
                         UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
                         if (button.tag != shakingButton.tag){
-                            [button setFrame:CGRectMake(40 + x * 90,  40 + y * 96.6, 60, 60)];
+                            [button setFrame:CGRectMake(InitIconX + x * 90,  InitIconY + y * 96.6, 60, 60)];
                         }
-                        //[button setLastCenter:CGPointMake(CGRectGetMidX(button.frame),CGRectGetMidY(button.frame))];
-                        [button setLastCenter:CGPointMake(40 + x * 90 + 30,  40 + y * 96.6 + 30)];
+                        [button setLastCenter:CGPointMake( InitIconX + x*(60 + 70 - InitIconX) + 60/2.0,  InitIconY + y * 96.6  + 60/2.0)];
                     }
                 }
             }
@@ -158,8 +160,8 @@
                     int i = 3 * y + x;
                     if (i < count) {
                         UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-                        [button setFrame:CGRectMake(40 + x * 90, 40 + y * 96.6, 60, 60)];
-                        [button setLastCenter:CGPointMake(40 + x * 90 + 30,  40 + y * 96.6 + 30)];
+                        [button setFrame:CGRectMake(InitIconX + x * (130 - InitIconX), InitIconY + y * 96.6, 60, 60)];
+                        [button setLastCenter:CGPointMake( InitIconX + x*(60 + 70 - InitIconX) + 60/2.0,  InitIconY + y * 96.6  + 60/2.0 )];
                     }
                 }
             }
