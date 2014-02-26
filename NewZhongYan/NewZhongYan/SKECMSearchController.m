@@ -122,13 +122,6 @@
     self.navigationItem.titleView = tView;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
-                        change:(NSDictionary *)change context:(void *)context {
-    if (object == _dataArray && [keyPath isEqualToString:@"count"]) {
-        NSLog(@"%@",change);
-    }
-}
-
 - (IBAction)cancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
         

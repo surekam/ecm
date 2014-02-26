@@ -231,6 +231,7 @@
     }
 }
 
+//1393232025126   1321866360000
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -269,8 +270,6 @@
                                                }];
         }
     }];
-    
-
 }
 
 -(long long)maxuptmFromServer:(NSArray*)array ChannelCode:(NSString*)code
@@ -279,7 +278,8 @@
         NSDictionary* vinfo = dict[@"v"];
         if ([vinfo[@"CHANNELCODE"] isEqualToString:code]) {
             NSString* timestr = vinfo[@"LATESTTIME"];
-            NSTimeInterval time = [[[DateUtils stringToDate:timestr DateFormat:dateTimeFormat] dateByAddingHours:0] timeIntervalSince1970];
+            //NSLog(@"%@ %@",timestr,code);
+            NSTimeInterval time = [[DateUtils stringToDate:timestr DateFormat:dateTimeFormat] timeIntervalSince1970];
             return time*1000;
         }
     }
@@ -293,8 +293,9 @@
         if(array){
             for (UIDragButton*btn in upButtons) {
                 long long lmaxuptm = [btn.channel.MAXUPTM longLongValue];
+                //long long lminuptm = [btn.channel.MINUPTM longLongValue];
                 long long smaxuptm = [self maxuptmFromServer:array ChannelCode:btn.channel.CODE];
-                //NSLog(@"%@  %lld  %lld",btn.channel.NAME,lmaxuptm,smaxuptm);
+                //NSLog(@"%@ lmax =  %lld  smax = %lld lmin =%lld",btn.channel.NAME,lmaxuptm,smaxuptm,lminuptm);
                 if (smaxuptm > lmaxuptm) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [btn setBadgeNumber:@"new"];

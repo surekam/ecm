@@ -268,7 +268,6 @@
     [SKDaemonManager SynDocumentsWithChannel:self.channel complete:^{
         [self dataFromDataBaseWithComleteBlock:^(NSArray* array){
             if (array.count) {
-                NSLog(@"%@",array);
                 [_dataItems setArray:array];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView tableViewDidFinishedLoading];
@@ -279,14 +278,16 @@
             }
         }];
     } faliure:^(NSError* error){
-        NSLog(@"%@",error);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView tableViewDidFinishedLoading];
+            if (error.code == 2001) {
+                [self.tableView setReachedTheEnd:YES];
+            }
         });
     } Type:DOWN];
 }
 
-#pragma mark - Table view data source/Users/lilin/Desktop/基于 ios7 的新工程/NewZhongYan/NewZhongYan/SKNewsAttachController.m
+#pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (isMeeting) {

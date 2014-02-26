@@ -7,7 +7,7 @@
 //
 
 #import "SKChannel.h"
-
+//默认时间是 1970-01-01T08:00:00.000
 @implementation SKChannel
 -(id)initWithDictionary:(NSDictionary*)channelInfo
 {
@@ -22,7 +22,7 @@
         _CURRENTID = channelInfo[@"CURRENTID"];
         _PARENTID = channelInfo[@"PARENTID"];
         _HASSUBTYPE = [channelInfo[@"HASSUBTYPE"] boolValue];
-        NSTimeInterval time = [[[NSDate dateWithTimeIntervalSince1970:0] dateByAddingHours:8] timeIntervalSince1970];
+        NSTimeInterval time = [[DateUtils stringToDate:@"1970-01-01T08:00:00.000" DateFormat:dateTimeFormat] timeIntervalSince1970];
         _MAXUPTM = [NSString stringWithFormat:@"%.0f",time*1000];
         _MINUPTM = [NSString stringWithFormat:@"%.0f",time*1000];;
         self.FIDLISTS = _FIDLIST;
