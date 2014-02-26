@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>8A53A828-CC1B-4BAF-BE87-28E8530CE43D</string>
+	<string>90845E7A-35B2-4041-993B-73911AB9CE47</string>
 	<key>IDESourceControlProjectName</key>
 	<string>NewZhongYan</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>4F4107A8-8C28-42EA-8EFC-D24B095630D7</key>
-		<string>https://github.com/lilin87788/NewZhongYan.git</string>
+		<key>0FE3AF6C-972F-4653-842D-6B1B23C8ECAA</key>
+		<string>https://github.com/lilin87788/ecm.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>NewZhongYan.xcodeproj/project.xcworkspace</string>
+	<string>NewZhongYan/NewZhongYan.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>4F4107A8-8C28-42EA-8EFC-D24B095630D7</key>
-		<string>../..</string>
+		<key>0FE3AF6C-972F-4653-842D-6B1B23C8ECAA</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/lilin87788/NewZhongYan.git</string>
+	<string>https://github.com/lilin87788/ecm.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>4F4107A8-8C28-42EA-8EFC-D24B095630D7</string>
+	<string>0FE3AF6C-972F-4653-842D-6B1B23C8ECAA</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>4F4107A8-8C28-42EA-8EFC-D24B095630D7</string>
+			<string>0FE3AF6C-972F-4653-842D-6B1B23C8ECAA</string>
 			<key>IDESourceControlWCCName</key>
-			<string>NewZhongYan</string>
+			<string>ecm</string>
 		</dict>
 	</array>
 </dict>

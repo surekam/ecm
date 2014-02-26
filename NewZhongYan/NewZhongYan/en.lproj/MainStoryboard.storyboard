@@ -977,7 +977,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWb-pa-8dw">
-                                        <rect key="frame" x="69" y="6" width="60" height="20"/>
+                                        <rect key="frame" x="69" y="6" width="60" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -990,7 +990,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15V-ML-URf">
-                                        <rect key="frame" x="130" y="6" width="60" height="20"/>
+                                        <rect key="frame" x="130" y="6" width="60" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -1003,7 +1003,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pc5-NZ-3R7">
-                                        <rect key="frame" x="191" y="6" width="60" height="20"/>
+                                        <rect key="frame" x="191" y="6" width="60" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -1065,7 +1065,7 @@
                             <constraint firstItem="LdY-Zn-bV7" firstAttribute="top" secondItem="S6r-r9-yGO" secondAttribute="bottom" id="nCs-I7-KB9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="4DE-On-dHm">
+                    <navigationItem key="navigationItem" title="湖南中烟" id="4DE-On-dHm">
                         <barButtonItem key="backBarButtonItem" title="返回" id="EaY-b6-XTJ"/>
                     </navigationItem>
                     <connections>

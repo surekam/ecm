@@ -295,7 +295,7 @@
 -(void)initPageController
 {
     pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 30, 150, 40)];
-    [pageController setHidden:YES];
+    //[pageController setHidden:YES];
     [pageController setIndicatorDiameter:8];
     [pageController setNumberOfPages:2];
     [pageController setHidesForSinglePage:YES];
@@ -376,6 +376,7 @@
     [self copyXMLToDocument];
     [self initNavBar];
     [self initPageController];
+    [self initSetting];
     if (isFirstLogin) {
         SKLoginViewController* loginController = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"loginController"];
         [FileUtils setvalueToPlistWithKey:@"EPSIZE" Value:@"5"];
