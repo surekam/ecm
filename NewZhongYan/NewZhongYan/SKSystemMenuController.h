@@ -17,4 +17,6 @@
     UIImageView     *imageView;
 }
 @property(nonatomic,weak)SKViewController* rootController;
+- (void)touchDown;
+- (void)ecmTouchDown;
 @end

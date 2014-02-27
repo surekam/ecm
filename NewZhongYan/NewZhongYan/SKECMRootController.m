@@ -49,16 +49,23 @@
 {
     [SKDaemonManager SynDocumentsWithChannel:self.channel complete:^{
         [self dataFromDataBaseWithComleteBlock:^(NSArray* array){
-            [_dataItems setArray:array];
+            if (isMeeting) {
+                [_sectionDictionary addEntriesFromDictionary:[self praseMeetingArray:array]];
+            } else {
+                [_dataItems setArray:array];
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView tableViewDidFinishedLoading];
                 [self.tableView reloadData];
                 [BWStatusBarOverlay showSuccessWithMessage:[NSString stringWithFormat:@"同步%@完成",self.channel.NAME] duration:1 animated:1];
             });
-
         }];
     } faliure:^(NSError* error){
+
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (error.code == 2001) {
+                [BWStatusBarOverlay showSuccessWithMessage:[NSString stringWithFormat:@"同步%@完成",self.channel.NAME] duration:1 animated:1];
+            }
             [self.tableView tableViewDidFinishedLoading];
         });
     } Type:UP];

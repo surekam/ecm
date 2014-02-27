@@ -35,7 +35,9 @@
     __weak IBOutlet UIView *titleView;
     __weak IBOutlet UIImageView *titleImageView;
     __weak IBOutlet UILabel *titleLabel;
+    UILabel* navTitleLabel;
     UIView* topView;
+    
     
     SKGridController* companyController;
     SKGridController* selfCompanyController;
@@ -119,25 +121,39 @@
     
     
     CGRect rect = self.navigationController.navigationBar.bounds;
-    //rect.size.height += 25;
+    //rect.size.width -= 44;
     topView = [[UIView alloc] initWithFrame:rect];
-    topView.backgroundColor =COLOR(0, 97, 194);
-    topView.backgroundColor =COLOR(17, 168, 171);
+//    topView.backgroundColor =COLOR(0, 97, 194);
+//    topView.backgroundColor =COLOR(17, 168, 171);
     topView.backgroundColor =[UIColor clearColor];
     
+    UIImageView* iv = [[UIImageView alloc] initWithFrame:CGRectMake(285, 9.5, 25, 25)];
+    iv.image = Image(@"main_btn_right_set");
+    [topView addSubview:iv];
+    
     UIButton* settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [settingButton setBackgroundImage:Image(@"main_btn_right_set") forState:UIControlStateNormal];
-    [settingButton setFrame:CGRectMake(280, 10, 25, 25)];
+    [settingButton setFrame:CGRectMake(272, 0, 48, 44)];
+    [settingButton addTarget:self action:@selector(showSettingView:) forControlEvents:UIControlEventTouchUpInside];
     [topView addSubview:settingButton];
     
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 25)];
+    [label setFont:[UIFont boldSystemFontOfSize:25]];
+    [label setTextColor:[UIColor whiteColor]];
+    [label setTextAlignment:NSTextAlignmentLeft];
+    [label setText:@"湖南中烟"];
+    [topView addSubview:label];
+    
+    navTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 18, 80, 19)];
+    [navTitleLabel setFont:[UIFont systemFontOfSize:14]];
+    [navTitleLabel setTextColor:[UIColor whiteColor]];
+    [navTitleLabel setTextAlignment:NSTextAlignmentLeft];
+    [topView addSubview:navTitleLabel];
     [self.navigationController.navigationBar addSubview:topView];
-    
-    
-    
-//    UIButton* btn = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [btn setFrame:CGRectMake(10, 8, 60, 60)];
-//    [btn setBackgroundImage:Image(@"Profile_image") forState:UIControlStateNormal];
-//    [topView addSubview:btn];
+}
+
+-(void)showSettingView:(UIButton*)sender
+{
+    [settingController ecmTouchDown];
 }
 
 -(void)initSetting
@@ -149,10 +165,10 @@
     {
         rect.origin.y += 44;
     }
+    rect.origin.y+= 44;
     [settingController.view setFrame:rect];
     [self.view addSubview:settingController.view];
 }
-
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -304,7 +320,7 @@
 -(void)initPageController
 {
     pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 30, 150, 40)];
-    //[pageController setHidden:YES];
+    [pageController setHidden:YES];
     [pageController setIndicatorDiameter:8];
     [pageController setNumberOfPages:2];
     [pageController setHidesForSinglePage:YES];
@@ -322,6 +338,7 @@
     pageController.currentPage = page;
     SKGridController *controller = controllerArray[page];
     titleLabel.text = controller.clientApp.NAME;
+    navTitleLabel.text = controller.clientApp.NAME;
 }
 
 - (void)loadScrollViewWithPage:(NSUInteger)page
@@ -345,9 +362,11 @@
 
 - (SKGridController*)loadScrollViewWithClientApp:(SKClientApp*)app PageNo:(int)page
 {
+    if (page == 0) {
+        navTitleLabel.text = app.NAME;
+    }
     [bgScrollView setContentSize:CGSizeMake((page + 1) * 320, bgScrollView.frame.size.height)];
     SKGridController *controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"SKGridController"];
-    //controller.isCompanyPage = [app.DEFAULTED intValue];
     controller.rootController = self;
     controller.clientApp = app;
     [controllerArray addObject:controller];
@@ -397,6 +416,7 @@
             }
         }];
     }else{
+        [self initClientApp];
         UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"patternlocknav"];
         SKPatternLockController* locker = (SKPatternLockController*)[nav topViewController];
         [locker setDelegate:self];
@@ -458,7 +478,6 @@
     }
 }
 
-
 -(void)updateClientAppinfo
 {
     for (SKGridController* controller in controllerArray) {
@@ -480,8 +499,6 @@
     }
 }
 
-
-
 -(void)onPatternLockSuccess
 {
     if (isFirstLogin){//这里还有bug//测试 登陆后会不会到这里
@@ -498,7 +515,6 @@
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
         }
     }else{
-        [self initClientApp];
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
             NSDate *date=[FileUtils valueFromPlistWithKey:@"sleepTime"];
             int sleepSecond = [[NSDate date] secondsAfterDate:date];

@@ -9,7 +9,7 @@
 #import "SKSystemMenuController.h"
 #import "SKAppConfiguration.h"
 #define duration 0.7
-//
+#define ECM 1
 #define MAINHEIGHT ([UIScreen mainScreen].bounds.size.height - 44 -  20)
 #define MAINY ([UIScreen mainScreen].bounds.size.height - 44 - 44 - 20)
 @interface SKSystemMenuController ()
@@ -83,6 +83,9 @@
         {
             rect.origin.y += 64;
         }
+        if (ECM) {
+            rect.origin.y += 44;
+        }
         self.view.frame = rect;
         imageView.image = [UIImage imageNamed:@"pushbar_n.png"];
         isSystemMenuShow = NO;
@@ -99,6 +102,38 @@
         isSystemMenuShow = YES;
     }
     [UIView commitAnimations];
+}
+
+- (void)ecmTouchDown
+{
+    [UIView animateWithDuration:duration animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        CGRect rect;
+        if (isSystemMenuShow)
+        {
+            rect = CGRectMake(0, MAINY, 320, MAINHEIGHT);
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            {
+                rect.origin.y += 64;
+            }
+            rect.origin.y += 44;
+            self.view.frame = rect;
+            imageView.image = [UIImage imageNamed:@"pushbar_n.png"];
+        }
+        else
+        {
+            rect = CGRectMake(0, 0, 320, MAINHEIGHT);
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            {
+                rect.origin.y += 64;
+            }
+            self.view.frame = rect;
+            imageView.image = [UIImage imageNamed:@"pushbar_p.png"];
+        }
+
+    } completion:^(BOOL completed){
+        isSystemMenuShow = !isSystemMenuShow;
+    }];
 }
 
 -(void)hide
@@ -110,33 +145,37 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:duration];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    CGRect rect;
-    if (isSystemMenuShow)
-    {
-        rect = CGRectMake(0, MAINY, 320, MAINHEIGHT);
-        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+    [UIView animateWithDuration:duration animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        CGRect rect;
+        if (isSystemMenuShow)
         {
-            rect.origin.y += 64;
+            rect = CGRectMake(0, MAINY, 320, MAINHEIGHT);
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            {
+                rect.origin.y += 64;
+            }
+            if (ECM) {
+                rect.origin.y += 44;
+            }
+            self.view.frame = rect;
+            imageView.image = [UIImage imageNamed:@"pushbar_n.png"];
         }
-        self.view.frame = rect;
-        imageView.image = [UIImage imageNamed:@"pushbar_n.png"];
-        isSystemMenuShow = NO;
-    }
-    else
-    {
-        rect = CGRectMake(0, 0, 320, MAINHEIGHT);
+        else
         {
-            rect.origin.y += 64;
+            rect = CGRectMake(0, 0, 320, MAINHEIGHT);
+            if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+            {
+                rect.origin.y += 64;
+            }
+            self.view.frame = rect;
+            imageView.image = [UIImage imageNamed:@"pushbar_p.png"];
         }
-        self.view.frame = rect;
-        imageView.image = [UIImage imageNamed:@"pushbar_p.png"];
-        isSystemMenuShow = YES;
-    }
+        
+    } completion:^(BOOL completed){
+        isSystemMenuShow = !isSystemMenuShow;
+    }];
     
-    [UIView commitAnimations];
     return YES;
 }
 

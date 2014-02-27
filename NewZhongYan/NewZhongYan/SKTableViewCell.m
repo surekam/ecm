@@ -10,10 +10,11 @@
 #import "utils.h"
 @implementation SKTableViewCell
 {
-      UILabel *_titleLabel;
-      UILabel *_crtmLabel;
-      UIImageView *_stateView;
-      UIImageView *_attachView;
+    UILabel *_titleLabel;
+    UILabel *_crtmLabel;
+    UILabel *_attachLabel;
+    UIImageView *_stateView;
+    UIImageView *_attachView;
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -29,18 +30,46 @@
         
         _crtmLabel = [[UILabel alloc]init];
         [_crtmLabel setBackgroundColor:[UIColor clearColor]];
-        [_crtmLabel setFont:[UIFont systemFontOfSize:12]];
+        [_crtmLabel setFont:[UIFont systemFontOfSize:10]];
         [_crtmLabel setTextAlignment:NSTextAlignmentRight];
         [_crtmLabel setTextColor:[UIColor lightGrayColor]];
         [self addSubview:_crtmLabel];
         
         _attachView = [[UIImageView alloc]initWithImage: [UIImage imageNamed:@"cms_attachment.png"]];
+        [_attachView setHidden:YES];
         [self addSubview:_attachView];
+        
+        _attachLabel = [[UILabel alloc] init];
+        [_attachLabel setBackgroundColor:[UIColor clearColor]];
+        [_attachLabel setFont:[UIFont systemFontOfSize:10]];
+        [_attachLabel setTextAlignment:NSTextAlignmentCenter];
+        [_attachLabel setTextColor:[UIColor whiteColor]];
+        [_attachLabel setBackgroundColor:[UIColor redColor]];
+        [self addSubview:_attachLabel];
         
         _stateView = [[UIImageView alloc]init];
         [self addSubview:_stateView];
     }
     return self;
+}
+
+-(void)setAttachViewImage:(NSString*)attachName
+{
+    if (!attachName) {
+        NSLog(@"attachName 是空的");
+    }
+    if (!attachName || [attachName isEqualToString:@""] ) {
+        [_attachLabel setHidden:YES];
+    }
+    if ([attachName isEqualToString:@"bodyimage"]) {
+        _attachLabel.text = @"图片";
+    }
+    if ([attachName isEqualToString:@"bodyfile"]) {
+        _attachLabel.text = @"正文";
+    }
+    if ([attachName isEqualToString:@"attachment"]) {
+        _attachLabel.text = @"附件";
+    }
 }
 
 -(void)setECMInfo:(NSDictionary*)info
@@ -52,8 +81,7 @@
     if ([info.allKeys containsObject:@"CRTM"]) {
         [_crtmLabel setText:[info objectForKey:@"CRTM"]];
     }
-    
-    [_attachView setHidden:![self containAttachement:info]];
+    [self setAttachViewImage:info[@"ATTRLABLE"]];
     if (![[info objectForKey:@"READED"] intValue]) {
         [_stateView  setImage:
          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
@@ -134,6 +162,7 @@
     [_titleLabel  setFrame:CGRectMake(25, 8, 280, height)];
     [_stateView   setFrame:CGRectMake(5, CGRectGetMidY(_titleLabel.frame) - 7.5, 15, 15)];
     [_attachView  setFrame:CGRectMake(25,CGRectGetMaxY(_titleLabel.frame)+5, 30, 15)];
+    [_attachLabel  setFrame:CGRectMake(25,CGRectGetMaxY(_titleLabel.frame)+8, 25, 12)];
     [_crtmLabel   setFrame:CGRectMake(205,CGRectGetMaxY(_titleLabel.frame)+5, 100, 21)];
 }
 

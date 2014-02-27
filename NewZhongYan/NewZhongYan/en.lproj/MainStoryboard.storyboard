@@ -998,7 +998,9 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <state key="normal" title="邮件 ">
+                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                        <state key="normal" title="邮件 " image="email.png">
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1011,7 +1013,9 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <state key="normal" title="待办">
+                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                        <state key="normal" title="待办" image="remind.png">
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1024,7 +1028,8 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <state key="normal" title="通讯录">
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                        <state key="normal" title="通讯录" image="address.png">
                                             <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1065,7 +1070,7 @@
                             <constraint firstItem="LdY-Zn-bV7" firstAttribute="top" secondItem="S6r-r9-yGO" secondAttribute="bottom" id="nCs-I7-KB9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="湖南中烟" id="4DE-On-dHm">
+                    <navigationItem key="navigationItem" id="4DE-On-dHm">
                         <barButtonItem key="backBarButtonItem" title="返回" id="EaY-b6-XTJ"/>
                     </navigationItem>
                     <connections>
@@ -4096,6 +4101,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="address.png" width="22" height="22"/>
         <image name="blur.png" width="320" height="400"/>
         <image name="btn_help.png" width="60" height="36"/>
         <image name="btn_home_bg.png" width="72" height="72"/>
@@ -4111,6 +4117,7 @@
         <image name="dial_button_hide.png" width="48" height="48"/>
         <image name="dial_button_pressed.png" width="100" height="48"/>
         <image name="dial_text.png" width="250" height="48"/>
+        <image name="email.png" width="22" height="22"/>
         <image name="icon.png" width="57" height="57"/>
         <image name="icon_announcement.png" width="100" height="100"/>
         <image name="icon_read.png" width="32" height="32"/>
@@ -4122,6 +4129,7 @@
         <image name="navagationBarCenterBtn.png" width="90" height="36"/>
         <image name="night_user_defaulthead.png" width="90" height="90"/>
         <image name="pw_input1.png" width="402" height="74"/>
+        <image name="remind.png" width="22" height="22"/>
         <image name="setpassword_bg.png" width="640" height="1008"/>
         <image name="star_off.png" width="35" height="35"/>
         <image name="star_on.png" width="35" height="35"/>
