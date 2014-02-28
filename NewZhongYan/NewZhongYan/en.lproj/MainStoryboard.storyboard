@@ -992,82 +992,43 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CNl-Cy-DBU">
                                 <rect key="frame" x="0.0" y="64" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWb-pa-8dw">
-                                        <rect key="frame" x="38" y="30" width="80" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                                        <state key="normal" title="邮件 " image="email.png">
-                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="jumpToEmailController:" destination="2" eventType="touchUpInside" id="i8w-OK-4EC"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15V-ML-URf">
-                                        <rect key="frame" x="120" y="30" width="80" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                                        <state key="normal" title="待办" image="remind.png">
-                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="jumpToRemindController:" destination="2" eventType="touchUpInside" id="jor-O1-inT"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pc5-NZ-3R7">
-                                        <rect key="frame" x="202" y="30" width="80" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                                        <state key="normal" title="通讯录" image="address.png">
-                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="jumpAddressBookController:" destination="2" eventType="touchUpInside" id="rni-Rg-PTN"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="[1]" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rRD-tv-Fs3">
-                                        <rect key="frame" x="104" y="26" width="17" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="[1]" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NZc-O1-6Tx">
-                                        <rect key="frame" x="185" y="26" width="17" height="21"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UJd-FC-wTk">
-                                <rect key="frame" x="0.0" y="124" width="320" height="333"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <outlet property="delegate" destination="2" id="Hx2-aw-en1"/>
                                 </connections>
                             </scrollView>
+                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lf2-eX-xja">
+                                <rect key="frame" x="0.0" y="431" width="320" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="T7S-G9-eAp"/>
+                                    <constraint firstAttribute="height" constant="49" id="bKA-du-BZv"/>
+                                </constraints>
+                                <items>
+                                    <tabBarItem title="待办" image="remind.png" badgeValue="1" id="muG-jB-PcA"/>
+                                    <tabBarItem tag="1" title="邮件" image="email.png" badgeValue="1" id="Z8h-Z7-TUN"/>
+                                    <tabBarItem tag="2" title="通讯录" image="address.png" id="LDP-ua-FhC"/>
+                                    <tabBarItem tag="3" title="设置" image="setting.png" id="Wc7-U7-wiR"/>
+                                </items>
+                                <connections>
+                                    <outlet property="delegate" destination="2" id="aHY-Im-nGF"/>
+                                </connections>
+                            </tabBar>
                         </subviews>
                         <color key="backgroundColor" red="0.94901960784313721" green="0.94117647058823528" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="S6r-r9-yGO" firstAttribute="leading" secondItem="3" secondAttribute="leading" id="1RH-Zc-j8N"/>
                             <constraint firstAttribute="trailing" secondItem="S6r-r9-yGO" secondAttribute="trailing" id="BH2-hk-U29"/>
                             <constraint firstItem="S6r-r9-yGO" firstAttribute="top" secondItem="3" secondAttribute="top" id="DWa-Fb-I3A"/>
+                            <constraint firstAttribute="trailing" secondItem="Lf2-eX-xja" secondAttribute="trailing" id="NEZ-Zj-JBz"/>
+                            <constraint firstItem="Lf2-eX-xja" firstAttribute="leading" secondItem="3" secondAttribute="leading" id="SeS-Ic-1Ze"/>
                             <constraint firstItem="LdY-Zn-bV7" firstAttribute="top" secondItem="S6r-r9-yGO" secondAttribute="bottom" id="nCs-I7-KB9"/>
+                            <constraint firstItem="LdY-Zn-bV7" firstAttribute="top" secondItem="Lf2-eX-xja" secondAttribute="bottom" id="vIV-9T-9Ik"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="4DE-On-dHm">
@@ -1075,6 +1036,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bgScrollView" destination="UJd-FC-wTk" id="BYF-ed-Ffo"/>
+                        <outlet property="tabbar" destination="Lf2-eX-xja" id="TBy-sw-uGN"/>
                         <outlet property="titleImageView" destination="9Oh-OZ-CcG" id="906-Ei-fpH"/>
                         <outlet property="titleLabel" destination="3iH-Aa-kP2" id="tLu-jX-dNO"/>
                         <outlet property="titleView" destination="W0X-UF-DS2" id="zSr-q5-9v3"/>
@@ -1109,11 +1071,11 @@
                         <viewControllerLayoutGuide type="bottom" id="W6I-a6-Qwh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="wam-5u-Nk4">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="333"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="blur.png" translatesAutoresizingMaskIntoConstraints="NO" id="j3q-WK-KEg">
-                                <rect key="frame" x="10" y="0.0" width="300" height="333"/>
+                                <rect key="frame" x="10" y="0.0" width="300" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                         </subviews>
@@ -4101,7 +4063,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="address.png" width="22" height="22"/>
+        <image name="address.png" width="30" height="30"/>
         <image name="blur.png" width="320" height="400"/>
         <image name="btn_help.png" width="60" height="36"/>
         <image name="btn_home_bg.png" width="72" height="72"/>
@@ -4117,7 +4079,7 @@
         <image name="dial_button_hide.png" width="48" height="48"/>
         <image name="dial_button_pressed.png" width="100" height="48"/>
         <image name="dial_text.png" width="250" height="48"/>
-        <image name="email.png" width="22" height="22"/>
+        <image name="email.png" width="30" height="30"/>
         <image name="icon.png" width="57" height="57"/>
         <image name="icon_announcement.png" width="100" height="100"/>
         <image name="icon_read.png" width="32" height="32"/>
@@ -4129,8 +4091,9 @@
         <image name="navagationBarCenterBtn.png" width="90" height="36"/>
         <image name="night_user_defaulthead.png" width="90" height="90"/>
         <image name="pw_input1.png" width="402" height="74"/>
-        <image name="remind.png" width="22" height="22"/>
+        <image name="remind.png" width="30" height="30"/>
         <image name="setpassword_bg.png" width="640" height="1008"/>
+        <image name="setting.png" width="30" height="30"/>
         <image name="star_off.png" width="35" height="35"/>
         <image name="star_on.png" width="35" height="35"/>
         <image name="user_input1.png" width="402" height="74"/>

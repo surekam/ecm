@@ -31,7 +31,7 @@
         [self addSubview:titleLabel];
         
         self.badge = [CustomBadge customBadgeWithString:@""];
-        badge.center = CGPointMake(58, 0);
+        badge.center = CGPointMake(55, 0);
         [self.badge setHidden:YES];
         [self addSubview:badge];
     }

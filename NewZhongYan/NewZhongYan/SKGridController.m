@@ -15,11 +15,13 @@
 #import "SKECMRootController.h"
 #import "LocalMetaDataManager.h"
 
-#define InitIconX 38
-#define InitIconY 30
+#define InitIconX 25
+#define InitIconY 40
+#define InitIconHeight 80
 //(320 - 180 ) - 2x/2 = (140 - 2x)/2 = 70 - x
-#define InitIconinterval （70 - InitIconX）
-
+#define InitIconintervalX 70 - InitIconX
+#define InitIconintervalWidth 130 - InitIconX
+#define InitIconintervalY 16.6
 @interface SKGridController ()
 {
     NSMutableArray *upButtons;
@@ -57,7 +59,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         upButtons = [[NSMutableArray alloc] init];
-        NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE OWNERAPP = '%@' and LEVL = 1;",self.clientApp.CODE];
+        NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE OWNERAPP = '%@' and LEVL = 1 and ENABLED = 1;",self.clientApp.CODE];
         NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
         for (int i=0;i<array.count;i++)
         {
@@ -71,7 +73,7 @@
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
             if (dict[@"LOGO"] == [NSNull null]) {
-                [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobta/public/icon/copublicnotice.png"]];
+                [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobtc/public/icon/wzfactory/wzgeneralinfo.png"]];
             }else{
                 [dragbtn.tapButton setImageURL:[NSURL URLWithString:dict[@"LOGO"]]];
             }
@@ -146,9 +148,9 @@
                     if (i < count) {
                         UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
                         if (button.tag != shakingButton.tag){
-                            [button setFrame:CGRectMake(InitIconX + x * 90,  InitIconY + y * 96.6, 60, 60)];
+                            [button setFrame:CGRectMake(InitIconX + x * (InitIconintervalWidth),  InitIconY + y * (InitIconHeight + InitIconintervalY), 60, 60)];
                         }
-                        [button setLastCenter:CGPointMake( InitIconX + x*(60 + 70 - InitIconX) + 60/2.0,  InitIconY + y * 96.6  + 60/2.0)];
+                        [button setLastCenter:CGPointMake( InitIconX + x * (InitIconintervalWidth) + 60/2.0,  InitIconY + y * (InitIconHeight + InitIconintervalY)  + 60/2.0)];
                     }
                 }
             }
@@ -160,8 +162,8 @@
                     int i = 3 * y + x;
                     if (i < count) {
                         UIDragButton *button = (UIDragButton *)[upButtons objectAtIndex:i];
-                        [button setFrame:CGRectMake(InitIconX + x * (130 - InitIconX), InitIconY + y * 96.6, 60, 60)];
-                        [button setLastCenter:CGPointMake( InitIconX + x*(60 + 70 - InitIconX) + 60/2.0,  InitIconY + y * 96.6  + 60/2.0 )];
+                        [button setFrame:CGRectMake(InitIconX + x *  (InitIconintervalWidth), InitIconY + y * (InitIconHeight + InitIconintervalY), 60, 60)];
+                        [button setLastCenter:CGPointMake( InitIconX + x * (InitIconintervalWidth) + 60/2.0,  InitIconY + y * (InitIconHeight + InitIconintervalY)  + 60/2.0 )];
                     }
                 }
             }
@@ -237,6 +239,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //[self.view setBackgroundColor:COLOR(17, 168, 171)];
     [self initSelfFactoryView];
 }
 

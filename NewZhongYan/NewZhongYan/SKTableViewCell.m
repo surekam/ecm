@@ -81,6 +81,7 @@
     if ([info.allKeys containsObject:@"CRTM"]) {
         [_crtmLabel setText:[info objectForKey:@"CRTM"]];
     }
+    NSLog(@"%@-----%@",info[@"TITL"],info);
     [self setAttachViewImage:info[@"ATTRLABLE"]];
     if (![[info objectForKey:@"READED"] intValue]) {
         [_stateView  setImage:

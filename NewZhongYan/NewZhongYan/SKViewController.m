@@ -35,6 +35,7 @@
     __weak IBOutlet UIView *titleView;
     __weak IBOutlet UIImageView *titleImageView;
     __weak IBOutlet UILabel *titleLabel;
+    __weak IBOutlet UITabBar *tabbar;
     UILabel* navTitleLabel;
     UIView* topView;
     
@@ -127,14 +128,14 @@
 //    topView.backgroundColor =COLOR(17, 168, 171);
     topView.backgroundColor =[UIColor clearColor];
     
-    UIImageView* iv = [[UIImageView alloc] initWithFrame:CGRectMake(285, 9.5, 25, 25)];
-    iv.image = Image(@"main_btn_right_set");
-    [topView addSubview:iv];
+//    UIImageView* iv = [[UIImageView alloc] initWithFrame:CGRectMake(285, 9.5, 25, 25)];
+//    iv.image = Image(@"main_btn_right_set");
+//    [topView addSubview:iv];
     
-    UIButton* settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [settingButton setFrame:CGRectMake(272, 0, 48, 44)];
-    [settingButton addTarget:self action:@selector(showSettingView:) forControlEvents:UIControlEventTouchUpInside];
-    [topView addSubview:settingButton];
+//    UIButton* settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [settingButton setFrame:CGRectMake(272, 0, 48, 44)];
+//    [settingButton addTarget:self action:@selector(showSettingView:) forControlEvents:UIControlEventTouchUpInside];
+//    [topView addSubview:settingButton];
     
     UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 100, 25)];
     [label setFont:[UIFont boldSystemFontOfSize:25]];
@@ -180,13 +181,42 @@
 }
 
 - (IBAction)jumpToEmailController:(id)sender {
-    [self performSegueWithIdentifier:@"SKEmailController"sender:self];
 }
 - (IBAction)jumpToRemindController:(id)sender {
-    [self performSegueWithIdentifier:@"SKGTaskViewController"sender:self];
 }
 - (IBAction)jumpAddressBookController:(id)sender {
-    [self performSegueWithIdentifier:@"SKAddressController"sender:self];
+}
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    switch (item.tag) {
+        case 0:
+        {
+            item.selectedImage = Image(@"remind_highnight");
+            [self performSegueWithIdentifier:@"SKGTaskViewController"sender:self];
+            break;
+        }
+        case 1:
+        {
+            item.selectedImage = Image(@"email_highnight");
+            [self performSegueWithIdentifier:@"SKEmailController"sender:self];
+            break;
+        }
+        case 2:
+        {
+            item.selectedImage = Image(@"address_highnight");
+            [self performSegueWithIdentifier:@"SKAddressController"sender:self];
+            break;
+        }
+        case 3:
+        {
+            item.selectedImage = Image(@"setting_highnight");
+            [settingController ecmTouchDown];
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 -(void)jumpToController:(id)sender
@@ -385,7 +415,7 @@
 -(void)initClientApp
 {
     clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 ORDER BY DEFAULTED;"];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];
@@ -488,7 +518,7 @@
 -(void)firstInitClientApp
 {
     clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 ORDER BY DEFAULTED;"];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];

@@ -12,7 +12,7 @@
 #import "SKNewsItemController.h"
 
 #import "SMPageControl.h"
-@interface SKViewController : UIViewController<UIDragButtonDelegate,drawPatternLockDelegate,SKDataDaemonHelperDelegate>
+@interface SKViewController : UIViewController<UIDragButtonDelegate,drawPatternLockDelegate,SKDataDaemonHelperDelegate,UITabBarDelegate>
 {
     NSMutableArray *upButtons;
     NSMutableArray* clientAppArray;
