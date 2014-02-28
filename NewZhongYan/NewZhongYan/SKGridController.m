@@ -15,7 +15,7 @@
 #import "SKECMRootController.h"
 #import "LocalMetaDataManager.h"
 
-#define InitIconX 25
+#define InitIconX 30
 #define InitIconY 40
 #define InitIconHeight 80
 //(320 - 180 ) - 2x/2 = (140 - 2x)/2 = 70 - x

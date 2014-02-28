@@ -12,9 +12,12 @@
 {
     UILabel *_titleLabel;
     UILabel *_crtmLabel;
-    UILabel *_attachLabel;
     UIImageView *_stateView;
     UIImageView *_attachView;
+    UIView*      _attachBgView;
+    UIImageView* pictureImageView;
+    UIImageView* contentImageView;
+    UIImageView* attachImageView;
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -36,17 +39,25 @@
         [self addSubview:_crtmLabel];
         
         _attachView = [[UIImageView alloc]initWithImage: [UIImage imageNamed:@"cms_attachment.png"]];
-        [_attachView setHidden:YES];
         [self addSubview:_attachView];
         
-        _attachLabel = [[UILabel alloc] init];
-        [_attachLabel setBackgroundColor:[UIColor clearColor]];
-        [_attachLabel setFont:[UIFont systemFontOfSize:10]];
-        [_attachLabel setTextAlignment:NSTextAlignmentCenter];
-        [_attachLabel setTextColor:[UIColor whiteColor]];
-        [_attachLabel setBackgroundColor:[UIColor redColor]];
-        [self addSubview:_attachLabel];
         
+        _attachBgView = [[UIView alloc] initWithFrame:CGRectMake(25,25, 85, 15)];
+        //[_attachBgView setBackgroundColor:COLOR(17, 168, 171)];
+        [self addSubview:_attachBgView];
+        
+        contentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,1, 28, 14)];
+        contentImageView.image = Image(@"content_unread");
+        [_attachBgView addSubview:contentImageView];
+        
+        pictureImageView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(contentImageView.frame) + 1,1, 28, 14)];
+        pictureImageView.image = Image(@"picture_unread");
+        [_attachBgView addSubview:pictureImageView];
+        
+        attachImageView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(pictureImageView.frame) + 1, 1, 28, 14)];
+        attachImageView.image = Image(@"attach_unread");
+        [_attachBgView addSubview:attachImageView];
+
         _stateView = [[UIImageView alloc]init];
         [self addSubview:_stateView];
     }
@@ -55,25 +66,33 @@
 
 -(void)setAttachViewImage:(NSString*)attachName
 {
-    if (!attachName) {
-        NSLog(@"attachName 是空的");
+    CGFloat X = 0;
+    if ([attachName rangeOfString:@"bodyfile"].location != NSNotFound) {
+        [contentImageView setHidden:NO];
+        X = CGRectGetMaxX(contentImageView.frame) + 1;
+    }else{
+        [contentImageView setHidden:YES];
     }
-    if (!attachName || [attachName isEqualToString:@""] ) {
-        [_attachLabel setHidden:YES];
+    
+    if ([attachName rangeOfString:@"bodyimage"].location != NSNotFound) {
+        [pictureImageView setHidden:NO];
+        [pictureImageView setFrame:CGRectMake(X, 1, 28, 14)];
+        X = CGRectGetMaxX(pictureImageView.frame) + 1;
+    }else{
+        [pictureImageView setHidden:YES];
     }
-    if ([attachName isEqualToString:@"bodyimage"]) {
-        _attachLabel.text = @"图片";
-    }
-    if ([attachName isEqualToString:@"bodyfile"]) {
-        _attachLabel.text = @"正文";
-    }
-    if ([attachName isEqualToString:@"attachment"]) {
-        _attachLabel.text = @"附件";
+    
+    if ([attachName rangeOfString:@"attachment"].location != NSNotFound) {
+        [attachImageView setHidden:NO];
+        [attachImageView setFrame:CGRectMake(X, 1, 28, 14)];
+    }else{
+        [attachImageView setHidden:YES];
     }
 }
 
 -(void)setECMInfo:(NSDictionary*)info
 {
+    [_attachView setHidden:YES];
     if ([info.allKeys containsObject:@"TITL"]) {
         _titleLabel.text =  [info objectForKey:@"TITL"];
     }
@@ -81,14 +100,11 @@
     if ([info.allKeys containsObject:@"CRTM"]) {
         [_crtmLabel setText:[info objectForKey:@"CRTM"]];
     }
-    NSLog(@"%@-----%@",info[@"TITL"],info);
     [self setAttachViewImage:info[@"ATTRLABLE"]];
     if (![[info objectForKey:@"READED"] intValue]) {
-        [_stateView  setImage:
-         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
+        [_stateView  setImage:Image(@"icon_unread")];
     }else{
-        [_stateView setImage:
-         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_read" ofType:@"png"]]];
+        [_stateView setImage:Image(@"icon_read")];
     }
 }
 
@@ -163,7 +179,7 @@
     [_titleLabel  setFrame:CGRectMake(25, 8, 280, height)];
     [_stateView   setFrame:CGRectMake(5, CGRectGetMidY(_titleLabel.frame) - 7.5, 15, 15)];
     [_attachView  setFrame:CGRectMake(25,CGRectGetMaxY(_titleLabel.frame)+5, 30, 15)];
-    [_attachLabel  setFrame:CGRectMake(25,CGRectGetMaxY(_titleLabel.frame)+8, 25, 12)];
+    [_attachBgView  setFrame:CGRectMake(25,CGRectGetMaxY(_titleLabel.frame)+5, 85, 15)];
     [_crtmLabel   setFrame:CGRectMake(205,CGRectGetMaxY(_titleLabel.frame)+5, 100, 21)];
 }
 
@@ -180,11 +196,9 @@
     
     [_attachView setHidden:![self containAttachement:dictionary]];
     if (![[dictionary objectForKey:@"READED"] intValue]) {
-        [_stateView  setImage:
-         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
+        [_stateView  setImage:Image(@"icon_unread")];
     }else{
-        [_stateView setImage:
-         [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_read" ofType:@"png"]]];
+        [_stateView setImage:Image(@"icon_read")];
     }
 }
 @end
