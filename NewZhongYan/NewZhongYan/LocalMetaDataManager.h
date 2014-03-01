@@ -43,4 +43,6 @@
 +(NSString*)newDataItemCount:(LocalDataMeta*)metaData;
 
 +(NSString*)newECMDataItemCount:(NSString*)currentFid;
+
++(NSString*)newECMMeettingItemCount:(NSString*)currentFid;
 @end

@@ -105,6 +105,14 @@
     return count ? [NSString stringWithFormat:@"%d",count] : nil;
 }
 
++(NSString*)newECMMeettingItemCount:(NSString*)currentFid
+{
+    NSString* sql = [NSString stringWithFormat:
+                     @"select  AID from T_DOCUMENTS WHERE DATETIME(EDTM) > DATETIME('now','localtime') and CHANNELID in (%@) and ENABLED = 1;",currentFid];
+    int count = [[DBQueue sharedbQueue] CountOfQueryWithSQL:sql];
+    return count ? [NSString stringWithFormat:@"%d",count] : nil;
+}
+
 +(NSString*)newDataItemCount:(LocalDataMeta*)metaData;
 {
     NSString *sql;

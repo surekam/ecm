@@ -230,17 +230,18 @@
                                                });
                                            } faliure:^(NSError* error){
                                                NSLog(@"SynMaxUpdateDateWithClient %@",error);
-                                               [self reloadBageNumber];
                                            }];
     }
 }
 
-//1393232025126   1321866360000
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     //[self.view setBackgroundColor:COLOR(17, 168, 171)];
     [self initSelfFactoryView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadBageNumber];
+    });
 }
 
 -(void)reloadData
@@ -264,6 +265,7 @@
                                                }];
         }
     } faliure:^(NSError* error){
+        NSLog(@"%@",error);
         if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
             [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
                                                complete:^(NSMutableArray* array){
@@ -306,7 +308,11 @@
                         [btn setBadgeNumber:@"new"];
                     });
                 }else{
-                    [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
+                    if (![btn.channel.TYPELABLE isEqualToString:@"meeting,"]) {
+                        [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
+                    }else{
+                         [btn setBadgeNumber:[LocalMetaDataManager newECMMeettingItemCount:btn.channel.FIDLISTS]];
+                    }
                 }
             }
         }
@@ -323,12 +329,15 @@
 
 -(void)setECMBadgeNumber
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (UIDragButton *btn in upButtons)
-        {
+    for (UIDragButton *btn in upButtons)
+    {
+        NSLog(@"%@",btn.channel.NAME);
+        if (![btn.channel.TYPELABLE isEqualToString:@"meeting,"]) {
             [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
+        }else{
+            [btn setBadgeNumber:[LocalMetaDataManager newECMMeettingItemCount:btn.channel.FIDLISTS]];
         }
-    });
+    }
 }
 
 -(void)setBadgeNumber

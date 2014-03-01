@@ -423,7 +423,6 @@
     for (SKClientApp* app in clientAppArray) {
         [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
     }
-
 }
 
 - (void)viewDidLoad
