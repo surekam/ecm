@@ -175,7 +175,8 @@
 {
     _titleLabel.text =  paper.title;
     _crtmLabel.text =  paper.time;
-    [_attachView setHidden:NO];
+    [_stateView  setImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_unread" ofType:@"png"]]];
+    [_attachView setHidden:YES];
 }
 
 -(BOOL)containAttachement:(NSDictionary*)dict

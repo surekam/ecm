@@ -26,8 +26,6 @@
 
 -(void)initSelf
 {
-    id a =  [self initWithFrame:CGRectMake(0, 0, 320-66, [UIScreen mainScreen].bounds.size.height-20-44)];
-    NSLog(@"%@",a);
     UILabel *titltL=[[UILabel alloc] initWithFrame:CGRectMake(20, 20, 193, 31)];
     [titltL setText:@"邮件每次收取数量设置："];
     [titltL setFont:[UIFont systemFontOfSize:16]];
@@ -45,9 +43,9 @@
     [selectTable reloadData];
     [popView addSubview:selectTable];
     NSString *eSize=[FileUtils valueFromPlistWithKey:@"EPSIZE"];
+    
     btn=[UIButton buttonWithType:UIButtonTypeCustom];
     [btn setFrame:CGRectMake(15, 60, 225, 39)];
-    
     [btn setTitle:eSize forState:UIControlStateNormal];
     [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [btn setTitleColor:[UIColor colorWithRed:0/255.0 green:89.0/255.0 blue:179.0/255.0 alpha:1] forState:UIControlStateNormal];
@@ -72,15 +70,11 @@
     [popView setHidden:NO];
 }
 
-
 #pragma mark -tableViewDataScource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return dataArray.count;
 }
-
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

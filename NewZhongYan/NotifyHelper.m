@@ -51,7 +51,6 @@
 +(NSString *)getSize
 {
     NSString *str=[FileUtils formattedFileSize:[FileUtils folderSizeAtPath:[SKAttachManger notifyPath]]];
-    
     NSString *needCleanSizeStr=[FileUtils formattedFileSize:[self getNeedCleanSize]];
     NSString *result=[NSString stringWithFormat:@"%@(%@)",str,needCleanSizeStr];
     return result;

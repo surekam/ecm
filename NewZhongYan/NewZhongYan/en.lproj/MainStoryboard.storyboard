@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="byi-Cc-Zqt">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="byi-Cc-Zqt">
     <dependencies>
         <deployment version="1536" defaultVersion="1280" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
@@ -1036,6 +1036,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="bgScrollView" destination="UJd-FC-wTk" id="BYF-ed-Ffo"/>
+                        <outlet property="emailTabItem" destination="Z8h-Z7-TUN" id="Bsz-LA-Yfo"/>
+                        <outlet property="remindTabItem" destination="muG-jB-PcA" id="h6L-Xn-qUQ"/>
                         <outlet property="tabbar" destination="Lf2-eX-xja" id="TBy-sw-uGN"/>
                         <outlet property="titleImageView" destination="9Oh-OZ-CcG" id="906-Ei-fpH"/>
                         <outlet property="titleLabel" destination="3iH-Aa-kP2" id="tLu-jX-dNO"/>
@@ -4107,6 +4109,6 @@
         <segue reference="NbM-yS-InL"/>
         <segue reference="ZOR-Yw-wB9"/>
         <segue reference="ZxI-C2-MUv"/>
-        <segue reference="guo-6r-hNO"/>
+        <segue reference="kVp-IR-zjU"/>
     </inferredMetricsTieBreakers>
 </document>

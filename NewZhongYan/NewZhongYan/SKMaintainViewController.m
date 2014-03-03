@@ -16,12 +16,14 @@
 #import "MeetingHelper.h"
 #import "WorkNewsHelper.h"
 #import "CODOCSHelper.h"
-
+#import "ClientAppHelper.h"
 #import "SKAppMaintainCell.h"
 @interface SKMaintainViewController ()
 {
     UIActivityIndicatorView *indicator;
     NSMutableArray *dataArray;
+    NSMutableArray *clientAppArray;//ecm
+    NSMutableArray *clientAppHelperArray;//ecm
     int currentTag;
     BOOL isClearAll;
     long long filesize;
@@ -33,40 +35,39 @@
 -(void)reload
 {
     [dataArray removeAllObjects];
-    NSDictionary *newsDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                           [UIImage imageNamed:@"icon_news.png"],@"image",@"新闻",@"title",[NewsHelper getSize],@"size",nil];
     NSDictionary *emailDic=[NSDictionary dictionaryWithObjectsAndKeys:
                             [UIImage imageNamed:@"icon_email.png"],@"image",@"邮件",@"title",[EmailHelper getSize],@"size",nil];
     NSDictionary *oaDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                         [UIImage imageNamed:@"icon_gtasks.png"],@"image",@"统一待办",@"title",[OAHelper getSize],@"size",nil];
-    NSDictionary *notifyDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                             [UIImage imageNamed:@"icon_notice.png"],@"image",@"通知",@"title",[NotifyHelper getSize],@"size",nil];
-    NSDictionary *announceDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                               [UIImage imageNamed:@"icon_announcement.png"],@"image",@"公告",@"title",[AnnounceHelper getSize],@"size",nil];
-    NSDictionary *workNewsDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                               [UIImage imageNamed:@"icon_touchstone.png"],@"image",@"公司动态",@"title",[WorkNewsHelper getSize],@"size",nil];
-    NSDictionary *meetingDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                              [UIImage imageNamed:@"icon_meeting.png"],@"image",@"会议",@"title",[MeetingHelper getSize],@"size",nil];
-    NSDictionary *codocsDic=[NSDictionary dictionaryWithObjectsAndKeys:
-                             [UIImage imageNamed:@"icon_companydocuments.png"],@"image",@"公司公文",@"title",[CODOCSHelper getSize],@"size",nil];
+                         [UIImage imageNamed:@"icon_gtasks.png"],@"image",@"统一待办",@"title",
+                         [OAHelper getSize],@"size",nil];
     [dataArray addObject:oaDic];
     [dataArray addObject:emailDic];
-    [dataArray addObject:newsDic];
-    [dataArray addObject:notifyDic];
-    [dataArray addObject:announceDic];
-    [dataArray addObject:meetingDic];
-    [dataArray addObject:workNewsDic];
-    [dataArray addObject:codocsDic];
+    
+    clientAppArray = [NSMutableArray array];
+    clientAppHelperArray = [NSMutableArray array];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
+    for (NSDictionary* dict in array) {
+        SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
+        [clientAppArray addObject:clientApp];
+    }
+    for (SKClientApp* app in clientAppArray) {
+        ClientAppHelper* clientHelper = [[ClientAppHelper alloc] initWithClientApp:app];
+        NSDictionary *clientDic=[NSDictionary dictionaryWithObjectsAndKeys:
+                             [UIImage imageNamed:@"icon_gtasks.png"],@"image",app.NAME,@"title",
+                             [clientHelper clientAppSizeDocumentPath],@"size",clientHelper,@"apphelper",nil];
+        [dataArray addObject:clientDic];
+        [clientAppHelperArray addObject:clientHelper];
+    }
     [tableview reloadData];
 }
 
 -(void)showAlert:(BOOL)needClean
 {
     if (needClean) {
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"本次清理后系统仍然会为您保存最近的数据，确定清理吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"本次清理后系统仍然会为您保存最近的数据,确定清理吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];
     } else {
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"系统保存的是最近的数据，无需清理" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"系统保存的是最近的数据,无需清理" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
     }
 }
@@ -84,41 +85,21 @@
         case 1:
             [self showAlert:[EmailHelper needClean]];
             break;
-        case 2:
-            [self showAlert:[NewsHelper needClean]];
-            break;
-        case 3:
-            [self showAlert:[NotifyHelper needClean]];
-            break;
-        case 4:
-            [self showAlert:[AnnounceHelper needClean]];
-            break;
-        case 5:
-            [self showAlert:[MeetingHelper needClean]];
-            break;
-        case 6:
-            [self showAlert:[WorkNewsHelper needClean]];
-            break;
-        case 7:
-            [self showAlert:[CODOCSHelper needClean]];
-            break;
         default:
-            break;
+        {
+            NSLog(@"ecm clean %@",[dataArray[index][@"apphelper"] class]);
+            ClientAppHelper* helper = (ClientAppHelper*)dataArray[index][@"apphelper"];
+            [self showAlert:[helper needClean]];
+        };
     }
 }
 
 -(void)cleanAll
 {
-    if (![OAHelper needClean]&&![EmailHelper needClean]&&![NotifyHelper needClean]&&![AnnounceHelper needClean]&&![MeetingHelper needClean]&&![WorkNewsHelper needClean]&&![NewsHelper needClean]&&![CODOCSHelper needClean])
-    {        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"系统保存的是最近的数据，无需清理" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
-        [alert show];
-    }
-    else
-    {
-        isClearAll=YES;
-        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"本次清理后系统仍然会为您保存最近的数据，确定要清理吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-        [alert show];
-    }
+    
+    isClearAll=YES;
+    UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"提示" message:@"本次清理后系统仍然会为您保存最近的数据，确定要清理吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -129,12 +110,9 @@
         {
             [OAHelper cleanLocalData];
             [EmailHelper cleanLocalData];
-            [NotifyHelper cleanLocalData];
-            [AnnounceHelper cleanLocalData];
-            [MeetingHelper cleanLocalData];
-            [WorkNewsHelper cleanLocalData];
-            [NewsHelper cleanLocalData];
-            [CODOCSHelper cleanLocalData];
+            for (ClientAppHelper* helper in clientAppHelperArray) {
+                [helper cleanLocalData];
+            }
         }
         else
         {
@@ -146,26 +124,12 @@
                 case 1:
                     [EmailHelper cleanLocalData];
                     break;
-                case 2:
-                    [NewsHelper cleanLocalData];
-                    break;
-                case 3:
-                    [NotifyHelper cleanLocalData];
-                    break;
-                case 4:
-                    [AnnounceHelper cleanLocalData];
-                    break;
-                case 5:
-                    [MeetingHelper cleanLocalData];
-                    break;
-                case 6:
-                    [WorkNewsHelper cleanLocalData];
-                    break;
-                case 7:
-                    [CODOCSHelper cleanLocalData];
-                    break;
                 default:
-                    break;
+                {
+                    NSLog(@"ecm clean %@",[dataArray[currentTag][@"apphelper"] class]);
+                    ClientAppHelper* helper = (ClientAppHelper*)dataArray[currentTag][@"apphelper"];
+                    [helper cleanLocalData];
+                };
             }
         }
         [self showIndicator];

@@ -62,8 +62,8 @@
 -(void) analysisXml:(NSString *) contentPath
 {
     NSData *data=[NSData dataWithContentsOfFile:contentPath];
-    NSString* xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(@"%@",xml);
+//    NSString* xml = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//    NSLog(@"%@",xml);
     DDXMLDocument *doc = [[DDXMLDocument alloc] initWithData:data options:0 error:0];
     _detail = [[SKECMDetail alloc] init];
 
@@ -182,13 +182,14 @@
     
     if (_detail.attachment.count) {
         UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, _curHeight, 320, 25)];
-        [view setBackgroundColor:[UIColor lightGrayColor]];
+        [view setBackgroundColor:COLOR(242, 240, 241)];
         [_bgscrollview addSubview:view];
         
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(15, 4, 100, 19)];
         label.text = @"附件";
         label.font = [UIFont systemFontOfSize:16];
         label.textColor = [UIColor blackColor];
+        label.backgroundColor = [UIColor clearColor];
         [view addSubview:label];
         _curHeight = CGRectGetMaxY(view.frame);
         for (Content *content in _detail.attachment) {
@@ -198,13 +199,14 @@
 
     if (_detail.inscribe.count) {
         UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, _curHeight, 320, 25)];
-        [view setBackgroundColor:[UIColor lightGrayColor]];
+        [view setBackgroundColor:COLOR(242, 240, 241)];
         [_bgscrollview addSubview:view];
         
-        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(15, 4, 100, 19)];
         label.text = @"附属值";
         label.font = [UIFont systemFontOfSize:16];
         label.textColor = [UIColor blackColor];
+        label.backgroundColor = [UIColor clearColor];
         [view addSubview:label];
         _curHeight = CGRectGetMaxY(view.frame);
         for (Content *content in _detail.addition) {
@@ -300,7 +302,7 @@
 }
 
 -(void) showContent:(Content *) content{
-    [content show];
+    //[content show];
     if (content.type == nil) {
         [self addText:content];
     }
@@ -338,7 +340,6 @@
 - (void)webViewDidFinishLoad:(UIWebView *) webView
 {
     CGSize actualSize = [webView sizeThatFits:CGSizeZero];
-     NSLog(@"actualSize.height %f",actualSize.height);
     CGRect newFrame = webView.frame;
     CGFloat diff = actualSize.height - newFrame.size.height;
     newFrame.size.height = actualSize.height;
@@ -354,7 +355,6 @@
     }
     
     [_bgscrollview setContentSize:CGSizeMake(320, [self scrollViewContentHeight])];
-    NSLog(@"scrollViewContentHeight %f  %f",[self scrollViewContentHeight],_bgscrollview.contentSize.height);
 }
 
 -(void)handlePinch:(UIPinchGestureRecognizer*)pinchRecognizer

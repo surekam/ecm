@@ -25,7 +25,6 @@
 }
 - (IBAction)clearData:(id)sender {
     NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",self.tag],@"tag", nil];
-    NSLog(@"%@",dict);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"cleanLocalDataNote" object:nil userInfo:dict];
 }
 
@@ -41,12 +40,6 @@
     [icon setImage:[dict objectForKey:@"image"]];
     sizeLabel.text=[dict objectForKey:@"size"];
     nameLabel.text=[dict objectForKey:@"title"];
-}
-
--(void)btnClick
-{
-    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",self.tag],@"tag", nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"cleanLocalDataNote" object:nil userInfo:dict];
 }
 
 -(void)dealloc

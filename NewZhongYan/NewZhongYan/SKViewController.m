@@ -36,6 +36,8 @@
     __weak IBOutlet UIImageView *titleImageView;
     __weak IBOutlet UILabel *titleLabel;
     __weak IBOutlet UITabBar *tabbar;
+    __weak IBOutlet UITabBarItem *remindTabItem;
+    __weak IBOutlet UITabBarItem *emailTabItem;
     UILabel* navTitleLabel;
     UIView* topView;
     
@@ -141,6 +143,7 @@
     [label setFont:[UIFont boldSystemFontOfSize:25]];
     [label setTextColor:[UIColor whiteColor]];
     [label setTextAlignment:NSTextAlignmentLeft];
+    [label setBackgroundColor:[UIColor clearColor]];
     [label setText:@"湖南中烟"];
     [topView addSubview:label];
     
@@ -148,6 +151,7 @@
     [navTitleLabel setFont:[UIFont systemFontOfSize:14]];
     [navTitleLabel setTextColor:[UIColor whiteColor]];
     [navTitleLabel setTextAlignment:NSTextAlignmentLeft];
+    [navTitleLabel setBackgroundColor:[UIColor clearColor]];
     [topView addSubview:navTitleLabel];
     [self.navigationController.navigationBar addSubview:topView];
 }
@@ -349,13 +353,15 @@
 
 -(void)initPageController
 {
-    pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 30, 150, 40)];
+    pageController = [[SMPageControl alloc] initWithFrame:CGRectMake((320 - 150)/2., BottomY - 49 - 35, 150, 40)];
     //[pageController setHidden:YES];
     [pageController setIndicatorDiameter:8];
-    [pageController setNumberOfPages:2];
     [pageController setHidesForSinglePage:YES];
-    [pageController setPageIndicatorTintColor:[UIColor blackColor]];
-    [pageController setCurrentPageIndicatorTintColor:[UIColor whiteColor]];
+    [pageController setNumberOfPages:2];
+//    [pageController setPageIndicatorTintColor:[UIColor blackColor]];
+//    [pageController setCurrentPageIndicatorTintColor:[UIColor whiteColor]];
+    [pageController setCurrentPageIndicatorImage:Image(@"dot_selected")];
+    [pageController setPageIndicatorImage:Image(@"dot_normal")];
     [pageController setCurrentPage:0];
     [pageController addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:pageController];
@@ -416,6 +422,7 @@
 {
     clientAppArray = [NSMutableArray array];
     NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
+    [pageController setNumberOfPages:array.count];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];
@@ -430,6 +437,11 @@
     [super viewDidLoad];
     titleLabel.text = @"吴忠主页";
     controllerArray = [NSMutableArray array];
+    if (System_Version_Small_Than_(7)) {
+        tabbar.backgroundImage = Image(@"landbar_noshadow");
+        [[UITabBarItem appearance] setTitleTextAttributes:@{UITextAttributeTextColor:[UIColor lightGrayColor]} forState:UIControlStateNormal];
+    }
+
     [self copyXMLToDocument];
     [self initNavBar];
     [self initPageController];
@@ -469,9 +481,9 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    [emailTabItem setBadgeValue:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMail]]];
+    [remindTabItem setBadgeValue:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedRemind]]];
 }
-
-
 
 #pragma mark - 屏保代理函数
 -(void)onGetNewVersionDoneWithDic:(NSDictionary *)dic
@@ -479,7 +491,6 @@
     NSDictionary* vDic=[[NSDictionary alloc] initWithDictionary:[[[dic objectForKey:@"s"] objectAtIndex:0] objectForKey:@"v"]];
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *appVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
-    //如果服务端版本小于等于当前客户端版本 不弹出更新界面
     if ([[vDic objectForKey:@"NVER"] floatValue] > [appVersion floatValue])
     {
         UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"versionupdatenav"];
@@ -518,6 +529,7 @@
 {
     clientAppArray = [NSMutableArray array];
     NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
+    [pageController setNumberOfPages:array.count];
     for (NSDictionary* dict in array) {
         SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
         [clientAppArray addObject:clientApp];

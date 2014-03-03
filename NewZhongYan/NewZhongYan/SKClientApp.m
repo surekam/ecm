@@ -9,7 +9,7 @@
 #import "SKClientApp.h"
 #import "SKMessageEntity.h"
 @implementation SKClientApp
-
+//没有用到
 -(void)initChanels
 {
     NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL where OWNERAPP = '%@' and LEVL = 1;",self.CODE];

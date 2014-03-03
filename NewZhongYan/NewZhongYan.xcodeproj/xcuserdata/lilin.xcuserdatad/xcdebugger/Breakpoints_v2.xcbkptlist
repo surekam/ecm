@@ -4,49 +4,13 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "NewZhongYan/SKECMRootController.m"
-            timestampString = "415350504.946643"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
-            landmarkName = "-dataFromDataBaseWithComleteBlock:"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__56-[SKECMRootController dataFromDataBaseWithComleteBlock:]_block_invoke"
-                  moduleName = "NewZhongYan"
-                  urlString = "file:///Users/lilin/Desktop/%E5%9F%BA%E4%BA%8E%20ios7%20%E7%9A%84%E6%96%B0%E5%B7%A5%E7%A8%8B/ecm/NewZhongYan/NewZhongYan/SKECMRootController.m"
-                  timestampString = "415354095.723066"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "85"
-                  endingLineNumber = "85"
-                  offsetFromSymbolStart = "332">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__56-[SKECMRootController dataFromDataBaseWithComleteBlock:]_block_invoke"
-                  moduleName = "NewZhongYan"
-                  urlString = "file:///Users/lilin/Desktop/%E5%9F%BA%E4%BA%8E%20ios7%20%E7%9A%84%E6%96%B0%E5%B7%A5%E7%A8%8B/ecm/NewZhongYan/NewZhongYan/SKECMRootController.m"
-                  timestampString = "415354095.723357"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "85"
-                  endingLineNumber = "85"
-                  offsetFromSymbolStart = "972">
-               </Location>
-            </Locations>
+            scope = "0"
+            stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

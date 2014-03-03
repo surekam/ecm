@@ -423,7 +423,7 @@
 - (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
 {
     float diff = (growingTextView.frame.size.height - height);
-    if ((int)diff == 0) return;
+    if ((int)diff <= 0) return;
     changeHeight+=diff;
     CGSize size = mainScrollView.contentSize;
     size.height-=diff;
