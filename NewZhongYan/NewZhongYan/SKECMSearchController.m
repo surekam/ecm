@@ -137,7 +137,7 @@
     } else {
         queryurl = [SKECMURLManager queryTitleWith:pageindex ECMContent:searchBar.text ChannelID:self.fidlist];
     }
-    
+    NSLog(@"%@",queryurl);
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:queryurl];
     __weak SKHTTPRequest* req = request;
     [request setCompletionBlock:^{
@@ -167,7 +167,6 @@
     }];
     
     [request setFailedBlock:^{
-        NSLog(@"%@",req.error);
         [_moreBtn setHidden:YES];
     }];
     [request startAsynchronous];
@@ -223,6 +222,9 @@
     [super viewDidLoad];
     [self initData];
     [self initNavBar];
+    if (System_Version_Small_Than_(7)) {
+        _searchBar.tintColor = COLOR(242, 240, 241);
+    }
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -241,7 +243,7 @@
             cell = [[SKSearchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identify];
         }
         [cell setECMPaperInfo:_dataArray[indexPath.row]];
-        [cell resizeMeetCellHeight];
+        [cell resizeCellHeight];
     }else{
         static NSString* identify = @"newscell";
          cell = [tableView dequeueReusableCellWithIdentifier:identify];

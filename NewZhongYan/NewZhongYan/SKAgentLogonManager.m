@@ -49,10 +49,11 @@
         {
             NSLog(@"保存个人信息数据时发生错误");
         }
-        NSLog(@"afterAgentLogon");
-        [SKClientApp getClientAppWithConpleteBlock:^{
+        [SKClientApp getClientAppWithCompleteBlock:^{
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"SynedClientApp"];
             [[NSUserDefaults standardUserDefaults] synchronize];
+        } faliureBlock:^(NSError* error){
+            
         }];
     }
     @catch (NSException *e) {
@@ -258,7 +259,7 @@
     User* user = nil;
     NSDictionary* item =[[DBQueue sharedbQueue] getSingleRowBySQL:@"select * from USER_REMS order by UPT DESC;"];
     if (item) {
-        user= [User alloc];
+        user= [[User alloc] init];
         [user setUid:[item objectForKey:@"UID"]];
         [user setName:[item objectForKey:@"CNAME"]];
         [user setTitle:[item objectForKey:@"TNAME"]];
@@ -268,7 +269,6 @@
         [user setLogged:NO];
         [user setEnabled:YES];
         [user setMobile:[item objectForKey:@"MOBILE"]];
-        
         NSString* sql = [NSString stringWithFormat:@"SELECT E.CNAME,E.DPNAME,E.MOBILE,E.TELEPHONE,E.OFFICEADDRESS,E.EMAIL,U.CNAME UCNAME,U.DPID UDPID FROM T_EMPLOYEE E,T_UNIT U ,T_ORGANIZATIONAL O WHERE E.UID = O.OID AND U.DPID = O.POID AND E.ENABLED = 1 AND (E.UID = '%@');",[item objectForKey:@"UID"]];
         item = nil;
         item =[[DBQueue sharedbQueue] getSingleRowBySQL:sql];

@@ -151,6 +151,7 @@
 
 -(void)setRemindInfo:(NSDictionary*)remind
 {
+    [_attachBgView setHidden:YES];
     NSString* flowInstanceId = [remind objectForKey:@"FLOWINSTANCEID"];
     if ([[remind objectForKey:@"HANDLE"] intValue] == 0
         || [flowInstanceId isEqual:[NSNull null]]//不可处理
@@ -164,9 +165,13 @@
     }else{
         [_attachView setImage:[UIImage imageNamed:@"undispose"]];
     }
-    
     _titleLabel.text = [remind objectForKey:@"TITL"];
     _crtmLabel.text =  [[[remind objectForKey:@"CRTM"] stringByReplacingOccurrencesOfString:@"T" withString:@" "] substringToIndex:16];
+    if ([remind[@"STATUS"] intValue] == -1) {
+        [_stateView  setImage:Image(@"icon_unread")];
+    }else{
+        [_stateView  setImage:Image(@"icon_read")];
+    }
 }
 
 -(void)resizeCellHeight

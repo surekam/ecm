@@ -11,7 +11,7 @@
 @interface SKLoginViewController : UIViewController<UITextFieldDelegate>
 {
     UIView* DownImageView ;
-    UIActivityIndicatorView* indicator;
+    IBOutlet UIActivityIndicatorView* indicator;
 }
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UITextField *userField;

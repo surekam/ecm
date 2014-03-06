@@ -10,7 +10,6 @@
 static LocalDataMeta * sharedEmployee = nil;
 static LocalDataMeta * sharedSelfEmployee = nil;
 static LocalDataMeta * sharedUnit = nil;
-static LocalDataMeta * sharedSelfUnit = nil;
 static LocalDataMeta * sharedOranizational = nil;
 static LocalDataMeta * sharedNews = nil;
 static LocalDataMeta * sharedNewsType = nil;
@@ -94,15 +93,6 @@ static LocalDataMeta * sharedChannelType = nil;
                        messageCode:@"USER"
                          tablename:@"T_EMPLOYEE"
                       identityName:@"UID"
-                           version:0];
-}
-
--(id)initWithSelfUnit
-{
-    return  [self initWithDataCode:@"unit"
-                       messageCode:@"UNIT"
-                         tablename:@"S_UNIT"
-                      identityName:@"DPID"
                            version:0];
 }
 
@@ -303,16 +293,6 @@ static LocalDataMeta * sharedChannelType = nil;
             sharedUnit = [[LocalDataMeta alloc] initWithUnit];
         }
         return sharedUnit;
-    }
-}
-
-+ (LocalDataMeta *)sharedSelfUnit{
-    @synchronized(self){
-        if (!sharedSelfUnit) {
-            sharedSelfUnit = [[LocalDataMeta alloc] initWithSelfUnit];
-            [sharedSelfUnit setUserOwner:YES];
-        }
-        return sharedSelfUnit;
     }
 }
 

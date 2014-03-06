@@ -30,7 +30,6 @@
 + (LocalDataMeta *)sharedEmployee;
 + (LocalDataMeta *)sharedSelfEmployee;
 + (LocalDataMeta *)sharedUnit;
-+ (LocalDataMeta *)sharedSelfUnit;
 + (LocalDataMeta *)sharedOranizational;
 + (LocalDataMeta *)sharedNews;
 + (LocalDataMeta *)sharedNewsType;

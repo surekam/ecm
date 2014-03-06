@@ -40,6 +40,8 @@
     //back的button要修改的颜色
     UIImage*  foldBImage;
     __weak IBOutlet UIButton *titltButton;
+    
+    UIActionSheet* actionSheet;
 }
 @end
 
@@ -223,7 +225,6 @@
 -(void)search:(id)sender
 {
     [UIView animateWithDuration:0.3 animations:^{
-
         [dataTable setFrame:CGRectMake(0,
                                             isHome ? TopY + 0: TopY + 46,
                                             320,
@@ -242,7 +243,7 @@
 #if USE_REMENU
     
 #elif USE_ACTIVITY
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"我的通讯录"
+    actionSheet = [[UIActionSheet alloc] initWithTitle:@"我的通讯录"
                                                              delegate:self
                                                     cancelButtonTitle:@"取消"
                                                destructiveButtonTitle:nil
@@ -254,9 +255,16 @@
 }
 
 #pragma mark -Actionsheet delegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)anIndex
+-(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
-    if (actionSheet.tag  == 10001) {
+    [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:0];
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+}
+
+
+- (void)actionSheet:(UIActionSheet *)as clickedButtonAtIndex:(NSInteger)anIndex
+{
+    if (as.tag  == 10001) {
         if (anIndex == currentindex) {
             return;
         }
@@ -287,12 +295,12 @@
                 break;
         }
         currentindex = anIndex;
-        [actionSheet setDelegate:nil];
+        [as setDelegate:nil];
         
     }else{
         if (0 == anIndex) {
             NSString* index = [[_dataEItems objectAtIndex:actionSheet.tag] objectForKey:@"id"];
-            [_dataEItems removeObjectAtIndex:actionSheet.tag];
+            [_dataEItems removeObjectAtIndex:as.tag];
             [dataTable reloadData];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 NSString* updatesql = [NSString stringWithFormat:@"UPDATE T_EMPLOYEE SET STORED = 0 where id  = %@;",index];
@@ -329,7 +337,7 @@
     {
         CGPoint point = [gestureRecognizer locationInView:dataTable];
         NSIndexPath *indexPath = [dataTable  indexPathForRowAtPoint:point];
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"编辑收藏列表"
+        actionSheet = [[UIActionSheet alloc] initWithTitle:@"编辑收藏列表"
                                                                  delegate:self
                                                         cancelButtonTitle:@"取消"
                                                    destructiveButtonTitle:@"取消收藏"

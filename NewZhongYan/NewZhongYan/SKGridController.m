@@ -55,8 +55,13 @@
     [_rootController performSegueWithIdentifier:btn.controllerName sender:self];
 }
 
--(void)initSelfFactoryView
+-(void)initChannelView
 {
+    for (UIView* v in self.view.subviews) {
+        if (v.class == [UIDragButton class]) {
+            [v removeFromSuperview];
+        }
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
         upButtons = [[NSMutableArray alloc] init];
         NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE OWNERAPP = '%@' and LEVL = 1 and ENABLED = 1;",self.clientApp.CODE];
@@ -72,6 +77,7 @@
             UIDragButton *dragbtn=[[UIDragButton alloc] initWithFrame:CGRectZero inView:self.view];
             [dragbtn setChannel:channel];
             [dragbtn setTitle:dict[@"NAME"]];
+            [dragbtn.tapButton setPlaceholderImage:Image(@"icon_default")];
             if (dict[@"LOGO"] == [NSNull null]) {
                 [dragbtn.tapButton setImageURL:[NSURL URLWithString:@"http://tam.hngytobacco.com/ZZZobtc/public/icon/wzfactory/wzgeneralinfo.png"]];
             }else{
@@ -238,7 +244,7 @@
 {
     [super viewDidLoad];
     //[self.view setBackgroundColor:COLOR(17, 168, 171)];
-    [self initSelfFactoryView];
+    [self initChannelView];
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadBageNumber];
     });
@@ -247,35 +253,24 @@
 -(void)reloadData
 {
     [SKDaemonManager SynChannelWithClientApp:self.clientApp complete:^{
-        for (UIView* v in self.view.subviews) {
-            if (v.class == [UIDragButton class]) {
-                [v removeFromSuperview];
-            }
-        }
-         [self initSelfFactoryView];
-        //获取每个频道更新信息
-        if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
-            [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
-                                               complete:^(NSMutableArray* array){
-                                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                                       [self reloadBageNumberWithServerInfo:array];
-                                                   });
-                                               } faliure:^(NSError* error){
-                                                   
-                                               }];
-        }
+        [self initChannelView];
+        [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                           complete:^(NSMutableArray* array){
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   [self reloadBageNumberWithServerInfo:array];
+                                               });
+                                           } faliure:^(NSError* error){
+                                               
+                                           }];
     } faliure:^(NSError* error){
-        NSLog(@"%@",error);
-        if ([self.clientApp.APPTYPE isEqualToString:@"ECM"]) {
-            [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
-                                               complete:^(NSMutableArray* array){
-                                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                                       [self reloadBageNumberWithServerInfo:array];
-                                                   });
-                                               } faliure:^(NSError* error){
-                                                   
-                                               }];
-        }
+        [SKDaemonManager SynMaxUpdateDateWithClient:self.clientApp
+                                           complete:^(NSMutableArray* array){
+                                               dispatch_async(dispatch_get_main_queue(), ^{
+                                                   [self reloadBageNumberWithServerInfo:array];
+                                               });
+                                           } faliure:^(NSError* error){
+                                               
+                                           }];
     }];
 }
 
@@ -331,7 +326,6 @@
 {
     for (UIDragButton *btn in upButtons)
     {
-        NSLog(@"%@",btn.channel.NAME);
         if (![btn.channel.TYPELABLE isEqualToString:@"meeting,"]) {
             [btn setBadgeNumber:[LocalMetaDataManager newECMDataItemCount:btn.channel.FIDLISTS]];
         }else{

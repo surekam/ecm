@@ -8,7 +8,10 @@
 
 #import "Sqlite.h"
 #import "sqlite3.h"
-
+#import "SKAttachManger.h"
+#import "SKAgentLogonManager.h"
+#import "SKDaemonManager.h"
+#import "SKViewController.h"
 static sqlite3 *dataBase = nil;
 @implementation Sqlite
 #pragma  mark -- 数据库的基本函数
@@ -1165,6 +1168,78 @@ ENABLED	是否可用，1表示可用，0表示不可用（删除掉了）
     return YES;
 }
 
+//+(NSString *)remindPath;
+//+(NSString*)mailPath;
+
+//+(NSString*)meetPath;
+//+(NSString*)announcePath;
+//+(NSString*)codocsPath;
+//+(NSString*)workNewsPath;
+//+(NSString*)newsPath;
+//+(NSString*)notifyPath;
+//数据库版本2 的文档补丁代码
+
+
++(void)DBVersion2DocumentPatch
+{
+    NSFileManager* filemanager = [NSFileManager defaultManager];
+    //1 删除新闻文件夹
+    [filemanager removeItemAtPath:[SKAttachManger newsPath] error:0];
+    //2 删除通知文件夹
+    [filemanager removeItemAtPath:[SKAttachManger notifyPath] error:0];
+    //3 删除公告文件夹
+    [filemanager removeItemAtPath:[SKAttachManger announcePath] error:0];
+    //4 删除会议文件夹
+    [filemanager removeItemAtPath:[SKAttachManger meetPath] error:0];
+    //5 删除工作动态文件夹
+    [filemanager removeItemAtPath:[SKAttachManger workNewsPath] error:0];
+    //6 删除公司公文文件夹
+    [filemanager removeItemAtPath:[SKAttachManger codocsPath] error:0];
+    //7 删除配置文件main_config.xml
+    [filemanager removeItemAtPath:[[FileUtils documentPath] stringByAppendingPathComponent:@"main_config.xml"] error:0];
+    
+    //删除表  DROP TABLE table-name
+    // 1 新闻表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    // 2 通知表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    // 3 工作动态表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    // 4 新闻类型表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    // 5 工作动态类型表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    // 6 公司公告表
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:@""];
+    
+    //删除表
+    //对数据库中的密码进行加密
+    NSDictionary* item =[[DBQueue sharedbQueue] getSingleRowBySQL:@"select * from USER_REMS order by UPT DESC;"];
+    if (item) {
+        NSString* sql = [NSString stringWithFormat:@"update USER_REMS set WPWD = '%@' where uid = '%@'",[item[@"WPWD"] encrypted],item[@"UID"]];
+        [[DBQueue sharedbQueue] updateDataTotableWithSQL:sql];
+    }
+    
+}
+
++(void)getClientChannelInfo
+{
+    [[APPUtils AppLogonManager] loginWithUser:[SKAppDelegate sharedCurrentUser]
+                                CompleteBlock:^{
+                                    [SKClientApp getClientAppWithCompleteBlock:^{
+                                        NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
+                                        for (NSDictionary* dict in array)
+                                        {
+                                            SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
+                                            [SKDaemonManager SynChannelWithClientApp:clientApp complete:0 faliure:0];
+                                        }
+                                    } faliureBlock:0];
+                                    //获取频道信息
+                                    NSLog(@"正在获取频道信息");
+                                }failureBlock:^(NSDictionary* dict){
+                                    NSLog(@"%@",dict);
+                                }];
+}
 
 +(void)setDBVersion
 {
@@ -1179,7 +1254,7 @@ ENABLED	是否可用，1表示可用，0表示不可用（删除掉了）
         }
         [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"1"];
         [self closeDb];
-        
+        return;
     }
     
     if ([[FileUtils valueFromPlistWithKey:@"DBVERSION"] intValue] == 1) {
@@ -1187,22 +1262,20 @@ ENABLED	是否可用，1表示可用，0表示不可用（删除掉了）
         [self createChannel];
         [self createCilentVersion];
         [self createDocuments];
+        [self DBVersion2DocumentPatch];
+        [self getClientChannelInfo];
         [FileUtils setvalueToPlistWithKey:@"DBVERSION" Value:@"2"];
+        return;
     }
 }
-
 
 +(BOOL)createAllTable
 {
     [self createBaseables];
     [self createSameDepartmentContactTables];
     [self createEContactTables];
-    [self CreateNewsTables];
-    [self createNotifyTables];
     [self createRemindTables];
     [self createVersionInfoTables];
-    [self createCODOCSTables];
-    [self createWorkNewsTables];
     [self createLocalMessageTables];
     [self createMessageDateMapTables];
     [self createOutbox];

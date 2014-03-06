@@ -19,7 +19,7 @@
 #import "UIDevice+IdentifierAddition.h"
 #import "SKViewController.h"
 #import "AESCrypt.h"
-#define MAXTIME 10
+#define MAXTIME 1
 static User* currentUser = nil;
 @implementation SKAppDelegate
 
@@ -58,23 +58,18 @@ NSUInteger DeviceSystemMajorVersion() {
     }
     else                                                                    //如果安装过则执行补丁代码
     {
-        if(![[NSUserDefaults standardUserDefaults] boolForKey:@"DBVERSION"])//这里保证补丁代码只执行一次
-        {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"DBVERSION"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            [Sqlite setDBVersion];
-        }else{
-            [Sqlite setDBVersion];
-        }    
+        [Sqlite setDBVersion];
     }
 }
 
 -(void)createDataManager
 {
-    [self creeateDatabase];
-    [FileUtils setvalueToPlistWithKey:@"sleepTime" Value:[NSDate distantFuture]];
     _queue = [[NSOperationQueue alloc] init];
-    self.logonManager = [[SKAgentLogonManager alloc] init];
+    [FileUtils setvalueToPlistWithKey:@"sleepTime" Value:[NSDate distantFuture]];
+    [self creeateDatabase];
+    if (!self.logonManager) {
+        self.logonManager = [APPUtils AppLogonManager];
+    }
 }
 
 - (void)updateInterfaceWithReachability:(Reachability *)reachability
@@ -121,12 +116,17 @@ NSUInteger DeviceSystemMajorVersion() {
     self.internetReachability = [Reachability reachabilityWithHostname:@"tam.hngytobacco.com"];
 	[self.internetReachability startNotifier];
     [self updateInterfaceWithReachability:self.internetReachability];
+}
 
+-(void)printVersionInfo
+{
+    NSString *filename=[[FileUtils documentPath] stringByAppendingPathComponent:@"config.plist"];
+     NSLog(@"%@",[NSMutableDictionary dictionaryWithContentsOfFile:filename]);
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"%@",NSHomeDirectory());
+    [self printVersionInfo];
     if (System_Version_Small_Than_(7)) {
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
             _mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_ios6" bundle:nil];
@@ -141,7 +141,6 @@ NSUInteger DeviceSystemMajorVersion() {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [_mainStoryboard instantiateInitialViewController];
     [self.window makeKeyAndVisible];
-    
     return YES;
 }
 
@@ -177,7 +176,8 @@ NSUInteger DeviceSystemMajorVersion() {
         int sleepSecond = [[NSDate date] secondsAfterDate:date];
         if (sleepSecond > 3) {
             UIViewController* controller = [APPUtils visibleViewController];
-            if ([controller isKindOfClass:[SKPatternLockController class]] || [controller isKindOfClass:[SKLoginViewController class]]) {
+            if ([controller isKindOfClass:[SKPatternLockController class]]
+                || [controller isKindOfClass:[SKLoginViewController class]]) {
                 return;
             }
             UINavigationController* nav = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:@"patternlocknav"];

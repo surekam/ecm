@@ -27,7 +27,11 @@
 
 +(SKAgentLogonManager*)AppLogonManager
 {
-    return [[self APPdelegate] logonManager];
+    SKAgentLogonManager* logonManager =  [[self APPdelegate] logonManager];
+    if (!logonManager){
+        [[self APPdelegate] setLogonManager:[[SKAgentLogonManager alloc] init]];
+    }
+    return  [[self APPdelegate] logonManager];
 }
 
 +(UIViewController*)visibleViewController

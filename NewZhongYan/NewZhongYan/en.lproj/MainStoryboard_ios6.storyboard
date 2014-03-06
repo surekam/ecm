@@ -188,6 +188,10 @@
                                     <outlet property="delegate" destination="3qq-31-Btt" id="LHQ-tt-VH7"/>
                                 </connections>
                             </textField>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="QsV-Es-a0J">
+                                <rect key="frame" x="150" y="427" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -217,6 +221,7 @@
                     <connections>
                         <outlet property="bgImageView" destination="oCG-iu-1yr" id="TcQ-mC-etn"/>
                         <outlet property="cancelButton" destination="95e-Wf-3XZ" id="v7k-ki-IUd"/>
+                        <outlet property="indicator" destination="QsV-Es-a0J" id="8Xa-Nq-b47"/>
                         <outlet property="loginButton" destination="LHU-Mh-k57" id="GHA-cP-umS"/>
                         <outlet property="passField" destination="jeb-WA-pJg" id="M9R-YF-t9P"/>
                         <outlet property="userField" destination="jD5-Q3-F7t" id="w9P-jv-iPJ"/>
@@ -3973,6 +3978,8 @@
                         <searchBar key="tableHeaderView" contentMode="redraw" searchBarStyle="prominent" placeholder="输入搜索的内容" id="gXh-Xf-vmw">
                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.94901960780000005" green="0.94117647059999998" blue="0.94509803920000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="barTintColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                             <offsetWrapper key="searchFieldBackgroundPositionAdjustment" horizontal="0.0" vertical="0.0"/>
                             <textInputTraits key="textInputTraits"/>
                             <scopeButtonTitles>
@@ -4090,7 +4097,7 @@
         <image name="landbar_shadow.png" width="320" height="49"/>
         <image name="linebuttom_n.png" width="225" height="10"/>
         <image name="linebuttom_p.png" width="225" height="32"/>
-        <image name="login_bg.png" width="640" height="920"/>
+        <image name="login_bg.png" width="320" height="460"/>
         <image name="navagationBarCenterBtn.png" width="90" height="36"/>
         <image name="night_user_defaulthead.png" width="90" height="90"/>
         <image name="pw_input1.png" width="402" height="74"/>

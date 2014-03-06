@@ -169,7 +169,7 @@ static NSOperationQueue* sharedQueue = nil;
 {
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[SKECMURLManager getAllChannelWithAppCode:_client.CODE]];
     [request startSynchronous];
-    //NSLog(@"%@  %@",request.url,request.responseString);
+    NSLog(@"%@  %@",request.url,request.responseString);
     if (!request.error) {
         SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
         if (!entity.praserError) {

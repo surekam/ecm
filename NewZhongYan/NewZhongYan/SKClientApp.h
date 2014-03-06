@@ -12,6 +12,7 @@
  */
 
 typedef void (^clientCompleteBlock)(void);
+typedef void (^clientfaliureBlock)(NSError* error);
 
 @interface SKClientApp : NSObject
 @property(nonatomic,strong)NSString* CODE;      //应用编码
@@ -24,5 +25,5 @@ typedef void (^clientCompleteBlock)(void);
 
 -(id)initWithDictionary:(NSDictionary*)appinfo;
 
-+(void)getClientAppWithConpleteBlock:(clientCompleteBlock)block;
++(void)getClientAppWithCompleteBlock:(clientCompleteBlock)completeblock  faliureBlock:(clientfaliureBlock)faliureblock;
 @end

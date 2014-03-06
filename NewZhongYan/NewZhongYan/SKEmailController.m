@@ -17,6 +17,7 @@
 @interface SKEmailController ()
 {
     BOOL isRefresh;
+    UIActionSheet* actionSheet;
     
 }
 @property (weak, nonatomic) IBOutlet UIView *toolView;
@@ -56,23 +57,28 @@
 
 
 - (IBAction)selectType:(UIButton *)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"我的邮箱"
+    actionSheet = [[UIActionSheet alloc] initWithTitle:@"我的邮箱"
                                                              delegate:self
                                                     cancelButtonTitle:@"取消"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:@"收件箱",@"发件箱",@"草稿箱",@"垃圾箱",nil];
     actionSheet.actionSheetStyle = UIBarStyleBlackTranslucent;
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
+    [actionSheet showInView:self.view];
 
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+-(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+    [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:0];
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+}
+
+- (void)actionSheet:(UIActionSheet *)as clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (selectedIndex == buttonIndex) {
         return;
     }
     selectedIndex = buttonIndex;
-    NSLog(@"%d",selectedIndex);
     switch (buttonIndex) {
         case 0:
         {
@@ -101,7 +107,7 @@
         default:
             break;
     }
-    [actionSheet setDelegate:nil];
+    [as setDelegate:nil];
 }
 
 -(void)setMailIsRead:(NSString *)MESSAGEID

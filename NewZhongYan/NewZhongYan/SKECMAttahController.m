@@ -22,6 +22,7 @@
 {
     NSMutableArray* attachmentItem;
     SKAttachManger *AM;//附件管理
+    int inscribeContentCount;//记录附属值的个数
     CGFloat height;
 }
 @end
@@ -160,17 +161,17 @@
     _curHeight = CGRectGetMaxY(DividingLines.frame);
 
     if (_detail.body.count) {
-//        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_crtmLabel.frame), 320, 25)];
-//        [view setBackgroundColor:[UIColor lightGrayColor]];
-//        [_bgscrollview addSubview:view];
-//        
-//        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(18, 4, 100, 19)];
-//        label.text = @"正文";
-//        label.font = [UIFont systemFontOfSize:16];
-//        label.textColor = [UIColor blackColor];
-//        [view addSubview:label];
-//        _curHeight = CGRectGetMaxY(view.frame);
+        UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_crtmLabel.frame), 320, 25)];
+        [view setBackgroundColor:COLOR(242, 240, 241)];
+        [_bgscrollview addSubview:view];
         
+        UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(15, 4, 100, 19)];
+        label.text = @"正文";
+        label.font = [UIFont systemFontOfSize:16];
+        label.textColor = [UIColor darkGrayColor];
+        label.backgroundColor = [UIColor clearColor];
+        [view addSubview:label];
+        _curHeight = CGRectGetMaxY(view.frame);
         for (Content *content in _detail.body) {
             [self showContent:content];
         }
@@ -197,26 +198,33 @@
         }
     }
 
-    if (_detail.inscribe.count) {
+    if (_detail.addition.count) {
+        inscribeContentCount = _detail.inscribe.count;
         UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, _curHeight, 320, 25)];
         [view setBackgroundColor:COLOR(242, 240, 241)];
         [_bgscrollview addSubview:view];
         
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(15, 4, 100, 19)];
-        label.text = @"附属值";
+        label.text = @"附加说明";
         label.font = [UIFont systemFontOfSize:16];
         label.textColor = [UIColor blackColor];
         label.backgroundColor = [UIColor clearColor];
         [view addSubview:label];
         _curHeight = CGRectGetMaxY(view.frame);
         for (Content *content in _detail.addition) {
+            if ([self.channel.TYPELABLE rangeOfString:@"meeting"].location == NSNotFound
+                && [content.type isEqualToString:@"mark"])
+            {
+                inscribeContentCount --;
+            }
             [self showContent:content];
+        }
+        if (inscribeContentCount == 0) {
+            [view removeFromSuperview];
         }
     }
     [_bgscrollview setContentSize:CGSizeMake(320, [self scrollViewContentHeight])];
 }
-
-
 
 -(CGFloat)scrollViewContentHeight
 {
@@ -276,14 +284,16 @@
 
 -(void) addAttachement:(Content *) content{
     NSString* btnTitle = content.name;
-    SKAttachButton* attachmentButton = [[SKAttachButton alloc] initWithFrame:CGRectMake(10,_curHeight, 300, 48)];
-    attachmentButton.filePath = [AM ecmAttachmentPathWithOwnerApp:self.channel.OWNERAPP AttachName:content.name];
-    attachmentButton.attachUrl = [NSURL URLWithString:content.value];
-    attachmentButton.isAttachExisted = [AM fileExisted:attachmentButton.filePath];
-    [attachmentButton setTitle:btnTitle forState:UIControlStateNormal];
-    [attachmentButton setTag:1];//1 表示该view是自己添加的，而不是系统自带的
-    [_bgscrollview addSubview:attachmentButton];
-    _curHeight =  CGRectGetMaxY(attachmentButton.frame);//48 button 的高度
+    if (![content.name hasSuffix:@".swf"]) {//swf 文件不现实
+        SKAttachButton* attachmentButton = [[SKAttachButton alloc] initWithFrame:CGRectMake(10,_curHeight, 300, 48)];
+        attachmentButton.filePath = [AM ecmAttachmentPathWithOwnerApp:self.channel.OWNERAPP AttachName:content.name];
+        attachmentButton.attachUrl = [NSURL URLWithString:content.value];
+        attachmentButton.isAttachExisted = [AM fileExisted:attachmentButton.filePath];
+        [attachmentButton setTitle:btnTitle forState:UIControlStateNormal];
+        [attachmentButton setTag:1];//1 表示该view是自己添加的，而不是系统自带的
+        [_bgscrollview addSubview:attachmentButton];
+        _curHeight =  CGRectGetMaxY(attachmentButton.frame);//48 button 的高度
+    }
 }
 
 -(void)addMark:(Content *) content
@@ -326,7 +336,9 @@
     }//如果是文字
     else if ([content.type isEqualToString:@"mark"])
     {
-        [self addMark:content];
+        if ([self.channel.TYPELABLE rangeOfString:@"meeting"].location != NSNotFound ) {
+            [self addMark:content];
+        }
     }
 }
 
@@ -353,7 +365,6 @@
             }
         }
     }
-    
     [_bgscrollview setContentSize:CGSizeMake(320, [self scrollViewContentHeight])];
 }
 
@@ -389,6 +400,5 @@
         //_bgscrollview.contentSize = CGSizeMake(320,[self scrollViewContentHeight]);
     }
 }
-
 @end
 

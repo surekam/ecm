@@ -22,4 +22,5 @@
 @property(nonatomic,weak)UIScrollView *bgScrollView;
 @property(nonatomic,strong)SMPageControl* pageController;
 - (void)scrollToPage:(int)page;
+-(void)firstInitClientApp;
 @end

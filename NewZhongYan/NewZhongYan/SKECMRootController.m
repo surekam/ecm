@@ -21,13 +21,14 @@
 #define UNREAD 0
 #define BEFORETWODAY 1 //两天以前
 #define INNERTWODAY  0 //两天以内
-
+#define ActionsheetTag 101
 @interface SKECMRootController ()
 {
     NSMutableArray              *_dataItems;
     NSArray* subChannels;
     NSInteger                   currentIndex;
     UIButton *titleButton;
+    UIActionSheet *actionSheet;
 }
 @end
 
@@ -61,7 +62,6 @@
             });
         }];
     } faliure:^(NSError* error){
-
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error.code == 2001) {
                 [BWStatusBarOverlay showSuccessWithMessage:[NSString stringWithFormat:@"同步%@完成",self.channel.NAME] duration:1 animated:1];
@@ -145,7 +145,7 @@
 }
 
 #pragma mark -Actionsheet delegate
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)anIndex
+- (void)actionSheet:(UIActionSheet *)as clickedButtonAtIndex:(NSInteger)anIndex
 {
     if (currentIndex == anIndex || anIndex == subChannels.count) {
         return;
@@ -156,12 +156,12 @@
         [self.tableView reloadData];
     }];
     currentIndex = anIndex;
-    [actionSheet setDelegate:nil];
+    [as setDelegate:nil];
 }
 
 
 - (IBAction)selectType:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:self.channel.NAME
+   actionSheet = [[UIActionSheet alloc] initWithTitle:self.channel.NAME
                                                              delegate:self
                                                     cancelButtonTitle:0
                                                destructiveButtonTitle:nil
@@ -170,9 +170,16 @@
         [actionSheet addButtonWithTitle:dict[@"NAME"]];
     }
     [actionSheet addButtonWithTitle:@"取消"];
+    actionSheet.tag = ActionsheetTag;
     [actionSheet setCancelButtonIndex:subChannels.count];
     actionSheet.actionSheetStyle = UIBarStyleBlackTranslucent;
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
+    [actionSheet showInView:self.view];
+}
+
+-(void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+    [actionSheet dismissWithClickedButtonIndex:actionSheet.cancelButtonIndex animated:0];
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 }
 
 -(void)initToolView
@@ -210,13 +217,10 @@
 -(void)initData
 {
     self.title = self.channel.NAME;
-    isMeeting = [self.channel.TYPELABLE isEqualToString:@"meeting,"];
+    isMeeting = [self.channel.TYPELABLE rangeOfString:@"meeting"].location != NSNotFound;
     [titleButton setHidden:!self.channel.HASSUBTYPE];
     
-    //这里做了一个FIDLIST的拼接
     if (self.channel.HASSUBTYPE) {
-        //documentId = self.channel.FIDLISTS;
-        [titleButton setHidden:NO];
         NSString* sql = [NSString stringWithFormat:@"select * from T_CHANNEL WHERE PARENTID  = %@",self.channel.CURRENTID];
         subChannels = [[DBQueue sharedbQueue] recordFromTableBySQL:sql];
     }else{
@@ -224,13 +228,10 @@
         label.text = self.channel.NAME;
         label.font = [UIFont boldSystemFontOfSize:18];
         label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor clearColor];
         self.navigationItem.titleView = label;
-        
-        [titleButton setHidden:YES];
-        //documentId = self.channel.FIDLIST;
     }
 
-    
     if (isMeeting) {
         _sectionArray = [[NSArray alloc] initWithObjects:@"即将召开&正在召开",@"已召开", nil];
         _sectionDictionary = [[NSMutableDictionary alloc] init];
@@ -297,7 +298,7 @@
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (isMeeting) {
+    if (isMeeting){
         return [_sectionDictionary count];
     }else{
         return 1;

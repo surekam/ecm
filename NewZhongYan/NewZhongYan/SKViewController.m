@@ -25,6 +25,8 @@
 #import "SKDaemonManager.h"
 #import "SKECMRootController.h"
 #define OriginY ((IS_IOS7) ? 64 : 0 )
+#define DepartmentInfomationCheckDate @"DepartmentInfomationCheckDate"
+#define ClientInfomationCheckDate @"ClientInfomationCheckDate"
 @interface SKViewController ()
 {
     SKSystemMenuController* settingController;
@@ -147,7 +149,7 @@
     [label setText:@"湖南中烟"];
     [topView addSubview:label];
     
-    navTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 18, 80, 19)];
+    navTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(112, 18, 80, 19)];
     [navTitleLabel setFont:[UIFont systemFontOfSize:14]];
     [navTitleLabel setTextColor:[UIColor whiteColor]];
     [navTitleLabel setTextAlignment:NSTextAlignmentLeft];
@@ -229,93 +231,6 @@
     //UIViewController* controller = [[APPUtils AppStoryBoard] instantiateViewControllerWithIdentifier:btn.controllerName];
     //[self.navigationController pushViewController:controller animated:YES];
     [self performSegueWithIdentifier:btn.controllerName sender:self];
-}
-
--(void)setBadgeNumber
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (UIDragButton *btn in upButtons)
-        {
-            NSString *controllerName=btn.controllerName;
-            if([controllerName isEqualToString:@"SKGTaskViewController"])
-            {
-                //代办
-                if ( [LocalMetaDataManager existedNewData:[LocalDataMeta sharedRemind]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedRemind]]];
-                }
-            }
-            else if([controllerName isEqualToString:@"SKMeetingItemController"])
-            {
-                //会议
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedMeeting]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMeeting]]];
-                }
-            }else if([controllerName isEqualToString:@"SKEmailController"]){
-                [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMail]]];
-            }else if([controllerName isEqualToString:@"SKNotifyItemController"]){
-                //通知
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedNotify]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedNotify]]];
-                }
-            } else if([controllerName isEqualToString:@"SKWorkNewsController"])  {
-                //动态
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedWorkNews]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedWorkNews]]];
-                }
-            }else if([controllerName isEqualToString:@"SKAddressBookController"]){
-                //通讯录
-            }else if([controllerName isEqualToString:@"SKAnnouncementItemController"]){
-                //公告
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedAnnouncement]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedAnnouncement]]];
-                }
-            }else if([controllerName isEqualToString:@"SKNewsItemController"]){
-                //新闻
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedNews]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedNews]]];
-                }
-            }else if([controllerName isEqualToString:@"SKCompIssueViewController"]){
-                if ([LocalMetaDataManager existedNewData:[LocalDataMeta sharedCompanyDocuments]])
-                {
-                    [btn setBadgeNumber:@"new"];
-                }
-                else
-                {
-                    [btn setBadgeNumber:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedCompanyDocuments]]];
-                }
-            }
-        }
-    });
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder
@@ -418,20 +333,6 @@
     return controller;
 }
 
--(void)initClientApp
-{
-    clientAppArray = [NSMutableArray array];
-    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
-    [pageController setNumberOfPages:array.count];
-    for (NSDictionary* dict in array) {
-        SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
-        [clientAppArray addObject:clientApp];
-    }
-    for (SKClientApp* app in clientAppArray) {
-        [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
-    }
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -479,6 +380,11 @@
     [topView setHidden:NO];
 }
 
+-(void)viewWillLayoutSubviews
+{
+    tabbar.selectedItem = nil;
+}
+
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     [emailTabItem setBadgeValue:[LocalMetaDataManager newDataItemCount:[LocalDataMeta sharedMail]]];
@@ -486,6 +392,8 @@
 }
 
 #pragma mark - 屏保代理函数
+//注释  比较版本号
+//注释  显示版本号
 -(void)onGetNewVersionDoneWithDic:(NSDictionary *)dic
 {
     NSDictionary* vDic=[[NSDictionary alloc] initWithDictionary:[[[dic objectForKey:@"s"] objectAtIndex:0] objectForKey:@"v"]];
@@ -525,6 +433,20 @@
     }
 }
 
+-(void)initClientApp
+{
+    clientAppArray = [NSMutableArray array];
+    NSArray* array = [[DBQueue sharedbQueue] recordFromTableBySQL:@"select * from T_CLIENTAPP where HASPMS = 1 and ENABLED = 1 ORDER BY DEFAULTED;"];
+    [pageController setNumberOfPages:array.count];
+    for (NSDictionary* dict in array) {
+        SKClientApp* clientApp = [[SKClientApp alloc] initWithDictionary:dict];
+        [clientAppArray addObject:clientApp];
+    }
+    for (SKClientApp* app in clientAppArray) {
+        [self loadScrollViewWithClientApp:app PageNo:[clientAppArray indexOfObject:app]];
+    }
+}
+
 -(void)firstInitClientApp
 {
     clientAppArray = [NSMutableArray array];
@@ -540,6 +462,42 @@
     }
 }
 
+/**
+ *  检测应用更新的代码该代码一天只执行一次
+ *  特殊情况: 当APP更新后可能会导致强制更新应用
+ */
+//保证每天只执行一次的代码
+-(void)checkClientInfomationCheckDate
+{
+    NSDate* date = [[NSUserDefaults standardUserDefaults] objectForKey:ClientInfomationCheckDate];
+//    NSLog(@"%@",[[date dateAtStartOfDay] dateByAddingHours:8]);
+//    NSLog(@"%d",[[[[[NSDate date] dateAtStartOfDay] dateByAddingHours:8] dateByAddingDays:1] daysAfterDate:[[date dateAtStartOfDay] dateByAddingHours:8]]);
+    if(!date)//这里保证补丁代码只执行一次
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:[[[NSDate date] dateAtStartOfDay] dateByAddingHours:8] forKey:DepartmentInfomationCheckDate];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+-(void)afterOnLogon
+{
+    [self updateClientAppinfo];
+    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
+    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
+        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
+            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
+            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
+            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
+        }
+    }
+    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
+        [self onGetNewVersionDoneWithDic:dict];
+    } FaliureBlock:^(NSDictionary* error){
+        NSLog(@"获取app版本信息失败 %@",error);
+    }];
+}
+
 -(void)onPatternLockSuccess
 {
     if (isFirstLogin){//这里还有bug//测试 登陆后会不会到这里
@@ -553,7 +511,6 @@
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
             [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedSelfEmployee] delegate:0];
-            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedWorkNewsType] delegate:0];
         }
     }else{
         if ([APPUtils currentReachabilityStatus] != NotReachable) {
@@ -561,47 +518,31 @@
             int sleepSecond = [[NSDate date] secondsAfterDate:date];
             if (sleepSecond > 1500 || sleepSecond < 0)
             {
-                if (sleepSecond> 1500) {
-                    if ([self isLoggedCookieValidity]) {
-                        return;
-                    }
+                if (sleepSecond> 1500 || [self isLoggedCookieValidity]) {
+                    [self afterOnLogon];
+                }else{
+                    [BWStatusBarOverlay showLoadingWithMessage:@"正在登录..." animated:YES];
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        [[APPUtils AppLogonManager] loginWithUser:[SKAppDelegate sharedCurrentUser]
+                                                    CompleteBlock:^{
+                                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                            [BWStatusBarOverlay showSuccessWithMessage:@"登录成功" duration:1 animated:1];
+                                                        });
+                                                        [self afterOnLogon];
+                                                    }failureBlock:^(NSDictionary* dict){
+                                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                                            [BWStatusBarOverlay showErrorWithMessage:dict[@"reason"] duration:1 animated:YES];
+                                                            if ([dict[@"reason"] isEqualToString:@"帐号或者密码错误"])
+                                                            {
+                                                                UIAlertView* av = [UIAlertView showAlertString:@"帐号或者密码已经被修改请重新登录"];
+                                                                av.delegate = self;
+                                                                av.tag = 101;
+                                                            }
+                                                        });
+                                                    }];
+                    });
                 }
-                [BWStatusBarOverlay showLoadingWithMessage:@"正在登录..." animated:YES];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    [[APPUtils AppLogonManager] loginWithUser:[SKAppDelegate sharedCurrentUser]
-                                                CompleteBlock:^{
-                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                        [BWStatusBarOverlay showSuccessWithMessage:@"登录成功" duration:1 animated:1];
-                                                    });
-                                                    [self updateClientAppinfo];
-                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedVersionInfo] delegate:self];
-                                                    [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedRemind] delegate:self];
-                                                    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"ECONTACTSYNED"]) {
-                                                        if ([APPUtils currentReachabilityStatus] == ReachableViaWiFi) {
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedEmployee] delegate:self];
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedOranizational] delegate:self];
-                                                            [SKDataDaemonHelper synWithMetaData:[LocalDataMeta sharedUnit] delegate:self];
-                                                        }
-                                                    }
-                                            
-                                                    //                                                    [GetNewVersion getNewsVersionComplteBlock:^(NSDictionary* dict){
-                                                    //                                                        [self onGetNewVersionDoneWithDic:dict];
-                                                    //                                                    } FaliureBlock:^(NSDictionary* error){
-                                                    //                                                    }];
-                                                }
-                                                 failureBlock:^(NSDictionary* dict){
-                                                     [self setBadgeNumber];
-                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                         [MBProgressHUD hideHUDForView:self.view animated:YES];
-                                                         [BWStatusBarOverlay showErrorWithMessage:dict[@"reason"] duration:1 animated:YES];
-                                                         if ([dict[@"reason"] isEqualToString:@"帐号或者密码错误"]) {
-                                                             UIAlertView* av = [UIAlertView showAlertString:@"帐号或者密码已经被修改请重新登录"];
-                                                             av.delegate = self;
-                                                             av.tag = 101;
-                                                         }
-                                                     });
-                                                 }];
-                });
+                
             }
         }else{
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -609,7 +550,6 @@
             });
         }
     }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -640,18 +580,8 @@
     });
 }
 
--(NSString*)ECMPName
-{
-    NSArray* array = [[DBQueue sharedbQueue] arrayFromTableBySQL:@"select code from T_CLIENTAPP;"];
-    NSString* result = [array componentsJoinedByString:@","];
-    return result;
-}
-
 -(void)didCompleteSynData:(LocalDataMeta *)metaData
 {
-    if ([metaData.dataCode isEqualToString:@"versioninfo"]) {
-        [self setBadgeNumber];
-    }
     if ([metaData.dataCode isEqualToString:@"employee"] && ![metaData isUserOwner])
     {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ECONTACTSYNED"];

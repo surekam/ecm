@@ -107,6 +107,8 @@
         _progressView.frame = CGRectMake(0, 0, 0, CGRectGetHeight(self.frame));
         if (IS_IOS7) {
             _progressView.frame = CGRectMake(0, CGRectGetHeight(self.frame) - 2, 0, 2);
+        }else{
+            _progressView.frame = CGRectMake(0, 0, 0, CGRectGetHeight(self.frame) - 1);
         }
         [self.contentView addSubview:_progressView];
         

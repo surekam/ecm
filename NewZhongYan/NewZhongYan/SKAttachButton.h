@@ -11,14 +11,15 @@
 #import "SKQLPreviewController.h"
 @interface SKAttachButton : UIButton<QLPreviewControllerDataSource,QLPreviewControllerDelegate,UIAlertViewDelegate>
 {
-    UIImageView *_DSImageView;// download State Image View
+    UIImageView *_DSImageView;
     UILabel     *_attachLabel;
     UIActivityIndicatorView *_indicator;
     UIProgressView* progresser;
     
-    SKHTTPRequest* _request;
     UIButton* delelteAttachBtn;
+    UIButton *_downloadButton;
     SKQLPreviewController* previewController;
+    SKHTTPRequest* _request;
 }
 
 

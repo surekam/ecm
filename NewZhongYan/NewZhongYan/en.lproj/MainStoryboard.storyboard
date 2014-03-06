@@ -189,6 +189,10 @@
                                     <outlet property="delegate" destination="Txh-n9-BNS" id="oui-Q4-xG4"/>
                                 </connections>
                             </textField>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Fda-Vc-GOD">
+                                <rect key="frame" x="150" y="447" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -197,12 +201,14 @@
                             <constraint firstAttribute="trailing" secondItem="q4I-LH-qcO" secondAttribute="trailing" constant="25" id="6QC-IR-hzM"/>
                             <constraint firstItem="7Tz-Gw-Awb" firstAttribute="leading" secondItem="gHw-ec-mxE" secondAttribute="leading" constant="20" id="6fW-MW-sBz"/>
                             <constraint firstItem="ptE-v7-mu1" firstAttribute="leading" secondItem="gHw-ec-mxE" secondAttribute="leading" constant="20" id="Clt-MC-P8j"/>
+                            <constraint firstItem="Fda-Vc-GOD" firstAttribute="centerX" secondItem="7Tz-Gw-Awb" secondAttribute="centerX" id="FQH-QW-KfQ"/>
                             <constraint firstItem="vpj-h4-Yh9" firstAttribute="leading" secondItem="gHw-ec-mxE" secondAttribute="leading" constant="56" id="FoV-rh-lr3"/>
                             <constraint firstItem="eYA-ou-yp9" firstAttribute="leading" secondItem="gHw-ec-mxE" secondAttribute="leading" constant="20" id="Ifb-Pu-CqO"/>
                             <constraint firstItem="xNg-d9-5Re" firstAttribute="top" secondItem="7Tz-Gw-Awb" secondAttribute="bottom" constant="5" id="JB9-FV-dZO"/>
                             <constraint firstItem="xNg-d9-5Re" firstAttribute="leading" secondItem="eYA-ou-yp9" secondAttribute="trailing" id="JXr-nA-a0V"/>
                             <constraint firstItem="JtJ-e2-qLh" firstAttribute="top" secondItem="eYA-ou-yp9" secondAttribute="bottom" constant="41" id="OwN-cP-pbz"/>
                             <constraint firstItem="JtJ-e2-qLh" firstAttribute="top" secondItem="BDL-5t-bsg" secondAttribute="bottom" id="P9o-hU-biO"/>
+                            <constraint firstItem="Fda-Vc-GOD" firstAttribute="top" secondItem="xNg-d9-5Re" secondAttribute="bottom" constant="8" symbolic="YES" id="RXV-xZ-ig3"/>
                             <constraint firstAttribute="trailing" secondItem="7Tz-Gw-Awb" secondAttribute="trailing" constant="20" id="Sh8-QZ-aVK"/>
                             <constraint firstAttribute="trailing" secondItem="xNg-d9-5Re" secondAttribute="trailing" constant="20" id="SjM-Rj-WTI"/>
                             <constraint firstItem="7Tz-Gw-Awb" firstAttribute="top" secondItem="vpj-h4-Yh9" secondAttribute="bottom" constant="5" id="T2k-7T-p5q"/>
@@ -218,6 +224,7 @@
                     <connections>
                         <outlet property="bgImageView" destination="BDL-5t-bsg" id="tv0-xk-6k0"/>
                         <outlet property="cancelButton" destination="eYA-ou-yp9" id="v6e-4d-MBi"/>
+                        <outlet property="indicator" destination="Fda-Vc-GOD" id="HON-Ra-HbW"/>
                         <outlet property="loginButton" destination="xNg-d9-5Re" id="Z0Z-g9-cZp"/>
                         <outlet property="passField" destination="q4I-LH-qcO" id="i10-cc-qR1"/>
                         <outlet property="userField" destination="vpj-h4-Yh9" id="Ilr-46-UBV"/>
@@ -4089,7 +4096,7 @@
         <image name="landbar.png" width="320" height="53"/>
         <image name="linebuttom_n.png" width="225" height="10"/>
         <image name="linebuttom_p.png" width="225" height="32"/>
-        <image name="login_bg.png" width="640" height="920"/>
+        <image name="login_bg.png" width="320" height="460"/>
         <image name="navagationBarCenterBtn.png" width="90" height="36"/>
         <image name="night_user_defaulthead.png" width="90" height="90"/>
         <image name="pw_input1.png" width="402" height="74"/>

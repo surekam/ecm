@@ -37,10 +37,23 @@
             SKPatternLockController* locker = (SKPatternLockController*)[nav topViewController];
             [locker setDelegate:controller];
             [controller presentViewController:nav animated:NO completion:^{
-                
+                [self setLoginComponentStatus:YES];
             }];
         }];
     });
+}
+-(void)setLoginComponentStatus:(BOOL) status
+{
+    [_loginButton setEnabled:status];
+    [_userField setEnabled:status];
+    [_passField setEnabled:status];
+    if (status) {
+        [indicator stopAnimating];
+    }else{
+        [indicator startAnimating];
+        [_userField  resignFirstResponder];
+        [_passField resignFirstResponder];
+    }
 }
 
 - (IBAction)login:(id)sender {
@@ -49,13 +62,10 @@
         [UIAlertView showAlertString:@"账号或者密码不能为空"];
         return;
     }
-    
-    [_userField  resignFirstResponder];
-    [_passField resignFirstResponder];    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(LogginBack:)
                                                  name:@"LoginBack" object:nil];
-    
+    [self setLoginComponentStatus:NO];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         @try
         {

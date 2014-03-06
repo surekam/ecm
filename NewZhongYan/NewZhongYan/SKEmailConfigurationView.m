@@ -58,7 +58,6 @@
     UIImageView *imageView=[[UIImageView alloc] initWithFrame:CGRectMake(205, 66, 29, 27)];
     [imageView setImage:[UIImage imageNamed:@"downArrow.jpg"]];
    
-    
     [self addSubview:btn];
     [self addSubview:imageView];
     [self addSubview:popView];

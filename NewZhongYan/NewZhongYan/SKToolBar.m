@@ -137,11 +137,10 @@
         [self addSubview:bgImageView];
         
         UIButton* clearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [clearBtn setTitle:@"一键清理" forState:UIControlStateNormal];
+        [clearBtn setTitle:@"一键清除" forState:UIControlStateNormal];
         [clearBtn setFrame:bgImageView.frame];
         [clearBtn addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:clearBtn];
-        
         [homeButton addTarget:self action:@selector(backToRoot:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;

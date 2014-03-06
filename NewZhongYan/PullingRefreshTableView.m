@@ -181,7 +181,7 @@
         } else if (_state == kPRStateHitTheEnd) {
             if (!self.isAtTop) {    //footer
                 _arrow.hidden = YES;
-                _stateLabel.text = @"没有了哦";
+                _stateLabel.text = @"数据已经全部加载完成";
             }
         }
     }

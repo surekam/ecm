@@ -45,7 +45,41 @@
     return self;
 }
 
-+(void)getClientAppWithConpleteBlock:(clientCompleteBlock)block
++(void)getClientAppWithCompleteBlock:(clientCompleteBlock)completeblock  faliureBlock:(clientfaliureBlock)faliureblock
+{
+    int localClientAppVersion = [[FileUtils valueFromPlistWithKey:@"CLIENTAPPVERSION"] integerValue];
+    SKHTTPRequest* request = [SKHTTPRequest requestWithURL:
+                              [SKECMURLManager getClientAppVMetaInfoWithVersion:localClientAppVersion]];
+    [request startSynchronous];
+    NSLog(@"%@",request.responseString);
+    if (!request.error) {
+        SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
+        NSDictionary* dict = [entity dataItem:0];
+        if ([[entity MessageCode] isEqualToString: @"DCI"] && [@"CLIENTAPP" isEqualToString:[dict objectForKey:@"c"]]){
+            int sv = [[dict objectForKey:@"v"] intValue] <= 0 ? 1 :[[dict objectForKey:@"v"] intValue];
+            int sc  = [[dict objectForKey:@"t"] intValue];//t 表示版本之间更新的数据有多少多少
+            if (localClientAppVersion) {
+                if (localClientAppVersion == sv) {
+                    if (faliureblock) {
+                        faliureblock([NSError errorWithDomain:@"ECMRequestError" code:1004 userInfo:@{@"reason": @"服务器数据和本地数据相同"}]);
+                    }
+                }else{
+                    [self getClientAppWithCompleteBlock:completeblock];
+                }
+            }else{
+                if (sc){
+                    [self getClientAppWithCompleteBlock:completeblock];
+                }
+            }
+        }
+    }else{
+        if (faliureblock) {
+            faliureblock([NSError errorWithDomain:@"ECMRequestError" code:1003 userInfo:@{@"reason": @"获取数据元信息错误"}]);
+        }
+    }
+}
+
++(void)getClientAppWithCompleteBlock:(clientCompleteBlock)block
 {
     SKHTTPRequest* request = [SKHTTPRequest requestWithURL:[SKECMURLManager getAllClientApp]];
     [request startSynchronous];
