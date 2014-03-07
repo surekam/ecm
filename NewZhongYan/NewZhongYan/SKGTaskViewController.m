@@ -156,30 +156,29 @@
     [super viewDidLoad];
     //添加刷新通知监视
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reload) name:@"refresh" object:nil];
-    
     [self.tableView setHeaderOnly:YES];
     
-    titleButton1=[UIButton buttonWithType:UIButtonTypeCustom];
-    [titleButton1 setFrame:CGRectMake(0, 0, 74, 32)];
-    [titleButton1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [titleButton1 setBackgroundImage:[UIImage imageNamed:@"segLeft_press.png"] forState:UIControlStateNormal];
-    [titleButton1 setTitle:@"待办" forState:UIControlStateNormal];
-    [titleButton1.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
-    [titleButton1 setTag:101];
-    [titleButton1 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
-    
-    titleButton2=[UIButton buttonWithType:UIButtonTypeCustom];
-    [titleButton2 setFrame:CGRectMake(74, 0, 74, 32)];
-    [titleButton2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [titleButton2 setBackgroundImage:[UIImage imageNamed:@"segRight.png"] forState:UIControlStateNormal];
-    [titleButton2 setTitle:@"已办" forState:UIControlStateNormal];
-    [titleButton2.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
-    [titleButton2 setTag:102];
-    [titleButton2 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
-    UIView *tView=[[UIView alloc] initWithFrame:CGRectMake(86, 6, 148, 32)];
-    [tView addSubview:titleButton1];
-    [tView addSubview:titleButton2];
-    self.navigationItem.titleView = tView;
+//    titleButton1=[UIButton buttonWithType:UIButtonTypeCustom];
+//    [titleButton1 setFrame:CGRectMake(0, 0, 74, 32)];
+//    [titleButton1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [titleButton1 setBackgroundImage:[UIImage imageNamed:@"segLeft_press.png"] forState:UIControlStateNormal];
+//    [titleButton1 setTitle:@"待办" forState:UIControlStateNormal];
+//    [titleButton1.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
+//    [titleButton1 setTag:101];
+//    [titleButton1 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    titleButton2=[UIButton buttonWithType:UIButtonTypeCustom];
+//    [titleButton2 setFrame:CGRectMake(74, 0, 74, 32)];
+//    [titleButton2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [titleButton2 setBackgroundImage:[UIImage imageNamed:@"segRight.png"] forState:UIControlStateNormal];
+//    [titleButton2 setTitle:@"已办" forState:UIControlStateNormal];
+//    [titleButton2.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
+//    [titleButton2 setTag:102];
+//    [titleButton2 addTarget:self action:@selector(selectType:) forControlEvents:UIControlEventTouchUpInside];
+//    UIView *tView=[[UIView alloc] initWithFrame:CGRectMake(86, 6, 148, 32)];
+//    [tView addSubview:titleButton1];
+//    [tView addSubview:titleButton2];
+//    self.navigationItem.titleView = tView;
     
     // Create a search bar
 	self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0.0f, 0, 320.0f, 44.0f)] ;
