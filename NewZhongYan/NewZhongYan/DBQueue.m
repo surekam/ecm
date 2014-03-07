@@ -69,39 +69,42 @@ static DBQueue *gSharedInstance = nil;
 -(void)insertDataToTableWithDataArray:(SKMessageEntity*)entity LocalDataMeta:(LocalDataMeta*)dataMeta
 {
     [self.dbQueue inTransaction:^(FMDatabase *db,BOOL *roolBack) {
-        for (int i = 0; i < [entity dataItemCount]; i++) {
-            NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:[entity dataItem:i]];
-            if ([[dict allKeys] containsObject:[dataMeta identityName]])
-            {
-                if ([dataMeta userOwner]) {
-                    [dict setObject:[APPUtils userUid] forKey:@"OWUID"];
-                }
-                
-                for (NSString* key in [dict allKeys])
+        @autoreleasepool {
+            for (int i = 0; i < [entity dataItemCount]; i++) {
+                NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:[entity dataItem:i]];
+                if ([[dict allKeys] containsObject:[dataMeta identityName]])
                 {
-                    id value = [dict objectForKey:key];
-                    if ([value isKindOfClass:[NSString class]])
+                    if ([dataMeta userOwner]) {
+                        [dict setObject:[APPUtils userUid] forKey:@"OWUID"];
+                    }
+                    
+                    for (NSString* key in [dict allKeys])
                     {
-                        //针对敏感字符 单引号
-                        if ([value rangeOfString:@"'"].location != NSNotFound)
+                        id value = [dict objectForKey:key];
+                        if ([value isKindOfClass:[NSString class]])
                         {
-                            value = [value stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
-                            [dict setObject:value forKey:key];
+                            //针对敏感字符 单引号
+                            if ([value rangeOfString:@"'"].location != NSNotFound)
+                            {
+                                value = [value stringByReplacingOccurrencesOfString:@"'" withString:@"''"];
+                                [dict setObject:value forKey:key];
+                            }
+                            //别的敏感字符
                         }
-                        //别的敏感字符
+                    }
+                    NSString* value = [NSString stringWithFormat:@"'%@'",[[dict allValues] componentsJoinedByString:@"','"]];
+                    NSString* sql = [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",[dataMeta localName],[[dict allKeys] componentsJoinedByString:@","],value];
+                    
+                    [db executeUpdate:sql];
+                    if ([db hadError])
+                    {
+                        if (db.lastErrorCode == SQLITE_CONSTRAINT) {
+                            continue;
+                        }
+                        NSLog(@"数据库插入错误:%@ 错误码%d",[db lastErrorMessage],db.lastErrorCode);
                     }
                 }
-                NSString* value = [NSString stringWithFormat:@"'%@'",[[dict allValues] componentsJoinedByString:@"','"]];
-                NSString* sql = [NSString stringWithFormat:@"INSERT OR REPLACE INTO %@ (%@) VALUES (%@)",[dataMeta localName],[[dict allKeys] componentsJoinedByString:@","],value];
-                
-                [db executeUpdate:sql];
-                if ([db hadError])
-                {
-                    if (db.lastErrorCode == SQLITE_CONSTRAINT) {
-                        continue;
-                    }
-                    NSLog(@"数据库插入错误:%@ 错误码%d",[db lastErrorMessage],db.lastErrorCode);
-                }
+                [dict removeAllObjects],dict = nil;
             }
         }
     }];

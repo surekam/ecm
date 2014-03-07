@@ -518,7 +518,7 @@
             int sleepSecond = [[NSDate date] secondsAfterDate:date];
             if (sleepSecond > 1500 || sleepSecond < 0)
             {
-                if (sleepSecond> 1500 || [self isLoggedCookieValidity]) {
+                if (sleepSecond > 1500 && [self isLoggedCookieValidity]) {
                     [self afterOnLogon];
                 }else{
                     [BWStatusBarOverlay showLoadingWithMessage:@"正在登录..." animated:YES];
@@ -616,5 +616,11 @@
 -(void)didErrorSynData:(LocalDataMeta *)metaData Reason:(NSString *)errorinfo
 {
     NSLog(@"didErrorSynData");
+}
+
+-(void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"SKViewController 我内存报警了，来治我吧。。。");
 }
 @end

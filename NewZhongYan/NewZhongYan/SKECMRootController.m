@@ -114,14 +114,14 @@
         if (isMeeting) {
             NSDictionary *sectionDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
                                                [NSMutableArray array],@"即将召开&正在召开",
-                                               [NSMutableArray array],@"已召开", nil];
+                                               [NSMutableArray array],@"已结束", nil];
             
             for (NSDictionary *dict in [NSArray arrayWithArray:dataArray]){
                 NSString* bz = [dict objectForKey:@"az"];
                 if (bz.intValue) {
                     [(NSMutableArray*)[sectionDictionary objectForKey:@"即将召开&正在召开"] addObject:dict];
                 }else{
-                    [(NSMutableArray*)[sectionDictionary objectForKey:@"已召开"]  addObject:dict];
+                    [(NSMutableArray*)[sectionDictionary objectForKey:@"已结束"]  addObject:dict];
                 }
             }
             _sectionDictionary = [NSMutableDictionary dictionaryWithDictionary:sectionDictionary];
@@ -201,14 +201,14 @@
 -(NSDictionary*)praseMeetingArray:(NSArray*)meetings{
     NSDictionary *sectionDictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
                                        [NSMutableArray array],@"即将召开&正在召开",
-                                       [NSMutableArray array],@"已召开", nil];
+                                       [NSMutableArray array],@"已结束", nil];
     
     for (NSDictionary *dict in [NSArray arrayWithArray:meetings]){
         NSString* bz = [dict objectForKey:@"az"];
         if (bz.intValue) {
             [(NSMutableArray*)[sectionDictionary objectForKey:@"即将召开&正在召开"] addObject:dict];
         }else{
-            [(NSMutableArray*)[sectionDictionary objectForKey:@"已召开"]  addObject:dict];
+            [(NSMutableArray*)[sectionDictionary objectForKey:@"已结束"]  addObject:dict];
         }
     }
     return sectionDictionary;
@@ -233,7 +233,7 @@
     }
 
     if (isMeeting) {
-        _sectionArray = [[NSArray alloc] initWithObjects:@"即将召开&正在召开",@"已召开", nil];
+        _sectionArray = [[NSArray alloc] initWithObjects:@"即将召开&正在召开",@"已结束", nil];
         _sectionDictionary = [[NSMutableDictionary alloc] init];
     }
     

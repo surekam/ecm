@@ -420,4 +420,10 @@
         }
     });
 }
+
+-(void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"SKGridController 我内存报警了，来治我吧。。。");
+}
 @end

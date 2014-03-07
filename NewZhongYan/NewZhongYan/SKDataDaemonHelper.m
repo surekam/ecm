@@ -20,15 +20,21 @@ static NSOperationQueue* _shareQueue = nil;
     self = [super init];
     if (self) {
         _metaData = metaData;
-        //_pathHelper = [DataServiceURLs DataServicePath:metaData];
         _urlHelper = [DataServiceURLs DataServiceURLs:metaData];
         _delegate = delegate;
     }
     return self;
 }
 
+
+
+-(void)dealloc{
+    _metaData = nil;
+    _pathHelper = nil;
+    _urlHelper = nil;
+}
+
 +(void)synWithMetaData:(LocalDataMeta*)metaData delegate:(id<SKDataDaemonHelperDelegate>)delegate{
-    //return;待测试
     for (SKDataDaemonHelper* helper  in [SKDataDaemonHelper sharedQueue].operations) {
         if ([helper.metaData.dataCode isEqualToString:metaData.dataCode]) {
             return;
@@ -94,36 +100,37 @@ static NSOperationQueue* _shareQueue = nil;
         [_delegate didBeginSynData:_metaData];
     }
     
-    while (sc > 0 && from <= sc)
-    {
-        NSURL* rangeURL;
-        if ([_metaData isECM]) {
-            rangeURL = [NSURL URLWithString:_urlHelper.ECMVupdateURL];
-        }else{
-            rangeURL = [NSURL URLWithString:[_urlHelper rangeURL:from length:_metaData.pageSize]];
-        }
-        SKHTTPRequest* request = [SKHTTPRequest requestWithURL:rangeURL];
-        [request setTimeOutSeconds:30];
-        [request startSynchronous];
-        if (![request error] && ![self isCancelled])
+    @autoreleasepool {
+        while (sc > 0 && from <= sc)
         {
-            SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
-            if ([[entity MessageCode] isEqualToString:[_metaData messageCode]]){
-                [[DBQueue sharedbQueue] insertDataToTableWithDataArray:entity LocalDataMeta:_metaData];
-                synedCount += entity.dataItemCount;
+            NSURL* rangeURL;
+            if ([_metaData isECM]) {
+                rangeURL = [NSURL URLWithString:_urlHelper.ECMVupdateURL];
+            }else{
+                rangeURL = [NSURL URLWithString:[_urlHelper rangeURL:from length:_metaData.pageSize]];
             }
-        }else{
-            @throw [NSException exceptionWithName:@"请求失败"
-                                           reason:[[request error] localizedDescription]
-                                         userInfo:nil];
-           
-        }
-        [self.metaData snapInitDataWithVersion:sv lastCount:sc lastFrom:from Date:[NSDate curerntTime]];
-        [LocalMetaDataManager flushMetaData:_metaData];
-        from += _metaData.pageSize;
-        if (_delegate && [_delegate respondsToSelector:@selector(didEndSynData:)])
-        {
-            [_delegate didEndSynData:_metaData];
+            SKHTTPRequest* request = [SKHTTPRequest requestWithURL:rangeURL];
+            [request setTimeOutSeconds:30];
+            [request startSynchronous];
+            if (![request error] && ![self isCancelled]){
+                SKMessageEntity* entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
+                if ([[entity MessageCode] isEqualToString:[_metaData messageCode]]){
+                    [[DBQueue sharedbQueue] insertDataToTableWithDataArray:entity LocalDataMeta:_metaData];
+                    synedCount += entity.dataItemCount;
+                }
+            }else{
+                @throw [NSException exceptionWithName:@"请求失败"
+                                               reason:[[request error] localizedDescription]
+                                             userInfo:nil];
+                
+            }
+            [self.metaData snapInitDataWithVersion:sv lastCount:sc lastFrom:from Date:[NSDate curerntTime]];
+            [LocalMetaDataManager flushMetaData:_metaData];
+            from += _metaData.pageSize;
+            if (_delegate && [_delegate respondsToSelector:@selector(didEndSynData:)]){
+                [_delegate didEndSynData:_metaData];
+            }
+            [request clearDelegatesAndCancel];
         }
     }
 }
@@ -159,8 +166,9 @@ static NSOperationQueue* _shareQueue = nil;
                                    ServerCount:sc
                                           From:1];
             }
-
+            entity = nil;
         }
+        [request clearDelegatesAndCancel];
     }
     
     if (![self isCancelled]) {
@@ -178,31 +186,34 @@ static NSOperationQueue* _shareQueue = nil;
     {
         [_delegate didBeginSynData:_metaData];
     }
-    while (sc > 0 && from <= sc)
-    {
-        SKMessageEntity* entity;
-        NSURL* url = [NSURL URLWithString:[_urlHelper updateRangeURL:lv from:from length:_metaData.pageSize]];
-        SKHTTPRequest* request = [SKHTTPRequest requestWithURL:url];
-        [request startSynchronous];
-        if (![request error])
+    @autoreleasepool {
+        while (sc > 0 && from <= sc)
         {
-            if (![self isCancelled]) {
-                entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
-                if ([entity.MessageCode isEqualToString:_metaData.messageCode])
-                {
-                    [[DBQueue sharedbQueue] insertDataToTableWithDataArray:entity LocalDataMeta:_metaData];
-                    from += _metaData.pageSize;
-                }else{
-                    @throw [NSException exceptionWithName:@"请求失败"
-                                                   reason:@"请求已被取消"
-                                                 userInfo:nil];
+            SKMessageEntity* entity;
+            NSURL* url = [NSURL URLWithString:[_urlHelper updateRangeURL:lv from:from length:_metaData.pageSize]];
+            SKHTTPRequest* request = [SKHTTPRequest requestWithURL:url];
+            [request startSynchronous];
+            if (![request error])
+            {
+                if (![self isCancelled]) {
+                    entity = [[SKMessageEntity alloc] initWithData:[request responseData]];
+                    if ([entity.MessageCode isEqualToString:_metaData.messageCode])
+                    {
+                        [[DBQueue sharedbQueue] insertDataToTableWithDataArray:entity LocalDataMeta:_metaData];
+                        from += _metaData.pageSize;
+                    }else{
+                        @throw [NSException exceptionWithName:@"请求失败"
+                                                       reason:@"请求已被取消"
+                                                     userInfo:nil];
+                    }
                 }
+            }else{
+                @throw [NSException exceptionWithName:@"请求失败"
+                                               reason:[[request error] localizedDescription]
+                                             userInfo:nil];
             }
-        }else{
-            @throw [NSException exceptionWithName:@"请求失败"
-                                           reason:[[request error] localizedDescription]
-                                         userInfo:nil];
         }
+
     }
 }
 

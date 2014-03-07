@@ -74,6 +74,7 @@
         @catch (NSException *exception)
         {
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self setLoginComponentStatus:YES];
                 UIAlertView* av = [[UIAlertView alloc] initWithTitle:[exception name]
                                                              message:[exception reason]
                                                             delegate:0

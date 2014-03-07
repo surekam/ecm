@@ -12,7 +12,7 @@
  *  {"c":"EXCEPTION","f":"aaa","k":"EXCEPTION20131219193910117","t":"0","m":"2013-12-19T19:39:10.117","s":[{
  "v":{"MESSAGE":"转成消息结构体的Java数组或集合至少需要一个元素","CLASS":"com.surekam.dits.message.MessageException"}}]}
  */
-// 2001 是没有查找到数据
+// 3001 是没有查找到数据
 
 @implementation SKMessageEntity
 @synthesize praserError;
@@ -26,7 +26,7 @@
             self.praserError = error;
         }else{
             if ([[self MessageCode] isEqualToString:@"EXCEPTION"] && [[self dataItem:0][@"MESSAGE"] isEqualToString:@"转成消息结构体的Java数组或集合至少需要一个元素"]) {
-                self.praserError = [NSError errorWithDomain:@"没有找到相应数据" code:2001 userInfo:@{@"reason": @"服务器上没有找到相应的数据"}];
+                self.praserError = [NSError errorWithDomain:@"没有找到相应数据" code:3001 userInfo:@{@"reason": @"服务器上没有找到相应的数据"}];
             }
         }        
     }
@@ -130,5 +130,11 @@
     }else{
         return kActionSelect;
     }
+}
+
+-(void)dealloc
+{
+    //NSLog(@"SKMessageEntity dealloc");
+    entityDict = nil;
 }
 @end

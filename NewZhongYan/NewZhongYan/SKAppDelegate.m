@@ -118,15 +118,8 @@ NSUInteger DeviceSystemMajorVersion() {
     [self updateInterfaceWithReachability:self.internetReachability];
 }
 
--(void)printVersionInfo
-{
-    NSString *filename=[[FileUtils documentPath] stringByAppendingPathComponent:@"config.plist"];
-     NSLog(@"%@",[NSMutableDictionary dictionaryWithContentsOfFile:filename]);
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self printVersionInfo];
     if (System_Version_Small_Than_(7)) {
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
             _mainStoryboard = [UIStoryboard storyboardWithName:@"MainStoryboard_ios6" bundle:nil];
@@ -194,4 +187,8 @@ NSUInteger DeviceSystemMajorVersion() {
     
 }
 
+-(void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    NSLog(@"applicationDidReceiveMemoryWarning");
+}
 @end
